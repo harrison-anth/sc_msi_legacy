@@ -1,0 +1,12 @@
+
+> for(i in 1:nrow(snv_matrix)){
+
++ temp2 <- filter(temp, temp$key == rownames(snv_matrix[i,]))
+
++ if(rownames(snv_matrix[i,]) %in% temp$key){
+
++ rownames(snv_matrix[i,]) <- temp2$V2} else{rownames(snv_matrix[i,] <- 'no_annotation')}
+
+                                             + }
+
+

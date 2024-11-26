@@ -1,0 +1,99 @@
+#!/bin/bash
+#SBATCH --job-name="pseudobulk"
+#SBATCH --output=../stdout_files/pseudobulk.out
+#SBATCH --error=../error_files/pseudobulk.error
+#SBATCH --partition="normal","highmem"
+#SBATCH --mem=35G
+
+gnorts=$1
+<<<<<<< HEAD
+gsm=$2
+
+#run numbat?
+numbat=N
+#run copykat?
+copykat=N
+#run atomic?
+atomic=Y
+#run msi tools?
+msi=Y
+
+=======
+>>>>>>> 8a5c77b783c5b63b0d7691a18aacc16be0338eef
+
+if [[ ! -d ../pseudobulk_barcodes/$gnorts ]]
+then
+module load Anaconda3
+conda activate seurat
+
+mkdir ../pseudobulk_barcodes/$gnorts
+
+Rscript barcode_generator.R $gnorts
+
+fi
+
+if [[ $gsm == "Y" ]]
+then
+
+if [[ ! -d ../bam/$gnorts/ ]]
+then
+module load Anaconda3
+conda activate rusty
+
+mkdir ../bam/$gnorts/
+
+sinto filterbarcodes -b ../cell_ranger_output/$gnorts/outs/possorted_genome_bam.bam \
+-c ../pseudobulk_barcodes/"$gnorts"/"$gnorts"_all_cell_barcodes.tsv \
+--barcodetag "CB" -p 20 --outdir ../bam/$gnorts/
+
+i=1 
+
+for bam in $(ls -v ../bam/$gnorts/*.bam)
+do
+samtools index $bam
+
+samtools view -H $bam  | sed "s/SM:[^\t]*/SM:$gnorts.$i/g" | samtools reheader - $bam > $bam.bam
+mv $bam.bam $bam
+
+i=$(( $i+1 ))
+
+done
+
+fi
+
+fi
+
+if [[ ! -f ../pseudobulk_barcodes/$gnorts/just_barcodes.tsv ]]
+then
+cut -f 1 ../pseudobulk_barcodes/$gnorts/"$gnorts"_all_cell_barcodes.tsv > ../pseudobulk_barcodes/$gnorts/just_barcodes.tsv
+fi
+
+<<<<<<< HEAD
+=======
+if [[ ! -f ../pseudobulk_barcodes/$gnorts/just_barcodes.tsv ]]
+then
+cut -f 1 ../pseudobulk_barcodes/$gnorts/"$gnorts"_all_cell_barcodes.tsv > ../pseudobulk_barcodes/$gnorts/just_barcodes.tsv
+fi
+>>>>>>> 8a5c77b783c5b63b0d7691a18aacc16be0338eef
+
+sbatch msi_passer.sh $gnorts
+sbatch kit_kat.sh $gnorts
+sbatch numbat.sh $gnorts
+
+if [[ $msi == "Y" ]]
+then
+sbatch msi_passer.sh $gnorts
+fi
+if [[ $copykat == "Y" ]]
+then
+sbatch kit_kat.sh $gnorts
+fi
+if [[ $numbat == "Y" ]]
+then
+sbatch numbat.sh $gnorts
+fi
+if [[ $atomic == "Y" ]]
+then
+sbatch atomic.sh $gnorts
+fi
+

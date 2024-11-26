@@ -1,0 +1,39 @@
+library(Seurat)
+library(PreMSIm)
+library(janitor)
+library(data.table)
+library(tidyverse)
+library(R.utils)
+library(reticulate)
+pd <- import("pandas")
+pickle_data <- pd$read_pickle("dataset.pickle")
+
+argus <- (commandArgs(asValues=TRUE, excludeReserved=TRUE)[-1])
+sample_name <- as.character(argus[1])
+
+path = system.file("extdata", "example.txt", package = "PreMSIm", mustWork = TRUE)
+input_data <- data_pre(path, type = "ID")
+
+#create count mat from s_obj
+s_obj <- readRDS(paste0('../filtered_h5/',sample_name,'.rds'))
+ct_mat <- t(as.matrix(s_obj@assays$RNA$counts))
+
+
+msi_results <- msi_pre(ct_mat[,c(colnames(input_data))])
+
+prob <- attributes(msi_results$MSI_status)
+
+s_obj$premsim_prob <- prob$prob
+
+attr(msi_results$MSI_status, "prob") <- NULL
+s_obj$premsim_status <- msi_results$MSI_status
+
+saveRDS(s_obj, paste0('../premsim/',sample_name,'_premsim.rds'))
+
+
+#for sensor_rna
+
+ct_mat <- as.data.frame(ct_mat) %>% rownames_to_column('SampleID')
+
+fwrite(ct_mat,paste0('../temp/',sample_name,'.csv',sep=','))
+

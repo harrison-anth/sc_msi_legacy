@@ -1,0 +1,27 @@
+annotated_h5/*
+annovar_results/*
+atomic/*
+bam/*
+cell_ranger_output/*
+copy_kat_results/*
+count_matrices/*
+decrypted/*
+<<<<<<< HEAD
+delete_me/*
+encrypted/*
+error_files/*
+fastq/*
+filtered_h5/*
+gsm_samps/*
+integrated_samples/*
+maf/*
+premsim/*
+stdout_files/*
+temp/*
+vartrix_results/*
+vcf/*
+
+=======
+numbat/*
+annotated_h5/*
+>>>>>>> 8a5c77b783c5b63b0d7691a18aacc16be0338eef

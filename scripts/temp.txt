@@ -1,0 +1,1 @@
+gatk SplitNCigarReads -R $ref -I $tumor -O ../temp/test.bam
