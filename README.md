@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # single_msi
 Single cell rna-seq MSI tests to explore heterogeneity in MSI status as biomarker.
 
@@ -28,5 +27,3 @@ https://ega-archive.org/datasets/EGAD00001008555
 https://ega-archive.org/datasets/EGAD00001008584 
 
 
-
->>>>>>> 8a5c77b783c5b63b0d7691a18aacc16be0338eef
