@@ -6,7 +6,6 @@
 #SBATCH --mem=35G
 
 gnorts=$1
-<<<<<<< HEAD
 gsm=$2
 
 #run numbat?
@@ -18,8 +17,6 @@ atomic=Y
 #run msi tools?
 msi=Y
 
-=======
->>>>>>> 8a5c77b783c5b63b0d7691a18aacc16be0338eef
 
 if [[ ! -d ../pseudobulk_barcodes/$gnorts ]]
 then
@@ -68,17 +65,7 @@ then
 cut -f 1 ../pseudobulk_barcodes/$gnorts/"$gnorts"_all_cell_barcodes.tsv > ../pseudobulk_barcodes/$gnorts/just_barcodes.tsv
 fi
 
-<<<<<<< HEAD
-=======
-if [[ ! -f ../pseudobulk_barcodes/$gnorts/just_barcodes.tsv ]]
-then
-cut -f 1 ../pseudobulk_barcodes/$gnorts/"$gnorts"_all_cell_barcodes.tsv > ../pseudobulk_barcodes/$gnorts/just_barcodes.tsv
-fi
->>>>>>> 8a5c77b783c5b63b0d7691a18aacc16be0338eef
 
-sbatch msi_passer.sh $gnorts
-sbatch kit_kat.sh $gnorts
-sbatch numbat.sh $gnorts
 
 if [[ $msi == "Y" ]]
 then

@@ -2,17 +2,8 @@
 #SBATCH --job-name="sc_msings"
 #SBATCH --output=../stdout_files/msings.out
 #SBATCH --error=../error_files/msings.error
-<<<<<<< HEAD
 #SBATCH --partition="normal","highmem","gpu"
 #SBATCH --mem=20G
-=======
-#SBATCH --partition="normal","highmem"
-#SBATCH --mem=20G
-
-module load Anaconda3
-
-conda activate msings
->>>>>>> 8a5c77b783c5b63b0d7691a18aacc16be0338eef
 
 #"multiplier" is the number of standard deviations from the baseline that is required to call instability
 multiplier=2.0
@@ -32,14 +23,6 @@ REF_GENOME=/data3/hanthony/reference_files/hg38.fa
 msings=/home/hanthony/bin/programs/msings/msi
 
 
-<<<<<<< HEAD
-=======
-if [[ ! -f $tumor.bai ]]
-then
-samtools index $tumor
-fi
-
->>>>>>> 8a5c77b783c5b63b0d7691a18aacc16be0338eef
 if [[ ! -f ../msings_results/"$gnorts"_cluster_"$num".MSI_Analysis.txt ]]
 then
 module load Anaconda3
@@ -48,12 +31,6 @@ conda activate msings
 mkdir -p ../temp/"$gnorts"_"$num"
 outdir=../temp/"$gnorts"_"$num"
 
-<<<<<<< HEAD
-=======
-mkdir -p ../temp/"$gnorts"_"$num"
-outdir=../temp/"$gnorts"_"$num"
-
->>>>>>> 8a5c77b783c5b63b0d7691a18aacc16be0338eef
 samtools mpileup -f $REF_GENOME -d 100000 -A -E -l $BEDFILE $tumor | awk '{if($4 >= 6) print $0}' > $outdir/$gnorts.mpileup
 
 $msings analyzer $outdir/$gnorts.mpileup $BEDFILE -o $outdir/$gnorts.msi.txt

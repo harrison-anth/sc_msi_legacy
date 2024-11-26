@@ -27,11 +27,7 @@ add_sensor2 <- function(s_obj,sample_name){
       temp15 <- fread(paste0('../sensor2_results/',sample_name,'_cluster_',num))
       cluster_info$msi[i] <- temp15$`%`
       cluster_info$tot_sites[i] <- temp15$Total_Number_of_Sites
-<<<<<<< HEAD
 	if(cluster_info$tot_sites[i] < 10 ){cluster_info$msi[i] <- NA}
-=======
-	if(cluster_info$tot_sites[i] < 5 ){cluster_info$msi[i] <- NA}
->>>>>>> 8a5c77b783c5b63b0d7691a18aacc16be0338eef
 }
 for(i in 1:nrow(s_obj[['sensor2']])){
   temp_name <- names(s_obj$sensor2[i])
@@ -56,11 +52,7 @@ cluster_info <- data.frame(clusters = sort(unique(cluster_info$V2)))
       temp15 <- fread(paste0('../pro_results/',sample_name,'_cluster_',num))
       cluster_info$msi[i] <- temp15$`%`
       cluster_info$tot_sites[i] <- temp15$Total_Number_of_Sites
-<<<<<<< HEAD
         if(cluster_info$tot_sites[i] < 10 ){cluster_info$msi[i] <- NA}
-=======
-        if(cluster_info$tot_sites[i] < 5 ){cluster_info$msi[i] <- NA}
->>>>>>> 8a5c77b783c5b63b0d7691a18aacc16be0338eef
 }
 for(i in 1:nrow(s_obj[['pro']])){
   temp_name <- names(s_obj$pro[i])
@@ -84,21 +76,13 @@ num <- cluster_info$clusters[i]
 temp <- fread(paste0('../msings_results/',sample_name,'_cluster_',num,'.MSI_Analysis.txt'))
 cluster_info$msi[i] <- temp[3,2]
 cluster_info$tot_sites[i] <- temp[2,2]
-<<<<<<< HEAD
 if(cluster_info$tot_sites[i] < 10 ){cluster_info$msi[i] <- NA}
-=======
-if(cluster_info$tot_sites[i] < 5 ){cluster_info$msi[i] <- NA}
->>>>>>> 8a5c77b783c5b63b0d7691a18aacc16be0338eef
 }
 for(i in 1:nrow(s_obj[['msings']])){
   temp_name <- names(s_obj$msings[i])
   temp_cluster <- as.numeric(as.character(s_obj$seurat_clusters[temp_name == names(s_obj$seurat_clusters)]))
   temp_msi_score <- filter(cluster_info, clusters == temp_cluster)
-<<<<<<< HEAD
    s_obj$msings[i] <- as.numeric(temp_msi_score$msi)*100
-=======
-   s_obj$msings[i] <- as.numeric(temp_msi_score$msi)
->>>>>>> 8a5c77b783c5b63b0d7691a18aacc16be0338eef
 
 }
 
@@ -135,7 +119,6 @@ s_obj$copykat[i] <- temp2$copykat.pred
 return(s_obj)
 }
 
-<<<<<<< HEAD
 add_muts <- function(s_obj,sample_name){
 cluster_info <- fread(paste0('../pseudobulk_barcodes/',sample_name,'/',sample_name,'_all_cell_barcodes.tsv'))
 cluster_info <- data.frame(clusters = sort(unique(cluster_info$V2)))
@@ -188,16 +171,12 @@ maf_mat_trim <- maf_mat[, colMaxs(maf_mat,na.rm=TRUE) > 15]
 s_obj <- AddMetaData(object=s_obj,metadata=maf_mat_trim)
 return(s_obj)
 }
-=======
-
->>>>>>> 8a5c77b783c5b63b0d7691a18aacc16be0338eef
 
 
 
 sample <- readRDS(paste0('../filtered_h5/',sample_name,'.rds'))
 
 
-<<<<<<< HEAD
 new_sample2 <- add_sensor2(sample,sample_name)
 #new_sample2 <- add_numbat(new_sample,sample_name)
 new_sample3 <- add_cc(new_sample2,sample_name)
@@ -207,14 +186,4 @@ new_sample6 <- add_muts2(new_sample5,sample_name)
 
 
 saveRDS(new_sample6, paste0('../annotated_h5/',sample_name,'.rds'))
-=======
-new_sample <- add_sensor2(sample,sample_name)
-new_sample2 <- add_numbat(new_sample,sample_name)
-new_sample3 <- add_cc(new_sample2,sample_name)
-new_sample4 <- add_pro(new_sample3,sample_name)
-new_sample5 <- add_msings(new_sample4,sample_name)
-
-
-saveRDS(new_sample5, paste0('../annotated_h5/',sample_name,'.rds'))
->>>>>>> 8a5c77b783c5b63b0d7691a18aacc16be0338eef
 

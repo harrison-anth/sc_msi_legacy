@@ -2,24 +2,14 @@
 #SBATCH --job-name=numbat
 #SBATCH --error=../error_files/numbat.error
 #SBATCH --output=../stdout_files/numbat.out
-<<<<<<< HEAD
 #SBATCH --partition="normal","highmem","gpu"
 #SBATCH --mem=30G
-=======
-#SBATCH --partition="normal","highmem"
-#SBATCH --mem=30G
-#SBATCH --cpus-per-task=10
-#SBATCH --ntasks=1
->>>>>>> 8a5c77b783c5b63b0d7691a18aacc16be0338eef
 
 #define variables
 gnorts=$1
 numbat=/data3/hanthony/.conda_envs/seurat/lib/R/library/numbat/bin/pileup_and_phase.R
 
-<<<<<<< HEAD
 SLURM_CPUS_PER_TASK=1
-=======
->>>>>>> 8a5c77b783c5b63b0d7691a18aacc16be0338eef
 
 if [[ ! -f ../numbat/"$gnorts"/"$gnorts"_allele_counts.tsv.gz ]]
 then

@@ -8,7 +8,6 @@
 
 samples=$1
 gnorts=$(sed "${SLURM_ARRAY_TASK_ID}q;d" ../manifests/$samples)
-<<<<<<< HEAD
 flavor=$2
 
 if [[ "$flavor" == "depth" ]]
@@ -26,16 +25,6 @@ then
 module load Anaconda3
 conda activate seurat
 Rscript annotate_h5.fast.1.R $gnorts
-=======
-
-if [[ ! -f ../annotated_h5/"$gnorts".rds ]]
-then
-module load Anaconda3
-conda activate seurat
-
-Rscript annotate_h5.R $gnorts
-
->>>>>>> 8a5c77b783c5b63b0d7691a18aacc16be0338eef
 fi
 elif [[ "$flavor" == "af" ]]
 then

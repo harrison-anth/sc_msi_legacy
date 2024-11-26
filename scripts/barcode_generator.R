@@ -117,14 +117,10 @@ sep='\t',col.names=FALSE,row.names=FALSE)
 }
 
 
-<<<<<<< HEAD
 #determine if sample is gsm or sra
 if(sample_name %in% gsm_key$sample_id){
 gsm=TRUE} else{gsm=FALSE}
 
 tryme <- process_data(sample_name,FALSE,gsm)
-=======
-tryme <- process_data(sample_name,FALSE)
->>>>>>> 8a5c77b783c5b63b0d7691a18aacc16be0338eef
 
 gen_barcodes(tryme)

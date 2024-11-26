@@ -3,11 +3,7 @@
 #set to Y to annotate exisiting
 first_run=N
 
-<<<<<<< HEAD
 annotate_mode=N
-=======
-annotate_mode=Y
->>>>>>> 8a5c77b783c5b63b0d7691a18aacc16be0338eef
 
 plot_mode=N
 
@@ -37,12 +33,8 @@ count=$(echo $(( $(wc -l < ../manifests/$samples) )))
 
 
 if [[ $first_run == "Y" ]]
-<<<<<<< HEAD
 then 
 sbatch --array 1-$count process_fastq.sh $samples $gsm
-=======
-then sbatch --array 10-$count%10 process_fastq.sh $samples
->>>>>>> 8a5c77b783c5b63b0d7691a18aacc16be0338eef
 fi
 
 #if [[ $annotate_mode == "Y" ]]
@@ -80,3 +72,4 @@ if [[ $integrate_cancer == "Y" ]]
 then
 sbatch --array 1-18 integrate_cancer.sh
 fi
+

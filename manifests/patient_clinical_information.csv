@@ -1,0 +1,64 @@
+dataset,patient.ID,Gender,Age at recruitment,MSS/MSI,Site,Sidedness,Group Stage,Stage TNM,iCMS.transcriptomic,iCMS.inferCNV,KRAS,BRAF,TP53,APC,PIK3CA,LymphNode,Normal,Tumor,CMS,test
+CRC-SG2,CRC-JSC-S02,M,47,MSI-H,Caecum,R,3,pT1N1(1/65 - ileocolic node)M0,iCMS3,iCMS3,wt,wt,wt,mut,wt,0,0,3,CMS3,IHC
+CRC-SG2,CRC-JSC-S03,F,59,MSI-H,Ascending colon,R,2,T3N0M0,iCMS3,iCMS3,wt,wt,wt,wt,mut,0,0,4,CMS3,IHC
+CRC-SG2,CRC-JSC-S04,F,65,MSS,Distal Sigmoid colon,L,3,T4bN2aM0,iCMS2,iCMS2,wt,wt,mut,mut,wt,0,0,2,NA,IHC
+CRC-SG2,CRC-JSC-S05,M,79,MSI-H,Caecum,R,2,mpT3N0M0,iCMS3,iCMS3,mut,mut,mut,wt,mut,0,0,2,CMS3,IHC
+CRC-SG2,CRC-JSC-S06,M,80,MSS,Rectum,L,3,T4aN1M0,iCMS2,iCMS2,mut,wt,mut,mut,wt,0,0,2,NA,IHC
+CRC-SG2,CRC-JSC-S07,M,66,MSS,Rectosigmoid,L,2,T3N0M0,iCMS2,iCMS2,wt,wt,mut,mut,wt,0,0,2,CMS2,IHC
+CRC-SG2,CRC-JSC-S08,M,64,MSS,Rectum,L,3,T3N1bM0,iCMS2,iCMS2,wt,wt,mut,wt,wt,0,0,2,CMS2,IHC
+CRC-SG2,CRC-JSC-S10,M,50,MSS,Caecum,R,2,T4aN0M0,iCMS3,iCMS3,wt,mut,mut,mut,mut,0,0,2,CMS3,IHC
+CRC-SG2,CRC-JSC-S12,F,79,MSS,Sigmoid colon,L,3,T4aN1bM0,iCMS2,iCMS2,wt,wt,wt,mut,wt,0,0,2,NA,IHC
+CRC-SG2,CRC-JSC-S13,M,72,MSS,Distal Ascending colon,R,3,T4aN1bMx,iCMS2,iCMS2,mut,wt,mut,mut,wt,0,0,2,NA,IHC
+CRC-SG2,CRC-JSC-S14,M,66,MSS,Rectum,L,3,ypT3N1bM0,iCMS2,iCMS2,wt,wt,mut,mut,wt,0,0,2,CMS3,IHC
+CRC-SG2,CRC-JSC-S15,M,72,MSS,Sigmoid colon,L,2,T3N0M0,iCMS2,iCMS2,mut,wt,mut,wt,wt,0,0,5,NA,IHC
+CRC-SG1,CRC2783,F,31,MSI-H,Transverse colon,R,3,T3N1b(2/62)M0 ,iCMS3,iCMS3,mut,wt,mut,mut,mut,1,1,4,CMS1,IHC
+CRC-SG1,CRC2786,M,68,MSS,Ascending colon,R,2,T3N0(0/30)M0 ,iCMS3,iCMS3,mut,wt,wt,wt,mut,0,1,4,CMS3,IHC
+CRC-SG1,CRC2787,F,61,MSS,Mid-rectum,L,2,T3N0(0/15)M0 ,iCMS3,iCMS3,mut,wt,wt,mut,wt,0,1,2,CMS1,IHC
+CRC-SG1,CRC2794,F,65,MSS,Descending colon,L,2,T3N0(0/27)M0 ,iCMS2,iCMS2,wt,wt,mut,mut,wt,0,1,4,CMS2,IHC
+CRC-SG1,CRC2795,M,58,MSS,Rectum,L,3,T4aN1a(1/23)M0 ,iCMS2,iCMS2,mut,wt,mut,mut,wt,0,1,4,CMS2,IHC
+CRC-SG1,CRC2801,M,50,MSS,Distal Descending colon,L,3,T4aN2b(14/49)M0 ,iCMS2,iCMS2,wt,wt,wt,mut,wt,1,1,4,CMS4,IHC
+CRC-SG1,CRC2803,M,60,MSS,Low rectum,L,3,T3N1a(1/31)M0 ,iCMS2,iCMS2,mut,wt,mut,mut,wt,0,1,4,CMS3,IHC
+CRC-SG1,CRC2810,F,76,MSS,Sigmoid colon,L,3,T4bN2b(12/30)M0 ,iCMS2,iCMS2,wt,wt,mut,mut,wt,0,1,4,CMS3,IHC
+CRC-SG1,CRC2811,M,63,MSS,Sigmoid colon,L,3,T3N2b(22/46)M0,iCMS2,iCMS2,wt,wt,mut,mut,wt,0,1,4,CMS2,IHC
+CRC-SG1,CRC2816,M,59,MSS,Upper rectum,L,3,T3N1b(2/22)M0 ,iCMS2,iCMS2,wt,wt,mut,mut,wt,1,1,4,CMS3,IHC
+CRC-SG1,CRC2817,M,67,MSI-H,Caecum,R,3,T4bN1b(3/71)M0 ,iCMS3,iCMS3,mut,wt,wt,wt,mut,2,1,8,CMS1,IHC
+CRC-SG1,CRC2821,F,NA,MSS,Ascending colon,R,3,T3N2b(26/61)M0 ,iCMS3,iCMS3,wt,mut,mut,wt,wt,0,0,1,CMS3,IHC
+CRC-SG1,CRC2841,M,64,MSS,Sigmoid colon,L,3,T4aN2b(8/102)M0 ,iCMS2,iCMS2,wt,wt,mut,mut,mut,2,1,7,CMS4,IHC
+CRC-SG1,CRC2899,F,76,MSS,Ascending colon,R,3,T3N1a(1/38)M0 ,iCMS2,iCMS2,NA,NA,NA,NA,NA,0,1,4,CMS2,IHC
+KUL3,SC001,F,81,MSI-H,Caecum,R,IIB,pT4aN0,iCMS3,iCMS3,wt,mut,wt,mut,NA,0,1,2,NA,PCR
+KUL3,SC019,F,86,MSS,Rectosigmoid,L,IIIB,pT3N1b,iCMS2,iCMS2,wt,wt,mut,mut,NA,0,1,2,CMS4,PCR
+KUL3,SC021,F,50,MSS,Sigmoid colon,L,IVA,pT4aN1aM1a,iCMS3,iCMS3,mut,wt,mut,mut,NA,0,1,2,CMS1,PCR
+KUL3,SC024,F,33,MSS,Sigmoid colon,L,II,pT3N0M0,iCMS2,iCMS2,mut,wt,mut,mut,NA,0,1,2,CMS4,PCR
+KUL3,SC027,M,81,MSS,Sigmoid colon,L,I,pT2N0M0,iCMS2,iCMS3,mut,wt,mut,wt,NA,0,1,2,CMS2,PCR
+KUL3,SC028,M,52,MSS,Sigmoid colon,L,IIA,pT3N0L1,iCMS2,iCMS2,wt,wt,mut,mut,NA,0,1,2,CMS2,PCR
+KUL3,SC029,F,77,MSS,Caecum,R,III,pT3N1M0,iCMS2,iCMS2,wt,wt,mut,mut,NA,0,1,1,CMS4,PCR
+KUL3,SC030,M,84,MSS,Ascending colon,R,IIA,pT3N0L1,iCMS2,iCMS2,mut,wt,mut,mut,NA,0,1,2,CMS2,PCR
+KUL3,SC031,M,85,MSS,Sigmoid colon,L,I,pT1N0,iCMS2,iCMS2,mut,wt,wt,mut,NA,0,1,2,CMS3,PCR
+KUL5,SC035,M,44,MSI-H,Ascending colon,R,II,T3N0M0,iCMS3,iCMS3,wt,wt,wt,mut,NA,1,1,2,CMS1,PCR
+KUL5,SC040,F,68,MSS,Ascending colon,R,II,T3N0M0,iCMS3,iCMS3,mut,wt,wt,mut,NA,1,2,4,NA,PCR
+KUL5,SC041,M,77,MSS,Rectosigmoid,L,III,T4N1M0,iCMS3,iCMS3,mut,mut,wt,mut,NA,0,1,2,CMS3,PCR
+KUL5,SC043,F,55,MSS,Sigmoid colon,L,III,T4N1M0,iCMS2,iCMS2,mut,wt,mut,mut,NA,0,1,2,CMS2,PCR
+KUL5,SC044,F,80,MSI-H,Caecum,R,III,T3N1M0,iCMS3,iCMS3,wt,wt,wt,wt,NA,0,2,3,CMS1,PCR
+SMC,SMC01,F,64,MSS,Rectum,L,IIA,T3N0M0,iCMS2,iCMS2,mut,wt,mut,mut,NA,0,1,1,CMS2,PCR
+SMC,SMC02,M,66,MSS,Rectum,L,IIIB,T3N1bM0,iCMS2,iCMS2,wt,wt,mut,mut,NA,0,1,1,CMS4,PCR
+SMC,SMC03,F,83,MSI-H,Hepatic Flexure,R,IIIC,T4bN2aM0,iCMS3,iCMS3,wt,mut,wt,mut,NA,0,1,1,CMS1,PCR
+SMC,SMC04,M,69,MSS,Sigmoid colon,L,IIIB,T3N1bM0,iCMS2,iCMS2,mut,wt,mut,mut,NA,0,1,1,CMS4,PCR
+SMC,SMC05,F,58,MSS,Ascending colon,R,IIA,T3N0M0,iCMS3,iCMS3,mut,wt,wt,mut,NA,0,1,1,NA,PCR
+SMC,SMC06,M,46,MSI-H,Hepatic Flexure,R,IIIB,T3N1bM0,iCMS3,iCMS3,mut,wt,wt,wt,NA,0,1,1,CMS1,PCR
+SMC,SMC07,F,67,MSS,Ascending colon,R,I,T2N0M0,iCMS2,iCMS2,mut,wt,mut,mut,NA,0,1,1,CMS2,PCR
+SMC,SMC08,M,68,MSS,Sigmoid colon,L,IIIB,T3N1bM0,iCMS2,iCMS2,wt,wt,mut,mut,NA,0,1,1,NA,PCR
+SMC,SMC09,M,75,MSS,Sigmoid colon,L,IIA,T3N0M0,iCMS2,iCMS2,wt,wt,mut,mut,NA,0,1,1,CMS2,PCR
+SMC,SMC10,F,77,MSI-H,Ascending colon,R,IIA,T3N0M0,iCMS3,iCMS3,wt,mut,wt,wt,NA,0,1,1,CMS4,PCR
+SMC,SMC11,F,38,MSS,Sigmoid colon,L,IIIA,T2N1aM0,iCMS2,iCMS2,wt,wt,mut,mut,NA,0,0,1,CMS2,PCR
+SMC,SMC14,M,77,MSS,Rectosigmoid,L,IIIB,T4aN1bM0,iCMS2,iCMS2,mut,wt,wt,wt,NA,0,0,1,CMS4,PCR
+SMC,SMC15,M,56,MSS,Sigmoid colon,L,IIA,T3N0M0,iCMS3,iCMS3,wt,wt,wt,mut,NA,0,0,1,CMS1,PCR
+SMC,SMC16,M,59,MSS,Ascending colon,R,IIIB,T4aN1bM0,iCMS3,iCMS3,wt,wt,wt,wt,NA,0,0,1,NA,PCR
+SMC,SMC17,M,47,MSS,Hepatic Flexure,R,IIIB,T4aN1bM0,iCMS3,iCMS3,wt,mut,wt,wt,NA,0,0,1,CMS4,PCR
+SMC,SMC18,F,63,MSS,Sigmoid colon,L,IIA,T3N0M0,iCMS2,iCMS2,wt,wt,mut,mut,NA,0,0,1,CMS2,PCR
+SMC,SMC19,F,80,MSS,Ascending colon,R,IIIB,T3N1M0,iCMS3,iCMS3,mut,wt,mut,mut,NA,0,0,1,CMS3,PCR
+SMC,SMC20,F,65,MSS,Ascending colon,R,IIIB,T4aN1cM0,iCMS3,iCMS3,mut,wt,mut,wt,NA,0,0,1,CMS4,PCR
+SMC,SMC21,M,51,MSS,Rectum,L,IVA,T3N1M1a,iCMS2,iCMS2,wt,wt,mut,mut,NA,0,0,1,CMS2,PCR
+SMC,SMC22,M,76,MSS,Sigmoid colon,L,IIIB,T3N1bM0,iCMS2,iCMS3,wt,mut,mut,mut,NA,0,0,1,CMS2,PCR
+SMC,SMC23,F,67,MSS,Ascending colon,R,IIIB,T3N1bM0,iCMS2,iCMS2,mut,wt,mut,mut,NA,0,0,1,CMS2,PCR
+SMC,SMC24,F,48,MSI-H,Ascending colon,R,I,T1N0M0,iCMS3,iCMS3,mut,wt,wt,mut,NA,0,0,1,CMS4,PCR
+SMC,SMC25,F,57,MSS,Sigmoid colon,L,IVA,T3N2bM1a,iCMS2,iCMS2,wt,wt,mut,mut,NA,0,0,1,CMS2,PCR

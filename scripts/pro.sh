@@ -6,7 +6,7 @@
 
 gnorts=$1
 num=$((SLURM_ARRAY_TASK_ID-1))
-baseline=../temp/pro_test_baseline.txt
+baseline=/data4/hanthony/tcga_msi_tools/baselines/pro_rna/scan_tcga_ms.bed_baseline
 tumor=../bam/$gnorts/$num.bam
 
 if [[ ! -f ../pro_results/"$gnorts"_cluster_"$num" ]]
