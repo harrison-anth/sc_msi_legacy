@@ -1,18 +1,19 @@
 #!/bin/bash
 
 #set to Y to annotate exisiting
-first_run=N
+first_run=Y
 
 annotate_mode=N
 
 plot_mode=N
 
-integrate_mode=Y
+integrate_mode=N
 
 integrate_cancer=N
 
 gsm=N
-	
+
+
 if [[ $gsm == "Y" ]]
 then
 #geo expression samples with treatment metadata
