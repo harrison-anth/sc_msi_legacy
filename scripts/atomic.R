@@ -28,7 +28,7 @@ sample_name <- as.character(argus[1])
 reticulate::use_python("/data3/hanthony/.conda_envs/atomic/bin/python3",required=T)
 sys <- import("sys")
 
-rds1 <- readRDS(paste0('/data4/hanthony/single_msi/filtered_h5/',sample_name,'.rds'))
+rds1 <- readRDS(paste0('../filtered_h5/',sample_name,'.rds'))
 
 
 sparse_matrix <- rds1@assays$RNA$counts

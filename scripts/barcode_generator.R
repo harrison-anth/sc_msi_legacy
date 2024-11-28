@@ -10,6 +10,7 @@ library(R.utils)
 
 argus <- (commandArgs(asValues=TRUE, excludeReserved=TRUE)[-1])
 sample_name <- as.character(argus[1])
+gsm <- as.character(argus[2])
 gsm_key <- fread('../manifests/final_gsm_key.tsv')
 
 
@@ -22,7 +23,7 @@ process_data <- function(sample_name,filter_norm,gsm){
   print(paste("Read in file",sample_name,sep=" "))
 
 
-if(gsm==TRUE){
+if(gsm=="Y"){
 indv_key <- filter(gsm_key, sample_id == sample_name)
 temp <- ReadMtx(
   mtx=paste0('../gsm_samps/',indv_key$file_prefix,'_matrix.mtx.gz'),
@@ -30,7 +31,7 @@ temp <- ReadMtx(
   features=paste0('../gsm_samps/',indv_key$file_prefix,'_features.tsv.gz')
 )
 
-} else if(gsm == FALSE){
+} else if(gsm == "N"){
   temp <- Read10X_h5(filename = paste0('/data4/hanthony/single_msi/cell_ranger_output/',sample_name,
 '/outs/filtered_feature_bc_matrix.h5'))
  # print(paste("Converting to Seurat object, filtering, and normalizing"))

@@ -25,7 +25,7 @@ conda activate seurat
 
 mkdir ../pseudobulk_barcodes/$gnorts
 
-Rscript barcode_generator.R $gnorts
+Rscript barcode_generator.R $gnorts $gsm
 
 fi
 
