@@ -44,7 +44,7 @@ if( ! ('pan_cancer_cluster' %in% colnames(results_temp))){results_temp$pan_cance
 
 rds2<- AddMetaData(rds1, results_temp)
 
-saveRDS(rds2,paste0('/data4/hanthony/single_msi/atomic/',sample_name,'.rds'))
+saveRDS(rds2,paste0('../atomic/',sample_name,'.rds'))
 
 #create cancer only barcodes
 

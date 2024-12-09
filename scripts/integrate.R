@@ -29,8 +29,34 @@ gsm <- as.character(argus[2])
 
 set.seed(seed = 152727)
 
-if(gsm == 'Y'){key <- fread('../manifests/final_gsm_key2.tsv',header=TRUE)
-} else if(gsm == 'N'){key <- fread('../manifests/final_key2.tsv',header=TRUE)}
+if(gsm == 'Y'){key <- fread('../manifests/final_gsm_key.tsv',header=TRUE)
+} else if(gsm == 'N'){key <- fread('../manifests/final_key.tsv',header=TRUE)}
+
+
+
+calc_msi_prop <- function(int_s_obj){
+
+msi_temp <- data.frame(cell_names = colnames(int_s_obj),clusters=int_s_obj$seurat_clusters,
+                        status=int_s_obj$sensor_rna_status)
+msi_temp$prop_msi <- NA
+
+for( i in levels(msi_temp$clusters)){
+if(nrow(filter(msi_temp, clusters == i & status == "MSI-H")) == 0){
+next} else{
+msi_temp$prop_msi[msi_temp$clusters == i] <- nrow(filter(msi_temp, clusters == i & status == "MSI-H"))/
+nrow(filter(msi_temp,clusters == i)))
+
+msi_temp$percent_msi <- round(msi_temp$prop_msi * 100,2)
+
+}
+}
+new_s_obj <- AddMetaData(int_s_obj,msi_temp,col.name='percent_msi')
+
+return(new_s_obj)
+
+}
+
+
 
 
 integrate_data <- function(sample_name){
@@ -87,6 +113,17 @@ integrated[["RNA"]] <- JoinLayers(integrated[["RNA"]])
 integrated <- integrated %>% FindNeighbors(., reduction = "integrated.cca", dims = 1:10) %>% 
 FindClusters(.,res=c(0.5), cluster.name = "integrated.clusters") %>% 
 RunUMAP(., dims=1:10, reduction= "integrated.cca", reduction.name = "integrated.umap")
+
+
+
+integrated <- calc_msi_prop(integrated)
+
+
+
+
+
+
+
 
 saveRDS(integrated, paste0('../integrated_samples/',sample_name,'.rds'))
 

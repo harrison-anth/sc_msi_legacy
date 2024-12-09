@@ -1,17 +1,18 @@
 #!/bin/bash
 
 #set to Y to annotate exisiting
-first_run=Y
+first_run=N
 
 annotate_mode=N
-
+	
 plot_mode=N
 
-integrate_mode=N
+
+integrate_mode=Y
 
 integrate_cancer=N
 
-gsm=N
+gsm=Y
 
 
 if [[ $gsm == "Y" ]]
