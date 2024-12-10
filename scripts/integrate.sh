@@ -40,4 +40,13 @@ Rscript plot_integrate.R $gnorts $gsm
 
 fi
 
-sbatch integrate2.sh $gnorts $gsm
+
+#for pseudobulk sensor-rna analysis
+
+sbatch sensor_rna.sh $gnorts
+
+
+
+
+
+

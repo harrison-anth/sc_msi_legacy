@@ -44,7 +44,7 @@ for( i in levels(msi_temp$clusters)){
 if(nrow(filter(msi_temp, clusters == i & status == "MSI-H")) == 0){
 next} else{
 msi_temp$prop_msi[msi_temp$clusters == i] <- nrow(filter(msi_temp, clusters == i & status == "MSI-H"))/
-nrow(filter(msi_temp,clusters == i)))
+nrow(filter(msi_temp,clusters == i))
 
 msi_temp$percent_msi <- round(msi_temp$prop_msi * 100,2)
 
@@ -118,14 +118,45 @@ RunUMAP(., dims=1:10, reduction= "integrated.cca", reduction.name = "integrated.
 
 integrated <- calc_msi_prop(integrated)
 
-
-
-
-
-
-
-
 saveRDS(integrated, paste0('../integrated_samples/',sample_name,'.rds'))
+
+###
+
+clustys <- AggregateExpression(integrated,return.seurat=TRUE,group.by=c('seurat_clusters'))
+ct_mat <- t(as.matrix(clustys@assays$RNA$counts))
+
+ct_mat <- as.data.frame(ct_mat) %>% rownames_to_column('SampleID')
+
+#create custom training data columns for pseudobulks
+
+pre_model <- fread ('/data4/hanthony/tcga_msi_tools/baselines/sensor_rna_files/model/demo/train.csv')
+
+common_names <- intersect(colnames(ct_mat),colnames(pre_model))
+
+new_model <- pre_model %>% select(all_of(c('SampleID','msi',common_names)))
+
+fwrite(new_model,paste0('../temp/',sample_name,'_training_model.csv'),sep=',')
+
+new_data <- ct_mat %>% select(all_of(c('SampleID',common_names)))
+
+new_data2 <- new_data[ rowSums(new_data[,2:ncol(new_data)]) >0, ]
+
+fwrite(new_data2,paste0('../temp/',sample_name,'.csv'),sep=',')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #now just the cancer
 #recluster
