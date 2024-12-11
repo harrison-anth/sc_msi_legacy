@@ -1,0 +1,120 @@
+---
+title: "12/10/24"
+author: "Harrison Anthony"
+date: "2024-12-10"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,warning = FALSE,message=FALSE,dev='png',dpi=300)
+```
+```{r libs-and-functions}
+
+#load libs
+library(Seurat)
+library(gridExtra)
+library(patchwork)
+library(tidyverse)
+library(scAnnotatR)
+library(data.table)
+library(cowplot)
+library(Nebulosa)
+library(ggpubr)
+library(R.utils)
+library(kableExtra)
+
+#set seed
+set.seed(seed = 152727)
+
+
+```
+
+
+
+```{r read-in-data,results='asis'}
+key <- fread('C:/Users/Harrison Anthony/Desktop/git_repos/sc_msi/manifests/combined_key.tsv')
+patients <- unique(key$patient_id)
+
+
+for(patient in patients){
+sample_info <- filter(key, patient_id == patient )
+if(! file.exists(paste0('E:/temp/newest_dir/',patient,'.rds')) | 
+  ! file.exists(paste0('E:/temp/newest_dir/',patient,'.rds')) |
+  patient == "P21"){next}
+else{
+ 
+if(nrow(sample_info) == 0){
+  sample_info <- data.frame(patient_id = sample,
+                            site ='tumor',
+                            filename = sample,
+                            msi_status = 'MSI-H',
+                            msi_test='IHC/PCR')
+} 
+  
+assign(x = 's_obj',value = readRDS(paste0('E:/temp/newest_dir/',patient,'.rds'))) 
+assign(x = 's_obj_cancer',value = readRDS(paste0('E:/temp/newest_dir/',patient,'_cancer.rds')))
+
+  
+  
+}
+
+
+#create centroid info for num of cells labelling
+cluster_counts <- table(Idents(s_obj))
+s_obj$cluster_counts <- s_obj$integrated.clusters
+temp <- as.numeric(levels(s_obj$cluster_counts))[s_obj$cluster_counts]
+z=0
+for(i in 1:length(cluster_counts)){
+temp[temp == z]  <- paste0('n= ',as.numeric(cluster_counts[i]))
+ z=z+1 
+}
+s_obj$cluster_counts <- temp
+
+#quickly add pseuduobulk data
+pseudobulk_status <- fread(paste0('C:/Users/Harrison Anthony/Desktop/git_repos/sc_msi/sensor_rna_results/',patient,'.txt'))
+pseudobulk_status$sample_id <- gsub(pattern = 'g',replacement = '',x = pseudobulk_status$sample_id)
+s_obj$pseudobulk_msi <- NA
+cluster_key <- data.frame(cells=colnames(s_obj),cluster=s_obj$seurat_clusters)
+
+for(i in 1:length(s_obj$pseudobulk_msi)){
+  cell <- cluster_key$cells[i]
+  cluster <- cluster_key$cluster[i]
+  temp <- filter(pseudobulk_status, sample_id == as.numeric(as.character(cluster)))
+#  if(nrow(temp)==0){next}
+  s_obj$pseudobulk_msi[i] <- temp$`probability_of_MSI-H`
+  
+  
+}
+
+
+
+
+
+
+
+
+
+p1 <- FeaturePlot(s_obj,features=c('sensor_rna_prob'),cols=c('blue','red')) +
+ ggtitle('Sensor RNA Score')
+p2 <- FeaturePlot(s_obj,features=c("percent_msi"),cols=c("blue","red"))+
+  ggtitle('Percent of Cells MSI-H')
+p3 <- FeaturePlot(s_obj,features=c("pseudobulk_msi"),cols=c("blue","red"))+
+  ggtitle('Pseudobulk Sensor RNA Score')
+
+p4 <- FeaturePlot(s_obj_cancer,features=c("sensor_rna_prob"),cols=c('blue','red'))+ggtitle('Recluster of cancer cells')
+
+grid.arrange(p1,p2)
+grid.arrange(p3,p4)
+
+}
+
+
+
+
+```
+
+
+
+
+
+
