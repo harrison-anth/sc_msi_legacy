@@ -31,8 +31,8 @@ temp <- ReadMtx(
   features=paste0('../gsm_samps/',indv_key$file_prefix,'_features.tsv.gz')
 )
 
-} else if(gsm == "N"){
-  temp <- Read10X_h5(filename = paste0('/data4/hanthony/single_msi/cell_ranger_output/',sample_name,
+} else if(gsm=="N"){
+  temp <- Read10X_h5(filename = paste0('../cell_ranger_output/',sample_name,
 '/outs/filtered_feature_bc_matrix.h5'))
  # print(paste("Converting to Seurat object, filtering, and normalizing"))
  } else{print('SAMPLE NAME ERROR')
@@ -119,8 +119,8 @@ sep='\t',col.names=FALSE,row.names=FALSE)
 
 
 #determine if sample is gsm or sra
-if(sample_name %in% gsm_key$sample_id){
-gsm=TRUE} else{gsm=FALSE}
+#if(sample_name %in% gsm_key$sample_id){
+#gsm=TRUE} else{gsm=FALSE}
 
 tryme <- process_data(sample_name,FALSE,gsm)
 

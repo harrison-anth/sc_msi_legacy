@@ -45,6 +45,8 @@ fi
 
 sbatch sensor_rna.sh $gnorts
 
+sbatch sensor_rna.sh "$gnorts"_cancer
+
 
 
 

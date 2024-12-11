@@ -143,21 +143,6 @@ new_data2 <- new_data[ rowSums(new_data[,2:ncol(new_data)]) >0, ]
 
 fwrite(new_data2,paste0('../temp/',sample_name,'.csv'),sep=',')
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #now just the cancer
 #recluster
 cancer_int <- subset(integrated,subset=pan_cancer_cluster == "Cancer")
@@ -170,7 +155,41 @@ FindClusters(., resolution = 0.8)
 
 saveRDS(cancer_fin, paste0('../integrated_samples/',sample_name,'_cancer.rds'))
 
+
+clustys <- AggregateExpression(cancer_fin,return.seurat=TRUE,group.by=c('seurat_clusters'))
+ct_mat <- t(as.matrix(clustys@assays$RNA$counts))
+
+ct_mat <- as.data.frame(ct_mat) %>% rownames_to_column('SampleID')
+
+#create custom training data columns for pseudobulks
+
+pre_model <- fread ('/data4/hanthony/tcga_msi_tools/baselines/sensor_rna_files/model/demo/train.csv')
+
+common_names <- intersect(colnames(ct_mat),colnames(pre_model))
+
+new_model <- pre_model %>% select(all_of(c('SampleID','msi',common_names)))
+
+fwrite(new_model,paste0('../temp/',sample_name,'_cancer_training_model.csv'),sep=',')
+
+new_data <- ct_mat %>% select(all_of(c('SampleID',common_names)))
+
+new_data2 <- new_data[ rowSums(new_data[,2:ncol(new_data)]) >0, ]
+
+fwrite(new_data2,paste0('../temp/',sample_name,'_cancer.csv'),sep=',')
+
+
+
+
+
+
+
 }
+
+
+
+
+
+
 
 integrate_data(sample_name)
 
