@@ -41,14 +41,13 @@ msi_temp <- data.frame(cell_names = colnames(int_s_obj),clusters=int_s_obj$seura
 msi_temp$prop_msi <- NA
 
 for( i in levels(msi_temp$clusters)){
-if(nrow(filter(msi_temp, clusters == i & status == "MSI-H")) == 0){
-next} else{
+#if(nrow(filter(msi_temp, clusters == i & status == "MSI-H")) == 0){
+#next} else{
 msi_temp$prop_msi[msi_temp$clusters == i] <- nrow(filter(msi_temp, clusters == i & status == "MSI-H"))/
 nrow(filter(msi_temp,clusters == i))
 
 msi_temp$percent_msi <- round(msi_temp$prop_msi * 100,2)
 
-}
 }
 new_s_obj <- AddMetaData(int_s_obj,msi_temp,col.name='percent_msi')
 
@@ -152,6 +151,10 @@ cancer_fin <- cancer_int %>% FindVariableFeatures(., selection.method = "vst", n
 ScaleData(.) %>%
 RunPCA(.) %>% RunUMAP(., dims = 1:30) %>% FindNeighbors(., dims = 1:30) %>%
 FindClusters(., resolution = 0.8)
+
+
+cancer_fin <- calc_msi_prop(cancer_fin)
+
 
 saveRDS(cancer_fin, paste0('../integrated_samples/',sample_name,'_cancer.rds'))
 
