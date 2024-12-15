@@ -1,0 +1,13 @@
+#load libs
+library(Seurat)
+library(RColorBrewer)
+library(gridExtra) 
+library(patchwork)
+library(tidyverse)
+library(scAnnotatR)
+library(data.table)
+library(cowplot)
+library(Nebulosa)
+library(ggpubr)
+library(R.utils)
+library(kableExtra)
