@@ -134,7 +134,7 @@ p2 <- FeaturePlot(s_obj,features=c("percent_msi"))+
 p3 <- FeaturePlot(s_obj,features=c("pseudobulk_msi"))+
   ggtitle('Pseudobulk sensor RNA score')+sc
 
-cancer_prob <- FeaturePlot(s_obj_cancer,features=c("sensor_rna_prob"))+
+cancer_prob <- FeaturePlot(s_obj_cancer,features=c("sensor_rna_prob"),label = TRUE)+
   ggtitle('Recluster of cancer cells')+sc
 cancer_pseudobulk <- FeaturePlot(s_obj_cancer,features=c("pseudobulk_msi"))+
   ggtitle('Cancer cells pseudobulk')+sc
@@ -181,7 +181,7 @@ Idents(s_obj_cancer) <- s_obj_cancer$sensor_rna_status
 
 diff_genes <- FindAllMarkers(s_obj_cancer,only.pos = FALSE) %>% filter(p_val_adj < 0.01) %>% head(50)
 heatmap2 <- DoHeatmap(s_obj_cancer,features = diff_genes$gene,label = FALSE)
-grid.arrange(heatmap1,heatmap2)
+grid.arrange(heatmap1,heatmap2,ncol=2)
 
 
 }
