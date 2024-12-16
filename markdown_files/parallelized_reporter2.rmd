@@ -1,8 +1,11 @@
 ---
 author: "Harrison Anthony"
-date: "2024-12-10"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: html_document
+params:
+  sample_id: ""
 ---
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE,warning = FALSE,message=FALSE,dev='png',dpi=300)
@@ -32,17 +35,14 @@ set.seed(seed = 152727)
 ```
 
 ```{r handle-args}
-argus <- (commandArgs(asValues=TRUE, excludeReserved=TRUE)[-1])
-sample_id <- as.character(argus[1])
+
+args <- params$sample_id
+sample_id <- args[1]
+
 ```
 
 ---
 title: `r sample_id`
-
-knit: (function(inputFile, encoding) {
-      rmarkdown::render(inputFile,
-                    encoding = encoding, 
-                    output_file = file.path(dirname(inputFile), 'myfile.html')) })
 ---
 
 
@@ -52,7 +52,6 @@ knit: (function(inputFile, encoding) {
 
 
 ```{r read-in-data}
-#output_file=`r paste0('../markdown_files/',sample_id,'.html')`)) }
 
 key <- fread('../manifests/combined_key.tsv')
 key <- filter(key, msi_status=='MSI-H')
@@ -133,7 +132,7 @@ for(i in 1:length(s_obj_cancer$pseudobulk_msi)){
 
 ```
 
-```{r plotting}
+```{r plotting,results='asis'}
 
 myPalette <- colorRampPalette(rev(brewer.pal(11, "Spectral")))
 sc <- scale_colour_gradientn(colours = myPalette(100), limits=c(0,1))
@@ -171,7 +170,7 @@ guides(colour = guide_legend(override.aes = list(size=1.6),ncol=1))+
 
 
 
-print(kable_styling(kable(sample_info)))
+kable_styling(kable(sample_info))
 
 grid.arrange(cell_types,p1,ncol=2,nrow=1)
 grid.arrange(p2,p3,ncol=2,nrow=1)
@@ -199,7 +198,8 @@ Idents(s_obj_cancer) <- s_obj_cancer$sensor_rna_status
 
 diff_genes <- FindAllMarkers(s_obj_cancer,only.pos = FALSE) %>% filter(p_val_adj < 0.01) %>% head(50)
 heatmap2 <- DoHeatmap(s_obj_cancer,features = diff_genes$gene,label = FALSE)
-grid.arrange(heatmap1,heatmap2,ncol=1,nrow=1)
+print(heatmap1)
+print(heatmap2)
 
 
 

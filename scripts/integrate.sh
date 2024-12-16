@@ -54,8 +54,8 @@ then
 module load Anaconda3
 conda activate seurat
 
-Rscript -e "rmarkdown::render('../markdown_files/parallelized_reporter.rmd')" $gnorts
-
+Rscript patient_report_generator.R $gnorts
+ 
 fi
 
 
