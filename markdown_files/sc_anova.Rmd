@@ -165,7 +165,7 @@ plot_list <- suppressWarnings(lapply(unique(final_df$patient_id),bp_n_tukey,tuke
 plot_list2 <- suppressWarnings(lapply(unique(final_df$patient_id),bp_n_tukey,tukey_try=TRUE))
 
 ggarrange(plotlist = plot_list,ncol = 3)
-ggarrange(plotlist = plotlist2,ncol=3)
+ggarrange(plotlist = plot_list2,ncol=3)
 
 
 #question: is the MSI-score different between the cancer clusters
