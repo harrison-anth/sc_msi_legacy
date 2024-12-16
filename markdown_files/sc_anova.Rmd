@@ -3,8 +3,8 @@ title: "SC-ANOVA"
 author: "Harrison Anthony"
 date: "2024-12-16"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 ---
 
 
@@ -26,7 +26,7 @@ library(Nebulosa)
 library(ggpubr)
 library(R.utils)
 library(kableExtra)
-library(report) # Load the package every time you start R
+library(gtools)
 
 
 #set seed
@@ -115,7 +115,7 @@ final_df$cluster <- as.numeric(as.character(final_df$cluster))
 ```
 ```{r plotter}
 
-bp_n_tukey <- function(patient){
+bp_n_tukey <- function(patient,tukey_try){
 #create boxplot for data vizz
 
 patient_df <- filter(final_df, patient_id == patient) 
@@ -151,21 +151,21 @@ bp <- ggplot(patient_df,aes(x=cluster,y=msi_score))+
 
 
 
-if(length(annotations)>0){
+if(length(annotations)>0 & tukey_try==TRUE){
 bp <- bp+ geom_signif(
   comparisons = comparisons,
   annotations = annotations,step_increase = 0.05,
   map_signif_level = TRUE,tip_length=.001,size = 0.001
 )}
-return(print(bp))
+return((bp))
 
 }
 
-plot_list <- suppressWarnings(lapply(unique(final_df$patient_id),bp_n_tukey))
+plot_list <- suppressWarnings(lapply(unique(final_df$patient_id),bp_n_tukey,tukey_try=FALSE))
+plot_list2 <- suppressWarnings(lapply(unique(final_df$patient_id),bp_n_tukey,tukey_try=TRUE))
 
-
-ggarrange(plotlist = plot_list)
-
+ggarrange(plotlist = plot_list,ncol = 3)
+ggarrange(plotlist = plotlist2,ncol=3)
 
 
 #question: is the MSI-score different between the cancer clusters
