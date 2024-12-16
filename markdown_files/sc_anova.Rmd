@@ -2,7 +2,9 @@
 title: "SC-ANOVA"
 author: "Harrison Anthony"
 date: "2024-12-16"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 
@@ -24,6 +26,8 @@ library(Nebulosa)
 library(ggpubr)
 library(R.utils)
 library(kableExtra)
+library(report) # Load the package every time you start R
+
 
 #set seed
 set.seed(seed = 152727)
@@ -36,7 +40,32 @@ set.seed(seed = 152727)
 key <- fread('C:/Users/Harrison Anthony/Desktop/git_repos/sc_msi/manifests/combined_key.tsv')
 key <- filter(key, msi_status=='MSI-H')
 patients <- unique(key$patient_id)
-patients <- 'P18'
+
+final_df <- data.frame()
+
+
+for(patient in patients){
+sample_info <- filter(key, patient_id == patient )
+if(! file.exists(paste0('E:/temp/newest_dir/',patient,'.rds')) | 
+  ! file.exists(paste0('E:/temp/newest_dir/',patient,'_cancer.rds')) |
+  patient == "P21"){next} else{
+ 
+if(nrow(sample_info) == 0){
+  sample_info <- data.frame(patient_id = sample,
+                            site ='tumor',
+                            filename = sample,
+                            msi_status = 'MSI-H',
+                            msi_test='IHC/PCR')
+} 
+  }
+
+
+  
+  
+  
+  
+  
+  
 treatment_meta_data <- fread('C:/Users/Harrison Anthony/Desktop/git_repos/sc_msi/manifests/final_gsm_key2.tsv')
 key$treatment <- NA
 for(i in 1:nrow(key)){
@@ -48,43 +77,9 @@ for(i in 1:nrow(key)){
 
 #start with just one patient
 
-patient <- 'P32' 
-
-
-assign(x = 's_obj',value = readRDS(paste0('E:/temp/newest_dir/',patient,'.rds'))) 
 assign(x = 's_obj_cancer',value = readRDS(paste0('E:/temp/newest_dir/',patient,'_cancer.rds')))
 
-  
-  
 
-
-
-#create centroid info for num of cells labelling
-cluster_counts <- table(Idents(s_obj))
-s_obj$cluster_counts <- s_obj$integrated.clusters
-temp <- as.numeric(levels(s_obj$cluster_counts))[s_obj$cluster_counts]
-z=0
-for(i in 1:length(cluster_counts)){
-temp[temp == z]  <- paste0('n= ',as.numeric(cluster_counts[i]))
- z=z+1 
-}
-s_obj$cluster_counts <- temp
-
-#quickly add pseuduobulk data
-pseudobulk_status <- fread(paste0('C:/Users/Harrison Anthony/Desktop/git_repos/sc_msi/sensor_rna_results/',patient,'.txt'))
-pseudobulk_status$sample_id <- gsub(pattern = 'g',replacement = '',x = pseudobulk_status$sample_id)
-s_obj$pseudobulk_msi <- NA
-cluster_key <- data.frame(cells=colnames(s_obj),cluster=s_obj$seurat_clusters)
-
-for(i in 1:length(s_obj$pseudobulk_msi)){
-  cell <- cluster_key$cells[i]
-  cluster <- cluster_key$cluster[i]
-  temp <- filter(pseudobulk_status, sample_id == as.numeric(as.character(cluster)))
-  if(nrow(temp)==0){next}
-  s_obj$pseudobulk_msi[i] <- temp$`probability_of_MSI-H`
-  
-  
-}
 #quickly add pseuduobulk data cancer
 pseudobulk_status_cancer <- fread(paste0('C:/Users/Harrison Anthony/Desktop/git_repos/sc_msi/sensor_rna_results/',patient,'_cancer.txt'))
 pseudobulk_status_cancer$sample_id <- gsub(pattern = 'g',replacement = '',x = pseudobulk_status_cancer$sample_id)
@@ -101,10 +96,17 @@ for(i in 1:length(s_obj_cancer$pseudobulk_msi)){
   
 }
 
-plot_me <- data.frame(patient_id=patient,
+temp_data <- data.frame(patient_id=patient,
                       cluster=s_obj_cancer$seurat_clusters,
                       msi_score=s_obj_cancer$sensor_rna_prob,
                       status=s_obj_cancer$sensor_rna_status)
+final_df <- rbind(final_df,temp_data)
+
+}
+
+final_df$cluster <- as.numeric(as.character(final_df$cluster))
+
+
 
 
 
@@ -112,8 +114,61 @@ plot_me <- data.frame(patient_id=patient,
 
 ```
 ```{r plotter}
-boxplot(msi_score~cluster,data = plot_me)
 
+bp_n_tukey <- function(patient){
+#create boxplot for data vizz
+
+patient_df <- filter(final_df, patient_id == patient) 
+
+patient_df$cluster <- as.character(patient_df$cluster)
+
+anova_result <- aov(msi_score ~ cluster,data = patient_df)
+f_statistic <- round(summary(anova_result)[[1]][["F value"]][1],2)
+
+
+
+tukey_result <- TukeyHSD(anova_result)
+tukey_summary <- as.data.frame(tukey_result$cluster)
+
+#find all cluster pairwise comparisons
+x=as.character(c(0:max(patient_df$cluster)))
+
+
+
+# Extract significant comparisons (p-value < 0.05)
+significant_comparisons <- rownames(tukey_summary)[tukey_summary$`p adj` < 0.005]
+
+comparisons <- str_split(significant_comparisons,pattern = '-')
+p_values <- tukey_summary$`p adj`[tukey_summary$`p adj` < 0.005]
+#annotations = signif(p_values, digits = 2)
+annotations <- stars.pval(p_values)
+
+
+
+bp <- ggplot(patient_df,aes(x=cluster,y=msi_score))+
+  geom_boxplot(fill='lightblue',color='black')+
+  labs(title=paste0(patient,' (F=',f_statistic,')'),x='Cluster',y='MSI score')+theme_minimal()
+
+
+
+if(length(annotations)>0){
+bp <- bp+ geom_signif(
+  comparisons = comparisons,
+  annotations = annotations,step_increase = 0.05,
+  map_signif_level = TRUE,tip_length=.001,size = 0.001
+)}
+return(print(bp))
+
+}
+
+plot_list <- suppressWarnings(lapply(unique(final_df$patient_id),bp_n_tukey))
+
+
+ggarrange(plotlist = plot_list)
+
+
+
+#question: is the MSI-score different between the cancer clusters
 
 
 
