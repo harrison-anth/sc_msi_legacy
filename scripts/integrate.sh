@@ -47,6 +47,16 @@ sbatch sensor_rna.sh $gnorts
 
 sbatch sensor_rna.sh "$gnorts"_cancer
 
+#generate report; will only work if above sensor-rna scripts were successful 
+
+if [[ ! -f ../reports/$gnorts.html ]]
+then
+module load Anaconda3
+conda activate seurat
+
+Rscript -e "rmarkdown::render('../markdown_files/parallelized_reporter.rmd')" $gnorts
+
+fi
 
 
 

@@ -1,0 +1,204 @@
+---
+author: "Harrison Anthony"
+date: "2024-12-10"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,warning = FALSE,message=FALSE,dev='png',dpi=300)
+```
+
+```{r libs-and-functions}
+
+#load libs
+library(Seurat)
+library(RColorBrewer)
+library(gridExtra)
+library(patchwork)
+library(tidyverse)
+library(scAnnotatR)
+library(data.table)
+library(cowplot)
+library(Nebulosa)
+library(ggpubr)
+library(R.utils)
+library(kableExtra)
+
+#set seed
+set.seed(seed = 152727)
+
+```
+
+```{r handle-args}
+argus <- (commandArgs(asValues=TRUE, excludeReserved=TRUE)[-1])
+sample_id <- as.character(argus[1])
+```
+
+---
+title: `r sample_id`
+---
+
+
+
+
+
+
+
+```{r read-in-data}
+key <- fread('../manifests/combined_key.tsv')
+key <- filter(key, msi_status=='MSI-H')
+treatment_meta_data <- fread('../manifests/final_gsm_key2.tsv')
+key$treatment <- NA
+for(i in 1:nrow(key)){
+  if(key$patient_id[i] %in% treatment_meta_data$patient_id){
+    treatment <- filter(treatment_meta_data, patient_id == key$patient_id[i]) %>% select('treatment')
+    key$treatment[i]<- treatment
+  }
+}
+
+
+patient=sample_id
+
+sample_info <- filter(key, patient_id == patient )
+if(! file.exists(paste0('../integrated_samples/',patient,'.rds')) | 
+  ! file.exists(paste0('../integrated_samples/',patient,'_cancer.rds'))
+){next} else{
+ 
+if(nrow(sample_info) == 0){
+  sample_info <- data.frame(patient_id = sample,
+                            site ='tumor',
+                            filename = sample,
+                            msi_status = 'MSI-H',
+                            msi_test='IHC/PCR')
+} 
+}
+assign(x = 's_obj',value = readRDS(paste0('../integrated_samples/',patient,'.rds'))) 
+assign(x = 's_obj_cancer',value = readRDS(paste0('../integrated_samples/',patient,'_cancer.rds')))
+
+  
+  
+
+
+
+#create centroid info for num of cells labelling
+cluster_counts <- table(Idents(s_obj))
+s_obj$cluster_counts <- s_obj$integrated.clusters
+temp <- as.numeric(levels(s_obj$cluster_counts))[s_obj$cluster_counts]
+z=0
+for(i in 1:length(cluster_counts)){
+temp[temp == z]  <- paste0('n= ',as.numeric(cluster_counts[i]))
+ z=z+1 
+}
+s_obj$cluster_counts <- temp
+
+#quickly add pseuduobulk data
+pseudobulk_status <- fread(paste0('../sensor_rna_results/',patient,'.txt'))
+pseudobulk_status$sample_id <- gsub(pattern = 'g',replacement = '',x = pseudobulk_status$sample_id)
+s_obj$pseudobulk_msi <- NA
+cluster_key <- data.frame(cells=colnames(s_obj),cluster=s_obj$seurat_clusters)
+
+for(i in 1:length(s_obj$pseudobulk_msi)){
+  cell <- cluster_key$cells[i]
+  cluster <- cluster_key$cluster[i]
+  temp <- filter(pseudobulk_status, sample_id == as.numeric(as.character(cluster)))
+  if(nrow(temp)==0){next}
+  s_obj$pseudobulk_msi[i] <- temp$`probability_of_MSI-H`
+  
+  
+}
+#quickly add pseuduobulk data cancer
+pseudobulk_status_cancer <- fread(paste0('../sensor_rna_results/',patient,'_cancer.txt'))
+pseudobulk_status_cancer$sample_id <- gsub(pattern = 'g',replacement = '',x = pseudobulk_status_cancer$sample_id)
+s_obj_cancer$pseudobulk_msi <- NA
+cluster_key_cancer <- data.frame(cells=colnames(s_obj_cancer),cluster=s_obj_cancer$seurat_clusters)
+
+for(i in 1:length(s_obj_cancer$pseudobulk_msi)){
+  cell <- cluster_key_cancer$cells[i]
+  cluster <- cluster_key_cancer$cluster[i]
+  temp <- filter(pseudobulk_status_cancer, sample_id == as.numeric(as.character(cluster)))
+ if(nrow(temp)==0){next}
+  s_obj_cancer$pseudobulk_msi[i] <- temp$`probability_of_MSI-H`
+  
+  
+}
+
+```
+
+```{r plotting}
+
+myPalette <- colorRampPalette(rev(brewer.pal(11, "Spectral")))
+sc <- scale_colour_gradientn(colours = myPalette(100), limits=c(0,1))
+sc2 <- scale_colour_gradientn(colours = myPalette(100), limits=c(0,10))
+
+
+
+
+
+
+
+p1 <- FeaturePlot(s_obj,features=c('sensor_rna_prob')) +
+ ggtitle('Sensor RNA score')+sc
+p2 <- FeaturePlot(s_obj,features=c("percent_msi"))+
+  ggtitle('Percent of cells MSI-H')+sc2
+p3 <- FeaturePlot(s_obj,features=c("pseudobulk_msi"))+
+  ggtitle('Pseudobulk sensor RNA score')+sc
+
+cancer_prob <- FeaturePlot(s_obj_cancer,features=c("sensor_rna_prob"),label = TRUE)+
+  ggtitle('Recluster of cancer cells')+sc
+cancer_pseudobulk <- FeaturePlot(s_obj_cancer,features=c("pseudobulk_msi"))+
+  ggtitle('Cancer cells pseudobulk')+sc
+
+cancer_percent <- FeaturePlot(s_obj_cancer,features=c("percent_msi"))+
+  ggtitle('Percent of cells MSI-H')+sc2
+cancer_tissue <- DimPlot(s_obj_cancer,group.by ='tissue')+ggtitle('Tissue contribution')
+
+
+
+cell_types <- DimPlot(s_obj, group.by = "pan_cancer_cluster",cols=c("red","blue"))+ ggtitle("Simplified cell types")+
+labs(fill="cell types")+
+guides(colour = guide_legend(override.aes = list(size=1.6),ncol=1))+ 
+  theme(legend.text=element_text(size=7))
+
+
+
+
+print(kable_styling(kable(sample_info)))
+
+grid.arrange(cell_types,p1,ncol=2,nrow=1)
+grid.arrange(p2,p3,ncol=2,nrow=1)
+#top = textGrob("Daily QC: Blue",gp=gpar(fontsize=20,font=3)))
+grid.arrange(cancer_prob,cancer_pseudobulk,cancer_percent,cancer_tissue,ncol=2)
+
+
+#differentially expressed cancer clusters
+de_cancer <- FindAllMarkers(s_obj_cancer,only.pos = FALSE) %>% filter(p_val_adj < 0.01)
+
+#look at top 5 differentially expressed
+top5 = matrix(ncol=7)
+colnames(top5) = colnames(de_cancer)
+for(i in 0:(length(levels(factor(s_obj_cancer$seurat_clusters)))-1)){
+top5 = rbind(top5, head(de_cancer[which(de_cancer$cluster==i),], 5))
+}
+top5=top5[-1,]
+
+
+
+heatmap1 <- DoHeatmap(s_obj_cancer,features = top5$gene)
+
+#find differentially expressed genes between msi-h and mss cells
+Idents(s_obj_cancer) <- s_obj_cancer$sensor_rna_status
+
+diff_genes <- FindAllMarkers(s_obj_cancer,only.pos = FALSE) %>% filter(p_val_adj < 0.01) %>% head(50)
+heatmap2 <- DoHeatmap(s_obj_cancer,features = diff_genes$gene,label = FALSE)
+grid.arrange(heatmap1,heatmap2,ncol=2)
+
+
+
+
+```
+
+
+
+
+
+

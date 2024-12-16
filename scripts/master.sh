@@ -12,7 +12,7 @@ integrate_mode=Y
 
 integrate_cancer=N
 
-gsm=N
+gsm=Y
 
 
 if [[ $gsm == "Y" ]]
