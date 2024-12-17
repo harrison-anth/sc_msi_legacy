@@ -3,8 +3,8 @@ title: "SC-ANOVA"
 author: "Harrison Anthony"
 date: "2024-12-16"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 
 
@@ -113,9 +113,9 @@ final_df$cluster <- as.numeric(as.character(final_df$cluster))
 
 
 ```
-```{r plotter}
+```{r plotter,results='hide',fig.keep='all'}
 
-bp_n_tukey <- function(patient,tukey_try){
+box_plot <- function(patient,tukey_try){
 #create boxplot for data vizz
 
 patient_df <- filter(final_df, patient_id == patient) 
@@ -158,6 +158,23 @@ bp <- bp+ geom_signif(
   map_signif_level = TRUE,tip_length=.001,size = 0.001
 )}
 return((bp))
+
+}
+tukey_plot <- function(patient){
+#create boxplot for data vizz
+
+patient_df <- filter(final_df, patient_id == patient) 
+
+patient_df$cluster <- as.character(patient_df$cluster)
+
+anova_result <- aov(msi_score ~ cluster,data = patient_df)
+f_statistic <- round(summary(anova_result)[[1]][["F value"]][1],2)
+
+
+
+tukey_result <- TukeyHSD(anova_result)
+plot <- plot(tukey_result)
+return((plot))
 
 }
 

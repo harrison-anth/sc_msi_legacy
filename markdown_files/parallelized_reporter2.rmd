@@ -28,9 +28,81 @@ library(Nebulosa)
 library(ggpubr)
 library(R.utils)
 library(kableExtra)
+library(gtools)
+
 
 #set seed
 set.seed(seed = 152727)
+
+#anova boxplot function
+
+box_plot <- function(patient,tukey_try){
+#create boxplot for data vizz
+
+patient_df <- filter(final_df, patient_id == patient) 
+
+patient_df$cluster <- as.character(patient_df$cluster)
+
+anova_result <- aov(msi_score ~ cluster,data = patient_df)
+f_statistic <- round(summary(anova_result)[[1]][["F value"]][1],2)
+
+
+
+tukey_result <- TukeyHSD(anova_result)
+tukey_summary <- as.data.frame(tukey_result$cluster)
+
+#find all cluster pairwise comparisons
+x=as.character(c(0:max(patient_df$cluster)))
+
+
+
+# Extract significant comparisons (p-value < 0.05)
+significant_comparisons <- rownames(tukey_summary)[tukey_summary$`p adj` < 0.005]
+
+comparisons <- str_split(significant_comparisons,pattern = '-')
+p_values <- tukey_summary$`p adj`[tukey_summary$`p adj` < 0.005]
+#annotations = signif(p_values, digits = 2)
+annotations <- stars.pval(p_values)
+
+
+
+bp <- ggplot(patient_df,aes(x=cluster,y=msi_score))+
+  geom_boxplot(fill='lightblue',color='black')+
+  labs(title=paste0(patient,' (F=',f_statistic,')'),x='Cluster',y='MSI score')+theme_minimal()
+
+
+
+if(length(annotations)>0 & tukey_try==TRUE){
+bp <- bp+ geom_signif(
+  comparisons = comparisons,
+  annotations = annotations,step_increase = 0.05,
+  map_signif_level = TRUE,tip_length=.001,size = 0.001
+)}
+return((bp))
+
+}
+
+tukey_plot <- function(patient){
+#create boxplot for data vizz
+
+patient_df <- filter(final_df, patient_id == patient) 
+
+patient_df$cluster <- as.character(patient_df$cluster)
+
+anova_result <- aov(msi_score ~ cluster,data = patient_df)
+f_statistic <- round(summary(anova_result)[[1]][["F value"]][1],2)
+
+
+
+tukey_result <- TukeyHSD(anova_result)
+plot <- plot(tukey_result)
+return((plot))
+
+}
+
+
+
+
 
 ```
 
@@ -130,9 +202,20 @@ for(i in 1:length(s_obj_cancer$pseudobulk_msi)){
   
 }
 
+
+#final df needed to plot tukey and anova
+final_df <- data.frame(patient_id=patient,
+                      cluster=s_obj_cancer$seurat_clusters,
+                      msi_score=s_obj_cancer$sensor_rna_prob,
+                      status=s_obj_cancer$sensor_rna_status)
+final_df$cluster <- as.numeric(as.character(final_df$cluster))
+
+
+
+
 ```
 
-```{r plotting,results='asis'}
+```{r plotting,results='hide',fig.keep='all'}
 
 myPalette <- colorRampPalette(rev(brewer.pal(11, "Spectral")))
 sc <- scale_colour_gradientn(colours = myPalette(100), limits=c(0,1))
@@ -198,8 +281,14 @@ Idents(s_obj_cancer) <- s_obj_cancer$sensor_rna_status
 
 diff_genes <- FindAllMarkers(s_obj_cancer,only.pos = FALSE) %>% filter(p_val_adj < 0.01) %>% head(50)
 heatmap2 <- DoHeatmap(s_obj_cancer,features = diff_genes$gene,label = FALSE)
+
 print(heatmap1)
 print(heatmap2)
+
+print(box_plot(patient,tukey_try=FALSE))
+print(tukey_plot(patient))
+
+
 
 
 
