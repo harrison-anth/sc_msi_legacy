@@ -95,7 +95,8 @@ f_statistic <- round(summary(anova_result)[[1]][["F value"]][1],2)
 
 
 tukey_result <- TukeyHSD(anova_result)
-plot <- plot(tukey_result)
+plot(tukey_result,las=1,col = ifelse(tukey_result[,4]<0.05,'red','black'))
+
 return((plot))
 
 }

@@ -167,13 +167,14 @@ patient_df <- filter(final_df, patient_id == patient)
 
 patient_df$cluster <- as.character(patient_df$cluster)
 
-anova_result <- aov(msi_score ~ cluster,data = patient_df)
-f_statistic <- round(summary(anova_result)[[1]][["F value"]][1],2)
-
-
+anova_result <- aov(msi_score ~ as.factor(cluster),data = patient_df)
 
 tukey_result <- TukeyHSD(anova_result)
-plot <- plot(tukey_result)
+plot(tukey_result,las=1,col = ifelse(tukey_result[,4]<0.05,'red','black'))
+
+
+
+
 return((plot))
 
 }
