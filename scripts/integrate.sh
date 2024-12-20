@@ -52,7 +52,7 @@ sbatch sensor_rna.sh "$gnorts"_cancer
 if [[ ! -f ../reports/$gnorts.html ]]
 then
 module load Anaconda3
-conda activate seurat
+conda activate atomic
 
 Rscript patient_report_generator.R $gnorts
  

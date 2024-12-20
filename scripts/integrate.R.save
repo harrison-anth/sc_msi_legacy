@@ -41,8 +41,7 @@ msi_temp <- data.frame(cell_names = colnames(int_s_obj),
                         status=int_s_obj$sensor_rna_status)
 msi_temp$prop_msi <- NA
 
-for( i in 0:max(msi_temp$clusters)){
-
+for( i in levels(msi_temp$clusters)){
 
 msi_temp$prop_msi[msi_temp$clusters == i] <- nrow(filter(msi_temp, clusters == i & status == "MSI-H"))/
 nrow(filter(msi_temp,clusters == i))
