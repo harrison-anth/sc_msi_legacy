@@ -59,7 +59,7 @@ return(new_s_obj)
 calc_cancer_prop <- function(int_s_obj){
 cancer_temp <- data.frame(cell_names = colnames(int_s_obj),
                         clusters=as.numeric(as.character(int_s_obj$seurat_clusters)),
-                        cancer_cell=as.character(int_s_obj$pan_cancer_cluster)
+                        cancer_cell=as.character(int_s_obj$pan_cancer_cluster))
 cancer_temp$prop_cancer <- NA
 for( i in 0:max(cancer_temp$clusters)){
 cancer_temp$prop_cancer[cancer_temp$clusters == i] <- nrow(filter(msi_temp, clusters == i & cancer_cell == "Cancer"))/
