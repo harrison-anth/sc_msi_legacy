@@ -15,6 +15,7 @@ integrate_cancer=N
 gsm=N
 
 
+
 if [[ $gsm == "Y" ]]
 then
 #geo expression samples with treatment metadata
