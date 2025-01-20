@@ -46,15 +46,44 @@ for( i in 0:max(msi_temp$clusters)){
 
 msi_temp$prop_msi[msi_temp$clusters == i] <- nrow(filter(msi_temp, clusters == i & status == "MSI-H"))/
 nrow(filter(msi_temp,clusters == i))
+}
+
 
 msi_temp$percent_msi <- round(msi_temp$prop_msi * 100,2)
 
-}
 new_s_obj <- AddMetaData(int_s_obj,msi_temp,col.name='percent_msi')
 
 return(new_s_obj)
 
 }
+
+calc_cancer_prop <- function(int_s_obj){
+cancer_temp <- data.frame(cell_names = colnames(int_s_obj),
+                        clusters=as.numeric(as.character(int_s_obj$seurat_clusters)),
+                        cancer_cell=as.character(int_s_obj$pan_cancer_cluster))
+cancer_temp$prop_cancer <- NA
+for( i in 0:max(cancer_temp$clusters)){
+cancer_temp$prop_cancer[cancer_temp$clusters == i] <- nrow(filter(cancer_temp, clusters == i & cancer_cell == "Cancer"))/
+nrow(filter(cancer_temp,clusters == i))
+}
+
+cancer_temp$percent_cancer <- round(cancer_temp$prop_cancer * 100,2)
+
+
+new_s_obj <- AddMetaData(int_s_obj,cancer_temp,col.name='percent_cancer')
+
+return(new_s_obj)
+
+}
+
+
+
+
+
+
+
+
+
 
 
 
@@ -144,8 +173,15 @@ new_data2 <- new_data[ rowSums(new_data[,2:ncol(new_data)]) >0, ]
 fwrite(new_data2,paste0('../temp/',sample_name,'.csv'),sep=',')
 
 #now just the cancer
+#get percent of cancer cells for each integrated cluster
+integrated <- subset(integrated, subset=tissue != "Normal" & tissue != "normal")
+
+int_ant <- calc_cancer_prop(integrated)
+cancer_int <- subset(int_ant,subset=pan_cancer_cluster == "Cancer" & percent_cancer >= 70)
+cancer_int <- calc_msi_prop(cancer_int)
+
 #recluster
-cancer_int <- subset(integrated,subset=pan_cancer_cluster == "Cancer")
+
 DefaultAssay(cancer_int) <- "RNA"
 cancer_fin <- cancer_int %>% FindVariableFeatures(., selection.method = "vst", nfeatures = 2000) %>%
 #ScaleData(., vars.to.regress = c("percent.mt")) %>%
@@ -154,7 +190,6 @@ RunPCA(.) %>% RunUMAP(., dims = 1:30) %>% FindNeighbors(., dims = 1:30) %>%
 FindClusters(., resolution = 0.8)
 
 
-cancer_fin <- calc_msi_prop(cancer_fin)
 
 
 saveRDS(cancer_fin, paste0('../integrated_samples/',sample_name,'_cancer.rds'))
