@@ -1,0 +1,135 @@
+# workflow - SC-MSI
+
+
+
+configfile: "Snakemake_config.yaml"
+
+
+
+samples = ["sample{i}" for i in range(1, 2)]
+
+
+#rule all:
+#    input:
+#        expand("../output/{sample_name}",
+#	      sample_name=samples)
+rule all:
+    input:
+        expand("../output/{sample_name}/representative_sequences.qza",sample_name=samples)
+
+#rule all:
+#     input:
+#        expand("../final_tables/{sample_name}_super_table.tsv",
+#        sample_name=samples)
+
+#rule all:
+#     input:
+#        expand("../taxonomies/{sample_name}.qza",
+#        sample_name=samples)
+
+
+
+rule import_sequences:
+    input:
+        manifest="../manifests/{sample_name}_manifest.tsv"
+    output:
+        demux_qza="../output/{sample_name}.demux.qza"
+    params:
+        phred="PairedEndFastqManifestPhred33V2"  # Optional parameter
+    shell:
+        """
+        qiime tools import --type 'SampleData[PairedEndSequencesWithQuality]' \
+        --input-path {input.manifest} \
+        --output-path {output.demux_qza} \
+        --input-format {params.phred}
+        """
+
+rule dada2:
+    input:
+        seq = rules.import_sequences.output.demux_qza
+    output:
+       # dir = directory("../output/{sample_name}")
+        "../output/{sample_name}/representative_sequences.qza"
+
+    threads: workflow.cores * 1/len(samples)
+    shell:
+        """
+        qiime dada2 denoise-paired \
+        --i-demultiplexed-seqs {input.seq} \
+        --p-trunc-len-f 250 \
+	--p-trunc-len-r 240 \
+	--p-max-ee-f 2 \
+	--p-max-ee-r 4 \
+	--p-n-reads-learn 1000000 \
+	--p-chimera-method pooled \
+	--output-dir "../output/{wildcards.sample_name}" \
+        --p-n-threads {threads}
+        """
+
+rule filt_viz:
+    input:
+        noise_stats="../output/{sample_name}/denoising_stats.qza"
+    output:
+        viz="../output/{sample_name}/denoising_stats.qza.gzv"
+    shell:
+        """
+        qiime metadata tabulate \
+        --m-input-file {input.noise_stats} \
+        --o-visualization ../output/{wildcards.sample_name}/denoising_stats.qza
+        """
+
+rule classify:
+    input:
+        sequences="../output/{sample_name}/representative_sequences.qza"
+    output:
+        taxa=directory("../taxonomies/{sample_name}")
+    shell:
+        """
+        qiime feature-classifier classify-sklearn \
+        --i-classifier ../input/new_classifier.qza \
+        --i-reads {input.sequences} \
+        --o-classification {output.taxa}
+        """
+
+rule export_tables:
+    input:
+        feature_table="../output/{sample_name}/table.qza",
+        taxonomy_table="../taxonomies/{sample_name}.qza"
+    output:
+        feature_fin="../output/{sample_name}/table.tsv",
+        taxonomy_fin=directory("../taxonomies/{sample_name}")
+    shell:
+        """
+#export feature table
+        qiime tools export \
+        --input-path {input.feature_table} \
+        --output-path ../feature_tables/{wildcards.sample_name}
+
+#change feature table format
+        biom convert \
+        -i ../feature_tables/{wildcards.sample_name}/feature-table.biom \
+        -o {output.feature_fin} --to-tsv
+
+#export taxonomy
+        qiime tools export \
+        --input-path {input.taxonomy_table} \
+        --output-path {output.taxonomy_fin}
+        """
+rule super_table:
+    input:
+        taxonomy_in = "../taxonomies/{sample_name}/taxonomy.tsv",
+        feature_in = "../output/{sample_name}/table.tsv"
+    output:
+        super_table = "../final_tables/{sample_name}_super_table.tsv"
+    shell:
+         """
+#create super table for aideen and john
+            cut -f 2,3 {input.taxonomy_in} > ../taxonomies/{sample_name}/taxonomy_join.tsv
+            tail -n +2 {input.feature_in} > ../output/{sample_name}/table_prepped.tsv
+            paste ../taxonomies/{sample_name}/taxonomy_join.tsv ../output/{sample_name}/table_prepped.tsv \
+            > {output.super_table}
+         """
+
+
+
+

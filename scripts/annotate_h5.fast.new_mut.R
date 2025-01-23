@@ -143,6 +143,8 @@ copykat <- fread(paste0('../copy_kat_results/',sample_name,'_copykat_prediction.
 s_obj[['copykat']] <- NA 
 for (i in 1:length(names(s_obj$copykat))){
 temp2 <- filter(copykat, cell.names == names(s_obj$copykat[i]))
+if(nrow(temp2) ==0){next}
+
 s_obj$copykat[i] <- temp2$copykat.pred
 }
 return(s_obj)
@@ -219,27 +221,27 @@ return(s_obj)
 sample <- readRDS(paste0('../filtered_h5/',sample_name,'.rds'))
 
 
-#new_sample <- add_sensor2(sample,sample_name)
-#new_sample2 <- add_numbat(new_sample,sample_name)
-#new_sample3 <- add_cc(new_sample,sample_name)
-#new_sample4 <- add_pro(new_sample3,sample_name)
-#new_sample5 <- add_msings(new_sample4,sample_name)
-#new_sample6 <- add_muts2(new_sample5,sample_name)
-new_sample7 <- add_sensor_rna(sample,sample_name)
+new_sample <- add_sensor2(sample,sample_name)
+new_sample <- add_numbat(new_sample,sample_name)
+new_sample <- add_cc(new_sample,sample_name)
+new_sample <- add_pro(new_sample,sample_name)
+#new_sample <- add_msings(new_sample,sample_name)
+#new_sample <- add_muts2(new_sample,sample_name)
+new_sample <- add_sensor_rna(new_sample,sample_name)
 #new_sample8 <- add_premsim(new_sample7,sample_name)
 
 #add big picture things
 
-new_sample7[['sample_name']] <- sample_name
+new_sample[['sample_name']] <- sample_name
 
 new_key <- fread('../manifests/combined_key.tsv')
 sample_info <- filter(new_key, filename == sample_name)
 
-new_sample7[['tissue']] <- sample_info$site
+new_sample[['tissue']] <- sample_info$site
 
 
 
-saveRDS(new_sample7, paste0('../annotated_h5/',sample_name,'.rds'))
+saveRDS(new_sample, paste0('../annotated_h5/',sample_name,'.rds'))
 
 
 

@@ -1,0 +1,4 @@
+# Config file for SC-MSI Snakemake file
+
+# edit the following parameters below. Note the curent sample list must consist of matrix (mtx) files.
+sample_list:

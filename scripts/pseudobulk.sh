@@ -9,9 +9,9 @@ gnorts=$1
 gsm=$2
 
 #run numbat?
-numbat=N
+numbat=Y
 #run copykat?
-copykat=N
+copykat=Y
 #run atomic?
 atomic=Y
 #run msi tools?
@@ -29,7 +29,7 @@ Rscript barcode_generator.R $gnorts $gsm
 
 fi
 
-if [[ $gsm == "Y" ]]
+if [[ $gsm == "N" ]]
 then
 
 if [[ ! -d ../bam/$gnorts/ ]]
@@ -47,10 +47,13 @@ i=1
 
 for bam in $(ls -v ../bam/$gnorts/*.bam)
 do
-samtools index $bam
 
 samtools view -H $bam  | sed "s/SM:[^\t]*/SM:$gnorts.$i/g" | samtools reheader - $bam > $bam.bam
 mv $bam.bam $bam
+
+samtools index $bam
+
+
 
 i=$(( $i+1 ))
 
@@ -69,11 +72,11 @@ fi
 
 if [[ $msi == "Y" ]]
 then
-sbatch msi_passer.sh $gnorts
+sbatch msi_passer.sh $gnorts $gsm
 fi
 if [[ $copykat == "Y" ]]
 then
-sbatch kit_kat.sh $gnorts
+sbatch kit_kat.sh $gnorts $gsm
 fi
 if [[ $numbat == "Y" ]]
 then

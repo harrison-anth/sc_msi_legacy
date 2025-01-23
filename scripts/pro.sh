@@ -14,9 +14,9 @@ then
 module load Anaconda3
 conda activate pro
 msisensor-pro pro -d $baseline -t $tumor -o ../pro_results/"$gnorts"_cluster_"$num"
-#rm ../pro_results/"$gnorts"_cluster_"$num"_unstable
-#rm ../pro_results/"$gnorts"_cluster_"$num"_all
-#rm ../pro_results/"$gnorts"_cluster_"$num"_dis
+rm ../pro_results/"$gnorts"_cluster_"$num"_unstable
+rm ../pro_results/"$gnorts"_cluster_"$num"_all
+rm ../pro_results/"$gnorts"_cluster_"$num"_dis
 
 fi
 

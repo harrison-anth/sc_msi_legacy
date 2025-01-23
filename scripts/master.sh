@@ -1,18 +1,18 @@
 #!/bin/bash
 
 #set to Y to annotate exisiting
-first_run=N
+first_run=Y
 
 annotate_mode=N
 	
 plot_mode=N
 
 
-integrate_mode=Y
+integrate_mode=N
 
 integrate_cancer=N
 
-gsm=Y
+gsm=N
 
 
 
@@ -48,8 +48,10 @@ fi
 
 if [[ $annotate_mode == "Y" ]]
 then
+
 flavor=depth
 sbatch --array 1-$count annotate_h5.sh $samples $flavor
+
 fi
 
 #if [[ $annotate_mode == "Y" ]]
@@ -62,6 +64,7 @@ if [[ $plot_mode == "Y" ]]
 then
 
 sbatch --array 1-$count plot_all.sh $samples
+
 fi
 
 if [[ $integrate_mode == "Y" ]]

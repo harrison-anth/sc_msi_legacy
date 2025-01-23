@@ -17,16 +17,16 @@ s_obj <- readRDS(paste0('../filtered_h5/',sample_name,'.rds'))
 ct_mat <- t(as.matrix(s_obj@assays$RNA$counts))
 
 
-#msi_results <- msi_pre(ct_mat[,c(colnames(input_data))])
+msi_results <- msi_pre(ct_mat[,c(colnames(input_data))])
 
-#prob <- attributes(msi_results$MSI_status)
+prob <- attributes(msi_results$MSI_status)
 
-#s_obj$premsim_prob <- prob$prob
+s_obj$premsim_prob <- prob$prob
 
-#attr(msi_results$MSI_status, "prob") <- NULL
-#s_obj$premsim_status <- msi_results$MSI_status
+attr(msi_results$MSI_status, "prob") <- NULL
+s_obj$premsim_status <- msi_results$MSI_status
 
-#saveRDS(s_obj, paste0('../premsim/',sample_name,'_premsim.rds'))
+saveRDS(s_obj, paste0('../premsim/',sample_name,'_premsim.rds'))
 
 
 #for sensor_rna

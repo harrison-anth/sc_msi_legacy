@@ -4,11 +4,12 @@
 #SBATCH --partition="normal","highmem","gpu"
 
 gnorts=$1
+gsm=$2
 
 #which tools
-pro=N
-msings=N
-sensor2=N
+pro=Y
+msings=Y
+sensor2=Y
 premsim=Y
 
 
@@ -18,22 +19,22 @@ vcf=N
 
 count=$(ls ../bam/"$gnorts"/*.bam | wc -l )
 
-if [[ $sensor2 == "Y" ]]
+if [[ "$sensor2" == "Y" -a "$gsm" == "N"  ]]
 then
 sbatch --array 1-$count sensor2.sh $gnorts
 fi
 
-if [[ $msings == "Y" ]]
+if [[ $msings == "Y" -a "$gsm" == "N" ]]
 then
 sbatch --array 1-$count msings.sh $gnorts
 fi
 
-if [[ $pro == "Y" ]]
+if [[ $pro == "Y" -a "$gsm" == "N" ]]
 then
 sbatch --array 1-$count pro.sh $gnorts
 fi
 
-if [[ $vcf == "Y" ]]
+if [[ $vcf == "Y" -a "$gsm" == "N" ]]
 then 
 sbatch --array 1-$count make_vcf.sh $gnorts
 fi
