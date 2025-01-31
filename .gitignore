@@ -21,3 +21,4 @@ temp/*
 vartrix_results/*
 vcf/*
 numbat/*
+scripts/.snakemake/*
