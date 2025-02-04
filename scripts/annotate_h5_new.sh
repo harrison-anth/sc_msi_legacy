@@ -22,6 +22,8 @@ then
 Rscript annotate_gsmog.R $gnorts
 
 elif [[ $gsm = "N" ]]
+then
+
 Rscript annotate_bamog.R $gnorts
 
 fi

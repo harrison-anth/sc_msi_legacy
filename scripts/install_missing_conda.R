@@ -1,0 +1,10 @@
+options(timeout=9999999)
+
+if(!require(devtools)) install.packages("devtools")
+library(devtools)
+if(!require(cutoff.scATOMIC)) devtools::install_github("inofechm/cutoff.scATOMIC", force = T)
+if(!require(scATOMIC)) devtools::install_github("abelson-lab/scATOMIC")
+if(!require(copykat)) devtools::install_github("navinlabcode/copykat")
+library(scATOMIC)
+library(cutoff.scATOMIC)
+library(copykat)

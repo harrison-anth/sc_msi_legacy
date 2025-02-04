@@ -228,7 +228,7 @@ new_sample <- add_pro(new_sample,sample_name)
 new_sample <- add_msings(new_sample,sample_name)
 #new_sample <- add_muts2(new_sample,sample_name)
 new_sample <- add_sensor_rna(new_sample,sample_name)
-#new_sample8 <- add_premsim(new_sample7,sample_name)
+new_sample <- add_premsim(new_sample,sample_name)
 
 #add big picture things
 

@@ -1,0 +1,9 @@
+{
+	"__default__" :
+	{
+        	"account" : "pstaunton",
+        	"partition" : "normal,highmem",
+		"mem-per-cpu" : "30000",
+		"ntasks" : "1"
+    	}
+}

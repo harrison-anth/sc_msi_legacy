@@ -25,11 +25,11 @@ sample_name <- as.character(argus[1])
 plotter <- function(s_obj, sample_name,sample_info){
 #ll <- plot_density(s_obj,features = ##c('rna_MSH2','rna_MLH1',"rna_MLH3","rna_MSH3","rna_PMS1",'rna_MSH6','rna_PMS2'),joint = TRUE,combine = #TRUE)
       
-sensor2_global <- fread(paste0('../sensor2_results/',sample_name,'_msi_status'))
+#sensor2_global <- fread(paste0('../sensor2_results/',sample_name,'_msi_status'))
       
-msings_global <- as.numeric(fread(paste0('../msings_results/', sample_name,'_msi_status.MSI_Analysis.txt'))[3,2])*100
+#msings_global <- as.numeric(fread(paste0('../msings_results/', sample_name,'_msi_status.MSI_Analysis.txt'))[3,2])*100
 
-pro_global <- fread(paste0('../pro_results/',sample_name,'_msi_status'))
+#pro_global <- fread(paste0('../pro_results/',sample_name,'_msi_status'))
       
 atomic_cells <- readRDS(paste0('../atomic/',sample_name,'.rds'))
 
@@ -39,31 +39,34 @@ s_obj$sensor_rna_prob <- as.numeric(s_obj$sensor_rna_prob)
 
 
 plots <-  ggarrange(
-  print(FeaturePlot(s_obj,features=c('sensor2'),cols=c('blue','red')) + 
-  ggtitle(paste0('MSIsensor2 (',sensor2_global$`%`,' overall)'))),
+#  print(FeaturePlot(s_obj,features=c('sensor2'),cols=c('blue','red')) + 
+#  ggtitle(paste0('MSIsensor2 (',sensor2_global$`%`,' overall)'))),
   
-  print(FeaturePlot(s_obj,features=c('msings'),cols=c('blue','red')) + 
-  ggtitle(paste0('mSINGS (',msings_global,' overall)'))),
+#  print(FeaturePlot(s_obj,features=c('msings'),cols=c('blue','red')) + 
+#  ggtitle(paste0('mSINGS (',msings_global,' overall)'))),
   
-  print(FeaturePlot(s_obj,features=c('pro'),cols=c('blue','red')) + 
-  ggtitle(paste0('MSIsensor-pro (',pro_global$`%`,' overall)'))),
+#  print(FeaturePlot(s_obj,features=c('pro'),cols=c('blue','red')) + 
+#  ggtitle(paste0('MSIsensor-pro (',pro_global$`%`,' overall)'))),
 
-  print(DimPlot(s_obj,group.by = 'numbat',cols=c('blue','red'))+ggtitle(paste0('Numbat'))),
+ print(FeaturePlot(s_obj,features=c('sensor_rna_prob'),cols=c('blue','red')) +
+ ggtitle('sensor_rna probs')),
+  
+#  print(DimPlot(s_obj,group.by = 'numbat',cols=c('blue','red'))+ggtitle(paste0('Numbat'))),
   print(DimPlot(s_obj,group.by='copykat',cols=c('red','blue','grey'))+ggtitle(paste0('Copykat'))),
   print(DimPlot(s_obj,group.by='pan_cancer_cluster',cols=c('red','blue','grey'))+ggtitle(paste0('ATOMIC'))),
   print(DimPlot(s_obj,group.by='sensor_rna_status',cols=c('red','blue'))+ggtitle(paste0('sensor_rna'))),
-  print(FeaturePlot(s_obj,features=c('sensor_rna_prob'),cols=c('blue','red')) +ggtitle('sensor_rna probs')),
-  print(DimPlot(s_obj,group.by='premsim_status',cols=c('red','blue'))+ggtitle(paste0('premsim'))),
-  print(FeaturePlot(s_obj,features=c('premsim_prob'),cols=c('blue','red')) +ggtitle('premsim probs')),
+#  print(DimPlot(s_obj,group.by='sensor_rna_prob',cols=c('red','blue'))+ggtitle(paste0('sensor_rna_prob'))),
+  print(DimPlot(s_obj,group.by='premsim_status',cols=c('blue','red'))+ggtitle(paste0('premsim'))),
+   print(FeaturePlot(s_obj,features=c('premsim_prob'),cols=c('blue','red')) +
+  ggtitle('premsim probs')),
 nrow=3,ncol=3
+
 
   )
 
-plots_final <- print(plots)
-
-#plots_final <- print(annotate_figure(plots,top=text_grob(paste0(sample_info$filename,'; ',sample_info$site,'; ',
-#                                                sample_info$msi_status,'; ',sample_info$msi_test),
-#color='black',face='bold',size=20)))
+plots_final <- print(annotate_figure(plots,top=text_grob(paste0(sample_info$filename,'; ',sample_info$site,'; ',
+                                                sample_info$msi_status,'; ',sample_info$msi_test),
+color='black',face='bold',size=20)))
 
 double_plot <- ggarrange(print(DimPlot(s_obj)+ggtitle(paste0('Clusters'))),
 print(DimPlot(s_obj, group.by = "scATOMIC_pred") + ggtitle("ATOMIC cells")+

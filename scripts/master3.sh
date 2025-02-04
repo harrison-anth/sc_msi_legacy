@@ -4,7 +4,7 @@
 first_run=N
 
 #set sample batch
-gsm=Y
+gsm=N
 
 
 annotate_mode=N

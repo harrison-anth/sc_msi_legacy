@@ -1,0 +1,30 @@
+snakefile: handle_mtx.snake
+#executor: slurm
+jobs: unlimited
+jobname: "{rule}.{jobid}"
+max-jobs-per-second: 100
+max-status-checks-per-second: 10
+show-failed-logs: True
+verbose: True
+cluster-generic-cancel-cmd: scancel
+cores: all
+
+#cluster: 'sbatch --partition="normal,highmem" --output="../stdout/{rule}/slurm_%x_%j.out" --error="../error_files/{rule}/slurm_%x_%j.error"'
+#note the cluster option does not work with snakemake v8
+default-resources:
+    threads: 1
+    mem_mb: 1000
+
+
+
+
+
+
+#sidenote had to edit lib/python3.12/site-packages/snakemake/executors/slurm/slurm_jobstep.py to include
+#call = f"srun -n1 --cpus-per-task={job.threads} --cpu_bind=q {self.format_job_exec(job)}"
+#as there is an ongoing issue with older installations of slurm having --cpu_bind versus --cpu-bind
+#also this fixes an old srun issue which does not fully utilize the cpus-per-task parallel capacity of clurm
+#see the following two git issues for more information:
+#https://github.com/snakemake/snakemake/issues/2447
+#https://github.com/snakemake/snakemake/issues/2071
+
