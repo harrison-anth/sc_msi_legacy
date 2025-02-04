@@ -8,14 +8,14 @@ gnorts=$1
 
 module load Anaconda3
 
-#if [[ ! -f ../premsim/$gnorts.rds ]]
-#then
+if [[ ! -f ../premsim/$gnorts.rds ]]
+then
 
-#conda activate seurat
-#
-#Rscript sensor_rna_shaper.R $gnorts
-#
-#fi
+conda activate seurat
+
+Rscript sensor_rna_shaper.R $gnorts
+
+fi
 
 if [[ ! -f ../sensor_rna_results/$gnorts.txt ]]
 then

@@ -10,8 +10,7 @@
 
 
 gnorts=$1
-
-run=Y
+gsm=$2
 
 if [[ ! -f ../copy_kat_results/"$gnorts"_copykat_prediction.txt ]]
 then
@@ -19,8 +18,8 @@ then
 module load Anaconda3
 conda activate MSIR
 
-Rscript kit_kat.R $gnorts $SLURM_CPUS_PER_TASK
+Rscript kit_kat.R $gnorts $SLURM_CPUS_PER_TASK $gsm
 
-mv "$gnorts"* /data4/hanthony/single_msi/copy_kat_results/
+mv "$gnorts"_copykat* ../copy_kat_results/
 
 fi
