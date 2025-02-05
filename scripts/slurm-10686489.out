@@ -1,0 +1,28 @@
+host: compute01
+Building DAG of jobs...
+shared_storage_local_copies: True
+remote_exec: True
+Using shell: /usr/bin/bash
+Provided cores: 16
+Rules claiming more threads will be scaled down.
+Provided resources: mem_gb=10
+Resources before job selection: {'mem_gb': 10, '_cores': 16, '_nodes': 9223372036854775807, '_job_count': 9223372036854775807}
+Ready jobs: 1
+Select jobs to execute...
+Selecting jobs to run using greedy solver.
+Selected jobs: 1
+Resources after job selection: {'mem_gb': 0, '_cores': 15, '_nodes': 9223372036854775806, '_job_count': 9223372036854775807}
+Execute 1 jobs...
+
+[Tue Feb  4 23:17:27 2025]
+localrule msings_global:
+    input: ../cell_ranger_output/EXT016/outs/possorted_genome_bam.bam
+    output: ../msings_results/EXT016_msi_status.MSI_Analysis.txt
+    log: ../stdout_files/EXT016/msings_global.out, ../error_files/EXT016/msings_global.error
+    jobid: 0
+    reason: Forced execution
+    wildcards: sample_name=EXT016
+    resources: mem_mb=8000, mem_mib=7630, disk_mb=14820, disk_mib=14134, tmpdir=/tmp, mem_gb=10
+
+Activating conda environment: msings
+[mpileup] 1 samples in 1 input files

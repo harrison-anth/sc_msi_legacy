@@ -1,13 +1,13 @@
 #my snakemake run command
-#snakemake --executor cluster-generic --cluster-generic-submit-cmd "sbatch" --use-conda --latency-wait 60 --profile ../conda_envs/slurm_profile/ --verbose
+#snakemake --executor cluster-generic --cluster-generic-submit-cmd "sbatch" --use-conda --latency-wait 10 --profile ../conda_envs/slurm_profile/ --verbose -s handle_mtx.snake
 
 #print snakemake dag
-snakemake --forceall --rulegraph | dot -Tpdf > dag.pdf
+#snakemake --forceall --rulegraph | dot -Tpdf > dag.pdf
 
 # workflow - SC-MSI
 
 #define config file
-configfile: "Snakemake_config.yaml"
+configfile: "mtx_config.yml"
 
 
 #print config file name and date
@@ -23,8 +23,8 @@ with open(config["sample_list"]) as samples_tmp:
 
 rule all:
 	input:
-		expand("../atomic/{sample_name}.rds",sample_name=samples),
-		expand("../sensor_rna_results/{sample_name}.txt",sample_name=samples)
+		expand("../images/{sample_name}_cell_types.pdf",sample_name=samples),
+		expand("../images/{sample_name}_msi_plots.pdf",sample_name=samples)
 
 rule process_sample:
 	input:
@@ -81,7 +81,30 @@ rule find_msi:
 		msisensor-rna train -i $training_model -m ../temp/{wildcards.sample_name}.model -t PanCancer
 		msisensor-rna detection -i ../temp/{wildcards.sample_name}.csv -o ../sensor_rna_results/{wildcards.sample_name}.txt -m ../temp/{wildcards.sample_name}.model -d True
 		"""
-		
-				
 
-
+rule annotate_h5:
+	input:
+		"../atomic/{sample_name}.rds",
+		"../sensor_rna_results/{sample_name}.txt"
+	output:
+		"../annotated_h5/{sample_name}.rds"
+	threads: 1
+	conda:
+		"seurat"
+	shell:
+		"""
+		Rscript annotate_gsmog.R {wildcards.sample_name}
+		"""
+rule create_plots:
+	input:
+		"../annotated_h5/{sample_name}.rds"
+	output:
+		"../images/{sample_name}_cell_types.pdf",
+		"../images/{sample_name}_msi_plots.pdf"
+	threads: 1
+	conda:
+		"seurat"
+	shell:
+		"""
+		Rscript plot_all_gsm.R {wildcards.sample_name}
+		"""

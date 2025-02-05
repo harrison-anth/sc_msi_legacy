@@ -2,6 +2,7 @@ annotated_h5/*
 annovar_results/*
 atomic/*
 bam/*
+baselines/*
 cell_ranger_output/*
 copy_kat_results/*
 count_matrices/*

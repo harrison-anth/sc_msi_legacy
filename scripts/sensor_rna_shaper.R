@@ -18,7 +18,7 @@ ct_mat <- as.data.frame(ct_mat) %>% rownames_to_column('SampleID')
 
 #create custom training data columns for this sample
 
-pre_model <- fread ('../baselines/sensor_rna_files/model/demo/train.csv')
+pre_model <- fread ('../baselines/sensor_rna.csv')
 
 common_names <- intersect(colnames(ct_mat),colnames(pre_model))
 
