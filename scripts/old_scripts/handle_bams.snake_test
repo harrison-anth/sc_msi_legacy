@@ -1,0 +1,283 @@
+#my snakemake run command
+#snakemake --executor cluster-generic --cluster-generic-submit-cmd "sbatch" --use-conda --latency-wait 60 --profile ../conda_envs/slurm_profile/ --verbose -s handle_bams.snake
+
+#print snakemake dag
+#snakemake --forceall --rulegraph | dot -Tpdf > dag.pdf
+
+# workflow - SC-MSI
+
+#define config file
+configfile: "bam_config_test.yaml"
+
+
+#print config file name and date
+#import datetime
+
+#print("Config settings are: ", config,".\n")
+#now = datetime.datetime.now()
+#print("Beginning analysis at", now.strftime("%Y-%m-%d %H:%M"))
+
+with open(config["sample_list"]) as samples_tmp:
+	samples=samples_tmp.read().splitlines()
+
+
+
+rule all:
+	input:
+		expand("../sensor2_results/{sample_name}_msi_status",sample_name=samples),
+		expand("../pro_results/{sample_name}_msi_status",sample_name=samples),
+		expand("../msings_results/{sample_name}_msi_status.MSI_Analysis.txt",sample_name=samples),
+		expand("../temp/{sample_name}_pause_here.txt",sample_name=samples)
+
+rule cellranger:
+	input:
+	output:
+		"../cell_ranger_output/{sample_name}/outs/possorted_genome_bam.bam"
+	params:
+		cellranger=config["cellranger"],
+		ref=config["transcriptome"]
+	conda:
+		 "base"
+	threads: 15
+	resources:
+		mem_gb=20
+	log:
+		stdout="../stdout_files/{sample_name}/cellranger.out",
+		stderr="../error_files/{sample_name}/cellranger.error"
+	shell:
+		"""
+		if [[ -d ../cell_ranger_output/{wildcards.sample_name} ]]
+		then
+		rm -r ../cell_ranger_output/{wildcards.sample_name}
+		fi
+		mkdir ../cell_ranger_output/{wildcards.sample_name}
+		{params.cellranger} count --id={wildcards.sample_name} --transcriptome={params.ref} --fastqs=../fastq/ \
+		--sample={wildcards.sample_name} --output-dir ../cell_ranger_output/{wildcards.sample_name} \
+		--localcores {threads} --localmem {resources.mem_gb} > {log.stdout} 2> {log.stderr}
+		"""
+
+rule sensor2_global:
+	input:
+		"../cell_ranger_output/{sample_name}/outs/possorted_genome_bam.bam"
+	output:
+		"../sensor2_results/{sample_name}_msi_status"
+	params:
+		tumor="../cell_ranger_output/{sample_name}/outs/possorted_genome_bam.bam",
+		models=config["sensor2_models"],
+		ms_loci=config["ms_loci"]
+	conda:
+		"pro"
+	threads: 1
+	resources:
+		mem_gb=1
+	log:
+		stdout="../stdout_files/{sample_name}/sensor2_global.out",
+		stderr="../error_files/{sample_name}/sensor2_global.error"
+	shell:
+		"""
+		msisensor2 msi -d {params.ms_loci} -t {params.tumor} -M {params.models} -c 5 \
+		-o ../sensor2_results/{wildcards.sample_name}_msi_status > {log.stdout} 2> {log.stderr}
+		rm ../sensor2_results/{wildcards.sample_name}_msi_status_dis
+		rm ../sensor2_results/{wildcards.sample_name}_msi_status_somatic
+		"""
+rule sensor_pro_global:
+	input:
+		"../cell_ranger_output/{sample_name}/outs/possorted_genome_bam.bam"
+	output:
+		"../pro_results/{sample_name}_msi_status"
+	params:
+		tumor="../cell_ranger_output/{sample_name}/outs/possorted_genome_bam.bam",
+		baseline=config["pro_baseline"]
+	conda:
+		"pro"
+	threads: 1
+	resources:
+		mem_gb=1
+	log:
+		stdout="../stdout_files/{sample_name}/pro_global.out",
+		stderr="../error_files/{sample_name}/pro_global.error"
+	shell:
+		"""
+		msisensor-pro pro -d {params.baseline} -t {params.tumor} \
+		-o ../pro_results/{wildcards.sample_name}_msi_status > {log.stdout} 2> {log.stderr}
+		rm ../pro_results/{wildcards.sample_name}_msi_status_all
+		rm ../pro_results/{wildcards.sample_name}_msi_status_dis
+		rm ../pro_results/{wildcards.sample_name}_msi_status_unstable
+		"""
+
+rule msings_global:
+	input:
+		"../cell_ranger_output/{sample_name}/outs/possorted_genome_bam.bam"
+	output:
+		"../msings_results/{sample_name}_msi_status.MSI_Analysis.txt"
+	params:
+		tumor="../cell_ranger_output/{sample_name}/outs/possorted_genome_bam.bam",
+		baseline=config["msings_baseline"],
+		msings=config["msings_path"],
+		msings_bed=config["msings_loci"],
+		ref=config["hg38"],
+		multiplier=config["multiplier"],
+		min=config["msi_min_threshold"],
+		max=config["msi_max_threshold"],
+		outdir="../temp/{sample_name}"
+	conda:
+		"msings"
+	threads: 1
+	resources:
+		mem_gb=10
+	log:
+		stdout="../stdout_files/{sample_name}/msings_global.out",
+		stderr="../error_files/{sample_name}/msings_global.error"
+	shell:
+		"""
+		mkdir -p ../temp/{wildcards.sample_name}
+		
+		samtools mpileup -f {params.ref} -d 100000 -A -E -l {params.msings_bed} {params.tumor} \
+		| awk '{{if($4 >= 6) print $0}}' > {params.outdir}/{wildcards.sample_name}.mpileup
+		
+		{params.msings} analyzer {params.outdir}/{wildcards.sample_name}.mpileup {params.msings_bed} \
+		-o {params.outdir}/{wildcards.sample_name}.msi.txt > {log.stdout} 2> {log.stderr}
+		
+		{params.msings} count_msi_samples {params.baseline} {params.outdir} \
+		-m {params.multiplier} -t {params.min} {params.max} \
+		-o ../msings_results/{wildcards.sample_name}_msi_status.MSI_Analysis.txt >> {log.stdout} 2>> {log.stderr}
+
+		if [[ -f ../msings_results/{wildcards.sample_name}_msi_status.MSI_Analysis.txt ]]
+		then
+		rm -r {params.outdir}
+		fi
+		"""
+
+rule process_sample:
+	input:
+	output:
+		"../pseudobulk_barcodes/{sample_name}/{sample_name}_all_cell_barcodes.tsv",
+		"../pseudobulk_barcodes/{sample_name}/just_barcodes.tsv",
+		"../filtered_h5/{sample_name}.rds"
+	log:
+		stdout="../stdout_files/{sample_name}/process_sample.out",
+		stderr="../error_files/{sample_name}/process_sample.error"
+	conda:
+		"seurat"
+	threads: 1
+	shell:
+		"""
+		if [[ ! -d ../pseudobulk_barcodes/{wildcards.sample_name} ]]
+		then
+		mkdir ../pseudobulk_barcodes/{wildcards.sample_name}
+		fi
+		Rscript barcode_generator.R {wildcards.sample_name} 'N' > {log.stdout} 2> {log.stderr}
+		if [[ ! -f ../pseudobulk_barcodes/{wildcards.sample_name}/just_barcodes.tsv ]]
+		then
+		cut -f 1 ../pseudobulk_barcodes/{wildcards.sample_name}/{wildcards.sample_name}_all_cell_barcodes.tsv > \
+		../pseudobulk_barcodes/{wildcards.sample_name}/just_barcodes.tsv
+		fi
+		"""
+
+checkpoint split_bam:
+	input:
+		"../cell_ranger_output/{sample_name}/outs/possorted_genome_bam.bam",
+		barcodes="../pseudobulk_barcodes/{sample_name}/{sample_name}_all_cell_barcodes.tsv"
+	output:
+		"../temp/{sample_name}_temp_bams.txt"
+	params:
+		tumor="../cell_ranger_output/{sample_name}/outs/possorted_genome_bam.bam"
+	conda:
+		"rusty"
+	threads: 20
+	resources:
+		mem_gb=20
+	shell:
+		"""
+		if [[ ! -d "../bam/{wildcards.sample_name}" ]]
+		then
+		mkdir ../bam/{wildcards.sample_name}
+		fi
+		sinto filterbarcodes -b {params.tumor} -c {input.barcodes} \
+		--barcodetag "CB" -p 20 --outdir ../bam/{wildcards.sample_name}/
+
+		find ../bam/{wildcards.sample_name}/*.bam -printf "%f\n" > ../temp/{wildcards.sample_name}_temp_bams.txt
+		"""
+
+
+def get_list_of_bams(wildcards):
+	ck_output = checkpoints.split_bam.get(**wildcards).output[0]
+	with open(ck_output) as f:
+		bams = [line.strip() for line in f]
+	return bams
+
+checkpoint process_splits:
+	input:
+		"../temp/{sample_name}_temp_bams.txt",
+		lambda wildcards: expand("../bam/{sample_name}/{bam}",sample_name={wildcards.sample_name},bam= get_list_of_bams(wildcards))
+	output:
+		"../bam/{sample_name}/{bam}.bai"
+	params:
+		bam="../bam/{sample_name}/{bam}"
+	conda:
+		"rusty"
+	threads: 1
+	resources:
+		mem_gb=5
+	shell:
+		"""
+		samtools view -H {params.bam} |  sed "s/SM:[^\t]*/SM:"{wildcards.bam}"/g" \
+		| samtools reheader - {params.bam} > {params.bam}.bam
+		mv {params.bam}.bam {params.bam}
+		samtools index {params.bam}
+		"""
+
+rule pro_local:
+	input:
+                lambda wildcards: expand("../bam/{sample_name}/{bam}.bai",sample_name={wildcards.sample_name},bam= get_list_of_bams(wildcards))
+	output:
+		"../pro_results/{sample_name}_cluster_{bam}"
+	params:
+		tumor="../bam/{sample_name}/{bam}",
+		baseline=config["pro_baseline"]
+	conda:
+		"pro"
+	threads: 1
+	resources:
+		mem_gb=1
+	shell:
+		"""
+		msisensor-pro pro -d {params.baseline} -t {params.tumor} \
+		-o ../pro_results/{wildcards.sample_name}_cluster_{wildcards.bam}
+		rm ../pro_results/{wildcards.sample_name}_cluster_{wildcards.bam}_all
+		rm ../pro_results/{wildcards.sample_name}_cluster_{wildcards.bam}_dis
+		rm ../pro_results/{wildcards.sample_name}_cluster_{wildcards.bam}_unstable
+		"""
+checkpoint pause_here:
+	input:
+		lambda wildcards: expand("../pro_results/{sample_name}_cluster_{bam}", sample_name=samples, bam=get_list_of_bams(wildcards))
+	output:
+		"../temp/{sample_name}_pause_here.txt"
+	params:
+	conda:
+		"rusty"
+	threads: 1
+	resources:
+		mem_gb=1
+	shell:
+		"""
+		echo "../bam/{wildcards.sample_name}/{wildcards.bam}.bai" >> ../temp/{wildcards.sample_name}_pause_here.txt
+		"""
+#		while read line#
+#		do
+#		samtools view -H $line | sed "s/SM:[^\t]*/SM:"$i"/g" \
+#		| samtools reheader - $line > $line.bam
+#		mv $line.bam $line
+#		samtools index $line
+##		i=$(( $i = $i +1 ))
+#		done <  "../temp/{wildcards.sample_name}_temp_bams.txt"
+#		"""
+#
+#		samtools view -H ../bam/{wildcards.sample_name}params.bam_file} | sed "s/SM:[^\t]*/SM:{wildcards.file}/g" \
+#		| samtools reheader - {params.bam_file} > {params.bam_file}.bam
+#		mv {params.bam_file}.bam {params.bam_file}
+#		samtools index {params.bam_file}
+#		touch ../temp/{wildcards.sample_name}_tryme.txt
+#		
+#checkpoints.split_bam.get(**{"sample_name": sample_name}).output[0]
+

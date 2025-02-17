@@ -1,4 +1,4 @@
-Position	XHC132-SI-GA-G3
+Position	XHC132-SI-GA-G3_6
 unstable_loci	1
 passing_loci	25
 msing_score	0.0400

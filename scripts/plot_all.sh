@@ -20,7 +20,7 @@ conda activate seurat
 if [[ $gsm == "N" ]]
 then
 
-Rscript plot_all_new.R $gnorts
+Rscript plot_all_bamog.R $gnorts
 
 elif [[ $gsm == "Y" ]]
 then

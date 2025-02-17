@@ -1,4 +1,4 @@
-Position	XHC132-SI-GA-G3
+Position	XHC132-SI-GA-G3_9
 unstable_loci	0
 passing_loci	0
 msi status	NEG

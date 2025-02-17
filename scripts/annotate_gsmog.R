@@ -60,6 +60,8 @@ temp <- temp[2:3,]
 s_obj <- AddMetaData(s_obj,temp[1,],col.name='sensor_rna_status')
 s_obj <- AddMetaData(s_obj,temp[2,],col.name='sensor_rna_prob')
 
+s_obj$sensor_rna_prob <- as.numeric(s_obj$sensor_rna_prob)
+
 return(s_obj)
 }
 
@@ -218,17 +220,32 @@ return(s_obj)
 
 
 
-sample <- readRDS(paste0('../filtered_h5/',sample_name,'.rds'))
+new_sample <- readRDS(paste0('../filtered_h5/',sample_name,'.rds'))
 
 
 #new_sample <- add_sensor2(sample,sample_name)
 #new_sample <- add_numbat(new_sample,sample_name)
-new_sample <- add_cc(sample,sample_name)
+#new_sample <- add_cc(sample,sample_name)
 #new_sample <- add_pro(new_sample,sample_name)
 #new_sample <- add_msings(new_sample,sample_name)
 #new_sample <- add_muts2(new_sample,sample_name)
 new_sample <- add_sensor_rna(new_sample,sample_name)
-new_sample <- add_premsim(new_sample,sample_name)
+#new_sample <- add_premsim(new_sample,sample_name)
+
+#quickly add atomic cell labels
+atomic_cells <- readRDS(paste0('../atomic/',sample_name,'.rds'))
+
+new_sample$scATOMIC_pred <- atomic_cells$scATOMIC_pred
+
+new_sample$classification_confidence <- as.numeric(atomic_cells$classification_confidence)
+
+
+if('pan_cancer_cluster' %in% colnames(atomic_cells@meta.data)){
+new_sample$pan_cancer_cluster <- atomic_cells$pan_cancer_cluster
+}
+
+
+
 
 #add big picture things
 

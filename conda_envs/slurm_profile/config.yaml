@@ -1,7 +1,7 @@
 jobs: unlimited
 jobname: "{rule}.{jobid}"
-max-jobs-per-second: 100
-max-status-checks-per-second: 10
+max-jobs-per-second: 150
+max-status-checks-per-second: 100
 executor: cluster-generic
 show-failed-logs: True
 verbose: True
@@ -10,7 +10,12 @@ cores: all
 cluster-generic-submit-cmd:
   sbatch
     --parsable
-    --partition="normal","highmem"
+    --partition="normal,highmem,gpu"
+    --output=../stdout_files/{rule}.{jobid}
+    --error=../error_files/{rule}.{jobid}
+    --mem=25000
+    --nice=5000
+    --cpus-per-task=5
 
 use-conda: True
 

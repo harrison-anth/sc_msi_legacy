@@ -222,13 +222,13 @@ sample <- readRDS(paste0('../filtered_h5/',sample_name,'.rds'))
 
 
 new_sample <- add_sensor2(sample,sample_name)
-new_sample <- add_numbat(new_sample,sample_name)
+#new_sample <- add_numbat(new_sample,sample_name)
 new_sample <- add_cc(new_sample,sample_name)
 new_sample <- add_pro(new_sample,sample_name)
 new_sample <- add_msings(new_sample,sample_name)
 #new_sample <- add_muts2(new_sample,sample_name)
 new_sample <- add_sensor_rna(new_sample,sample_name)
-new_sample <- add_premsim(new_sample,sample_name)
+#new_sample <- add_premsim(new_sample,sample_name)
 
 #add big picture things
 

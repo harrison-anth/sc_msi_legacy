@@ -8,5 +8,6 @@ sample_list: "../manifests/all_gsm_samples.txt"
 #reference transcriptome
 transcriptome: "/data3/hanthony/reference_files/refdata-gex-GRCh38-2020-A"
 
-
+#give key file
+key: "../manifests/final_gsm_key.tsv"
 

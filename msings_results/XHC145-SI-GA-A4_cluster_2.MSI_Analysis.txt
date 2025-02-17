@@ -1,4 +1,4 @@
-Position	XHC145-SI-GA-A4
+Position	XHC145-SI-GA-A4_2
 unstable_loci	14
 passing_loci	144
 msing_score	0.0972

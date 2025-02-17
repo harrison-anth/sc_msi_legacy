@@ -1,0 +1,10 @@
+prop_msih_cancer	prop_mss_cancer	prop_msih_norm	prop_mss_norm	sample_id	file_prefix
+0.1	0.9	0.1	0.9	mix_1	mix_1
+0.2	0.8	0.2	0.8	mix_2	mix_2
+0.3	0.7	0.3	0.7	mix_3	mix_3
+0.4	0.6	0.4	0.6	mix_4	mix_4
+0.5	0.5	0.5	0.5	mix_5	mix_5
+0.6	0.4	0.6	0.4	mix_6	mix_6
+0.7	0.3	0.7	0.3	mix_7	mix_7
+0.8	0.2	0.8	0.2	mix_8	mix_8
+0.9	0.1	0.9	0.1	mix_9	mix_9

@@ -1,5 +1,5 @@
 #my snakemake run command
-#snakemake --executor cluster-generic --cluster-generic-submit-cmd "sbatch" --use-conda --latency-wait 10 --profile ../conda_envs/slurm_profile/ --verbose -s handle_mtx.snake
+#snakemake --profile ../conda_envs/slurm_profile/ --verbose -s handle_mtx.snake --latency-wait 60 --rerun-incomplete
 
 #print snakemake dag
 #snakemake --forceall --rulegraph | dot -Tpdf > dag.pdf
@@ -7,8 +7,11 @@
 # workflow - SC-MSI
 
 #define config file
-configfile: "mtx_config.yml"
+#gsm samples
+#configfile: "mtx_config.yaml"
 
+#artificial samples
+configfile: "artificial_config.yaml"
 
 #print config file name and date
 import datetime
@@ -32,9 +35,8 @@ rule process_sample:
 		"../pseudobulk_barcodes/{sample_name}/{sample_name}_all_cell_barcodes.tsv",
 		"../pseudobulk_barcodes/{sample_name}/just_barcodes.tsv",
 		"../filtered_h5/{sample_name}.rds"
-	log:
-		stdout="../stdout/{sample_name}/process_sample.out",
-		stderr="../error_files/{sample_name}/process_sample.error"
+	params:
+		sample_key=config["key"]
 	conda:
 		 "seurat"
 	threads: 1
@@ -44,7 +46,7 @@ rule process_sample:
 		then
 		mkdir ../pseudobulk_barcodes/{wildcards.sample_name}
 		fi
-		Rscript barcode_generator.R {wildcards.sample_name} 'Y'
+		Rscript gsm_barcode_generator.R {wildcards.sample_name} 'Y' {params.sample_key}
 		if [[ ! -f ../pseudobulk_barcodes/{wildcards.sample_name}/just_barcodes.tsv ]]
 		then
 		cut -f 1 ../pseudobulk_barcodes/{wildcards.sample_name}/{wildcards.sample_name}_all_cell_barcodes.tsv > \
@@ -85,7 +87,8 @@ rule find_msi:
 rule annotate_h5:
 	input:
 		"../atomic/{sample_name}.rds",
-		"../sensor_rna_results/{sample_name}.txt"
+		"../sensor_rna_results/{sample_name}.txt",
+		"../filtered_h5/{sample_name}.rds"
 	output:
 		"../annotated_h5/{sample_name}.rds"
 	threads: 1

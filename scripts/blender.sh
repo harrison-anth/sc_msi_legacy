@@ -13,7 +13,10 @@ manifest=../manifests/final_key.tsv
 module load Anaconda3
 conda activate seurat
 
-Rscript cellMixe.R $manifest
+sample1_name='GSM6213971'
+sample2_name='GSM6213963'
+
+Rscript cellMixe.R $manifest $sample1_name $sample2_name
 
 
 
