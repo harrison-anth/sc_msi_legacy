@@ -1,4 +1,4 @@
-Position	XHC138-SI-GA-H3
+Position	XHC138-SI-GA-H3_7
 unstable_loci	0
 passing_loci	0
 msi status	NEG

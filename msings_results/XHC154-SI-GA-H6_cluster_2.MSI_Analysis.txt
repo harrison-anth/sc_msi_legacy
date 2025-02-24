@@ -1,4 +1,4 @@
-Position	XHC154-SI-GA-H6
+Position	XHC154-SI-GA-H6_2
 unstable_loci	2
 passing_loci	41
 msing_score	0.0488

@@ -49,13 +49,13 @@ list(  print(FeaturePlot(s_obj,features=c('sensor2'),cols=c('blue','red')) +
   ggtitle(paste0('MSIsensor-pro (',pro_global$`%`,' overall)'))),
 
 #  print(DimPlot(s_obj,group.by = 'numbat',cols=c('blue','red'))+ggtitle(paste0('Numbat'))),
-  print(DimPlot(s_obj,group.by='copykat',cols=c('red','blue','grey'))+ggtitle(paste0('Copykat'))),
+#  print(DimPlot(s_obj,group.by='copykat',cols=c('red','blue','grey'))+ggtitle(paste0('Copykat'))),
   print(DimPlot(s_obj,group.by='pan_cancer_cluster',cols=c('red','blue','grey'))+ggtitle(paste0('ATOMIC'))),
   print(DimPlot(s_obj,group.by='sensor_rna_status',cols=c('red','blue'))+ggtitle(paste0('sensor_rna'))),
   print(FeaturePlot(s_obj,features=c('sensor_rna_prob'),cols=c('blue','red')) +ggtitle('sensor_rna probs'))),
 #  print(DimPlot(s_obj,group.by='premsim_status',cols=c('red','blue'))+ggtitle(paste0('premsim'))),
 #  print(FeaturePlot(s_obj,features=c('premsim_prob'),cols=c('blue','red')) +ggtitle('premsim probs')))),
-nrow=3,ncol=3
+nrow=3,ncol=2
   )
 
 #plots_final <- marrangeGrob(grobs = plots, nrow=3, ncol=3)

@@ -1,4 +1,4 @@
-Position	XHC155-SI-GA-H9
+Position	XHC155-SI-GA-H9_4
 unstable_loci	2
 passing_loci	63
 msing_score	0.0317

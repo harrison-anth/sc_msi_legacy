@@ -1,6 +1,6 @@
 jobs: unlimited
 jobname: "{rule}.{jobid}"
-max-jobs-per-second: 150
+max-jobs-per-second: 200
 max-status-checks-per-second: 100
 executor: cluster-generic
 show-failed-logs: True
@@ -9,23 +9,22 @@ cluster-generic-cancel-cmd: scancel
 cores: all
 cluster-generic-submit-cmd:
   sbatch
-    --parsable
     --partition="normal,highmem,gpu"
     --output=../stdout_files/{rule}.{jobid}
     --error=../error_files/{rule}.{jobid}
-    --mem=25000
+    --mem-per-cpu={resources.mem_mb}
     --nice=5000
-    --cpus-per-task=5
+    --cpus-per-task={threads}
 
 use-conda: True
 
 #cluster: 'sbatch --partition="normal,highmem" --output="../stdout/{rule}/slurm_%x_%j.out" --error="../error_files/{rule}/slurm_%x_%j.error"'
 #note the cluster option does not work with snakemake v8
-#default-resources:
-#    threads: 1
-#    mem_mb: 1000
+default-resources:
+    threads: 1
+    mem_mb: 5000
 
-
+#can add --parsable to sbatch command
 
 
 

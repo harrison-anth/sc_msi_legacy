@@ -1,4 +1,4 @@
-Position	XHC102-SI-GA-C11
+Position	XHC102-SI-GA-C11_4
 unstable_loci	5
 passing_loci	34
 msing_score	0.1471

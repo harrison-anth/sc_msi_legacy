@@ -1,4 +1,4 @@
-Position	XHC109-SI-GA-E4
+Position	XHC109-SI-GA-E4_6
 unstable_loci	6
 passing_loci	31
 msing_score	0.1935

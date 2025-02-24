@@ -1,4 +1,4 @@
-Position	XHC168-SI-GA-B10
+Position	XHC168-SI-GA-B10_1
 unstable_loci	28
 passing_loci	357
 msing_score	0.0784

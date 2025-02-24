@@ -1,0 +1,4 @@
+ega_id	patient_id	site	filename	msi_status	msi_test
+EGAN00003499116	SC024	normal	EXT017	MSS	PCR
+EGAN00003499117	SC024	tumor2	EXT016	MSS	PCR
+EGAN00003499118	SC024	tumor1	EXT015	MSS	PCR

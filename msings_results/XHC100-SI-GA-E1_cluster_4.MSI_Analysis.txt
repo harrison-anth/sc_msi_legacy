@@ -1,4 +1,4 @@
-Position	XHC100-SI-GA-E1
+Position	XHC100-SI-GA-E1_4
 unstable_loci	7
 passing_loci	34
 msing_score	0.2059

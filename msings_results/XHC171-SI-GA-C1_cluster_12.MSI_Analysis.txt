@@ -1,4 +1,4 @@
-Position	XHC171-SI-GA-C1
+Position	XHC171-SI-GA-C1_12
 unstable_loci	5
 passing_loci	33
 msing_score	0.1515

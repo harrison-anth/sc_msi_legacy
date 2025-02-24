@@ -237,7 +237,7 @@ atomic_cells <- readRDS(paste0('../atomic/',sample_name,'.rds'))
 
 new_sample$scATOMIC_pred <- atomic_cells$scATOMIC_pred
 
-new_sample$classification_confidence <- as.numeric(atomic_cells$classification_confidence)
+new_sample$classification_confidence <- atomic_cells$classification_confidence
 
 
 if('pan_cancer_cluster' %in% colnames(atomic_cells@meta.data)){

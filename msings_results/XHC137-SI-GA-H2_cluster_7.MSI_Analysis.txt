@@ -1,4 +1,4 @@
-Position	XHC137-SI-GA-H2
+Position	XHC137-SI-GA-H2_7
 unstable_loci	1
 passing_loci	24
 msing_score	0.0417

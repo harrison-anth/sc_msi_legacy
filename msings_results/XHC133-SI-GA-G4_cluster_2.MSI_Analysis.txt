@@ -1,4 +1,4 @@
-Position	XHC133-SI-GA-G4
+Position	XHC133-SI-GA-G4_2
 unstable_loci	4
 passing_loci	42
 msing_score	0.0952

@@ -8,10 +8,10 @@
 
 #define config file
 #gsm samples
-#configfile: "mtx_config.yaml"
+configfile: "mtx_config.yaml"
 
 #artificial samples
-configfile: "artificial_config.yaml"
+#configfile: "artificial_config.yaml"
 
 #print config file name and date
 import datetime

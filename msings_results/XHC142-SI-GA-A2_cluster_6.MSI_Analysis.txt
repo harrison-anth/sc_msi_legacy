@@ -1,4 +1,4 @@
-Position	XHC142-SI-GA-A2
+Position	XHC142-SI-GA-A2_6
 unstable_loci	4
 passing_loci	43
 msing_score	0.0930

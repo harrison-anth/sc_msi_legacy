@@ -2,6 +2,13 @@
 
 # edit the following parameters below. Note the curent sample list must consist of matrix (mtx) files.
 
+#specify list of patient id's
+patient_list: "../manifests/patient_ids_test.txt"
+
+#specify key that links sample names and patient id's
+patient_key: "../manifests/final_key_test.tsv"
+
+
 #specify list of sample names
 sample_list: "../manifests/bam_test1.tsv"
 
