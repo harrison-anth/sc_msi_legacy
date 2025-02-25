@@ -1,5 +1,5 @@
 #my snakemake run command
-#snakemake -s handle_bams.snake7 --profile ../conda_envs/slurm_profile/ --rerun-incomplete --rerun-triggers mtime
+#snakemake --executor cluster-generic --cluster-generic-submit-cmd "sbatch" --use-conda --latency-wait 60 --profile ../conda_envs/slurm_profile/ --verbose -s handle_bams.snake
 
 #print snakemake dag
 #snakemake --forceall --rulegraph | dot -Tpdf > dag.pdf
@@ -9,15 +9,12 @@
 #import libraries
 import pandas as pd
 
-#helpful to include this if Snakemake is using too make cluster cores on the headnode (probably just due to my version)
-import os
-os.environ['OPENBLAS_NUM_THREADS'] = '1'
 
 
 #define config file
-configfile: "bam_config.yaml"
+#configfile: "bam_config.yaml"
 #2 sample test file:
-#configfile: "bam_config_test.yaml"
+configfile: "bam_config_test2.yaml"
 
 with open(config["sample_list"]) as samples_tmp:
 	samples=samples_tmp.read().splitlines()
@@ -66,9 +63,7 @@ rule cellranger:
 		then
 		rm -r {params.final_dir}
 		fi
-
-		mkdir -p {params.temp_dir}
-
+		mkdir {params.temp_dir}
 		{params.cellranger} count --id={wildcards.sample_name} --transcriptome={params.ref} --fastqs=../fastq/ \
 		--sample={wildcards.sample_name} --output-dir {params.temp_dir} \
 		--localcores {threads}
@@ -154,9 +149,9 @@ rule process_sample:
 	input:
 		{rules.cellranger.output.matrix}
 	output:
-		all_barcodes="../pseudobulk_barcodes/{sample_name}/{sample_name}_all_cell_barcodes.tsv",
-		just_barcodes="../pseudobulk_barcodes/{sample_name}/just_barcodes.tsv",
-		filtered_h5="../filtered_h5/{sample_name}.rds"
+		"../pseudobulk_barcodes/{sample_name}/{sample_name}_all_cell_barcodes.tsv",
+		"../pseudobulk_barcodes/{sample_name}/just_barcodes.tsv",
+		"../filtered_h5/{sample_name}.rds"
 	conda:
 		"seurat"
 	shell:
@@ -221,7 +216,6 @@ rule vcf_gen:
 		-R {params.ref} \
 		-I {input} \
 		-O {output.anno_bam}
-		mv ../vcf/{wildcards.sample_name}.vcf_ready.bai ../vcf/{wildcards.sample_name}.vcf_ready.bam.bai
 		
 		gatk Mutect2 \
 		-R {params.ref} \
@@ -238,26 +232,22 @@ rule vcf_gen:
 rule vartrix:
 	input:
 		vcf={rules.vcf_gen.output.filtered_vcf},
-		barcodes={rules.process_sample.output.just_barcodes},
+		barcodes="../pseudobulk_barcodes/{sample_name}/{sample_name}_all_cell_barcodes.tsv",
 		bam={rules.vcf_gen.output.anno_bam}
 	output:
 		 "../vartrix_results/{sample_name}.mmx"
 	conda:
 		"seurat"
-	threads: 12
-	resources:
-		mem_mb="3000"
 	params:
 		ref=config["vcf_ref"]
 	shell:
 		r"""
 		vartrix -v {input.vcf} -b {input.bam} -f {params.ref} -c \
-		{input.barcodes} -o ../vartrix_results/{wildcards.sample_name}.mmx \
-		--log-level info --threads {threads}
+		{input.barcodes} -o ../vartrix_results/{wildcards.sample_name}.mmx
 		
 		zcat {input.vcf} | awk '{{print $1,$2}}' > ../vartrix_results/{wildcards.sample_name}.snv_loci.txt
 		sed -i 's/\s/:/g' ../vartrix_results/{wildcards.sample_name}.snv_loci.txt
-		Rscript vartrix.R {widlcards.sample_name}
+		Rscript gedder.R $gnorts $num
 		"""
 
 def get_list_of_bams(wildcards):
@@ -289,6 +279,7 @@ checkpoint split_bam:
 
 		find ../bam/{wildcards.sample_name}/*.bam -printf "%f\n" > ../temp/{wildcards.sample_name}_temp_bams.txt
 		"""
+
 rule process_splits:
 	input:
 		"../temp/{sample_name}_temp_bams.txt",
@@ -305,8 +296,6 @@ rule process_splits:
 		| samtools reheader - {params.bam} > {params.bam}.bam
 		mv {params.bam}.bam {params.bam}
 		samtools index {params.bam}
-		touch ../bam/{wildcards.sample_name}/*.bai
-		sleep 1
 		"""
 
 rule pro_local:
