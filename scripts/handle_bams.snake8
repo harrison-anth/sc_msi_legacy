@@ -1,5 +1,5 @@
 #my snakemake run command
-#snakemake --executor cluster-generic --cluster-generic-submit-cmd "sbatch" --use-conda --latency-wait 60 --profile ../conda_envs/slurm_profile/ --verbose -s handle_bams.snake
+#snakemake -s handle_bams.snake8 --profile ../conda_envs/slurm_profile/ --rerun-incomplete --rerun-triggers mtime
 
 #print snakemake dag
 #snakemake --forceall --rulegraph | dot -Tpdf > dag.pdf
@@ -9,19 +9,21 @@
 #import libraries
 import pandas as pd
 
+#helpful to include this if Snakemake is using too make cluster cores on the headnode (probably just due to my version)
+import os
+os.environ['OPENBLAS_NUM_THREADS'] = '1'
 
 
 #define config file
-#configfile: "bam_config.yaml"
+configfile: "bam_config.yaml"
 #2 sample test file:
-configfile: "bam_config_test2.yaml"
+#configfile: "bam_config_test.yaml"
 
 with open(config["sample_list"]) as samples_tmp:
 	samples=samples_tmp.read().splitlines()
 
 
 #read in patient list
-
 with open(config["patient_list"]) as patient_id:
 	patients=patient_id.read().splitlines()
 
@@ -35,7 +37,7 @@ rule all:
 		expand("../images/{sample_name}_cell_types.pdf",sample_name=samples),
 		expand("../images/{sample_name}_msi_plots.pdf",sample_name=samples),
 		expand("../integrated_samples/{patient}.rds",patient=patients),
-		expand("../vcf/{sample_name}.filtered.vcf.gz",sample_name=samples)
+		expand("../vartrix_results/{sample_name}.mmx",sample_name=samples)
 
 rule cellranger:
 	input:
@@ -63,7 +65,9 @@ rule cellranger:
 		then
 		rm -r {params.final_dir}
 		fi
-		mkdir {params.temp_dir}
+
+		mkdir -p {params.temp_dir}
+
 		{params.cellranger} count --id={wildcards.sample_name} --transcriptome={params.ref} --fastqs=../fastq/ \
 		--sample={wildcards.sample_name} --output-dir {params.temp_dir} \
 		--localcores {threads}
@@ -149,9 +153,9 @@ rule process_sample:
 	input:
 		{rules.cellranger.output.matrix}
 	output:
-		"../pseudobulk_barcodes/{sample_name}/{sample_name}_all_cell_barcodes.tsv",
-		"../pseudobulk_barcodes/{sample_name}/just_barcodes.tsv",
-		"../filtered_h5/{sample_name}.rds"
+		all_barcodes="../pseudobulk_barcodes/{sample_name}/{sample_name}_all_cell_barcodes.tsv",
+		just_barcodes="../pseudobulk_barcodes/{sample_name}/just_barcodes.tsv",
+		filtered_h5="../filtered_h5/{sample_name}.rds"
 	conda:
 		"seurat"
 	shell:
@@ -194,60 +198,95 @@ rule sensor_rna:
 		msisensor-rna detection -i ../temp/{wildcards.sample_name}.csv -o ../sensor_rna_results/{wildcards.sample_name}.txt \
 		-m ../temp/{wildcards.sample_name}.model -d True
 		"""
-rule vcf_gen:
+rule split_cigar:
 	input:
 		{rules.cellranger.output.raw_bam}
 	output:
-		filtered_vcf="../vcf/{sample_name}.filtered.vcf.gz",
-		anno_bam="../bam/{sample_name}.vcf_ready.bam"
+		"../bam/{sample_name}.vcf_ready.bam"
 	conda:
 		"vcftools"
+	params:
+		ref=config["vcf_ref"]
+	threads: 1
+	shell:
+		"""
+		module load java
+
+		gatk SplitNCigarReads \
+		-R {params.ref} \
+		-I {input} \
+		-O {output}
+
+		mv ../bam/{wildcards.sample_name}.vcf_ready.bai ../bam/{wildcards.sample_name}.vcf_ready.bam.bai
+		"""
+
+rule mutect2:
+	input:
+		{rules.split_cigar.output}
+	output:
+		vcf="../vcf/{sample_name}_raw.vcf.gz"
+	conda:
+		"vcftools"
+	threads: 12
+	resources:
+		mem_mb="3000"
 	params:
 		ref=config["vcf_ref"],
 		pon=config["pon"],
 		gnome=config["gnome"]
-	threads: 12
-	resources:
-		mem_mb="3000"
 	shell:
-		"""
-		module load java
-		gatk SplitNCigarReads \
-		-R {params.ref} \
-		-I {input} \
-		-O {output.anno_bam}
-		
+		"""	
 		gatk Mutect2 \
 		-R {params.ref} \
-		-I {output.anno_bam} \
+		-I {input} \
 		--panel-of-normals {params.pon} \
 		--native-pair-hmm-threads {threads} \
-		-O ../vcf/{wildcards.sample_name}.vcf.gz
+		-O {output.vcf}
+		"""
 
+rule filter_vcf:
+	input:
+		{rules.mutect2.output.vcf}
+	output:
+		filtered_vcf="../vcf/{sample_name}.filtered.vcf.gz"
+	conda:
+		"vcftools"
+	params:
+		ref=config["vcf_ref"]
+	shell:
+		"""
 		gatk FilterMutectCalls \
-		-V ../vcf/{wildcards.sample_name}.vcf.gz \
+		-V {input} \
 		-R {params.ref} \
 		-O {output.filtered_vcf}
 		"""
+
 rule vartrix:
 	input:
-		vcf={rules.vcf_gen.output.filtered_vcf},
-		barcodes="../pseudobulk_barcodes/{sample_name}/{sample_name}_all_cell_barcodes.tsv",
-		bam={rules.vcf_gen.output.anno_bam}
+		vcf={rules.filter_vcf.output.filtered_vcf},
+		barcodes={rules.process_sample.output.just_barcodes},
+		bam={rules.split_cigar.output}
 	output:
 		 "../vartrix_results/{sample_name}.mmx"
 	conda:
 		"seurat"
+	threads: 20
+	resources:
+		mem_mb="1000"
 	params:
 		ref=config["vcf_ref"]
 	shell:
 		r"""
 		vartrix -v {input.vcf} -b {input.bam} -f {params.ref} -c \
-		{input.barcodes} -o ../vartrix_results/{wildcards.sample_name}.mmx
+		{input.barcodes} --out-matrix ../vartrix_results/{wildcards.sample_name}_alt_matrix.mmx \
+		--log-level info --threads {threads} \
+		--ref-matrix ../vartrix_results/{wildcards.sample_name}_ref_matrix.mmx \
+		--out-variants ../vartrix_results/{wildcards.sample_name}_var_list.tsv
 		
 		zcat {input.vcf} | awk '{{print $1,$2}}' > ../vartrix_results/{wildcards.sample_name}.snv_loci.txt
 		sed -i 's/\s/:/g' ../vartrix_results/{wildcards.sample_name}.snv_loci.txt
-		Rscript gedder.R $gnorts $num
+
+#		Rscript vartrix.R {wildcards.sample_name}
 		"""
 
 def get_list_of_bams(wildcards):
@@ -279,7 +318,6 @@ checkpoint split_bam:
 
 		find ../bam/{wildcards.sample_name}/*.bam -printf "%f\n" > ../temp/{wildcards.sample_name}_temp_bams.txt
 		"""
-
 rule process_splits:
 	input:
 		"../temp/{sample_name}_temp_bams.txt",
@@ -296,6 +334,8 @@ rule process_splits:
 		| samtools reheader - {params.bam} > {params.bam}.bam
 		mv {params.bam}.bam {params.bam}
 		samtools index {params.bam}
+		touch ../bam/{wildcards.sample_name}/*.bai
+		sleep 1
 		"""
 
 rule pro_local:

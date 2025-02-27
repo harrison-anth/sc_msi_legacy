@@ -9,10 +9,10 @@ gsm=Y
 
 annotate_mode=N
 	
-plot_mode=Y
+plot_mode=N
 
 
-integrate_mode=N
+integrate_mode=Y
 
 integrate_cancer=N
 

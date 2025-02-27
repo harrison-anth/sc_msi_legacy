@@ -107,11 +107,6 @@ assign(x = paste0('s_obj'),value = readRDS(paste0('../annotated_h5/',file_name,'
 s_obj$classification_confidence <- as.numeric(s_obj$classification_confidence)
 
 
-if('pan_cancer_cluster' %in% colnames(atomic_cells@meta.data)){
-s_obj$pan_cancer_cluster <- atomic_cells$pan_cancer_cluster
-}
-
-
 s_obj$sensor_rna_prob <- as.numeric(s_obj$sensor_rna_prob)
 
 assign(x = paste0(sample_name,'_', i),value = s_obj) %>% append(all_objs) -> all_objs

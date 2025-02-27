@@ -5,6 +5,10 @@ library(data.table)
 library(tidyverse)
 library(R.utils)
 
+#good reference https://rnabio.org/module-08-scrna/0008/06/01/Cancer_cell_identification/
+
+
+
 argus <- (commandArgs(asValues=TRUE, excludeReserved=TRUE)[-1])
 sample_name <- as.character(argus[1])
 

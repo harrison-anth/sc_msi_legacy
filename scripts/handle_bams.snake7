@@ -24,7 +24,6 @@ with open(config["sample_list"]) as samples_tmp:
 
 
 #read in patient list
-
 with open(config["patient_list"]) as patient_id:
 	patients=patient_id.read().splitlines()
 

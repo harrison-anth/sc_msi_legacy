@@ -9,7 +9,7 @@ cluster-generic-cancel-cmd: scancel
 #cores: all
 cluster-generic-submit-cmd:
   sbatch
-    --partition="normal,highmem,gpu"
+    --partition="normal,highmem"
     --output=../stdout_files/{rule}.{jobid}
     --error=../error_files/{rule}.{jobid}
     --mem-per-cpu={resources.mem_mb}

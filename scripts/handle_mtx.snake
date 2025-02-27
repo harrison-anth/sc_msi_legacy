@@ -1,5 +1,5 @@
 #my snakemake run command
-#snakemake --profile ../conda_envs/slurm_profile/ --verbose -s handle_mtx.snake --latency-wait 60 --rerun-incomplete
+#snakemake --profile ../conda_envs/slurm_profile/ --verbose -s handle_mtx.snake --latency-wait 60 --rerun-incomplete --rerun-triggers mtime
 
 #print snakemake dag
 #snakemake --forceall --rulegraph | dot -Tpdf > dag.pdf
@@ -13,21 +13,25 @@ configfile: "mtx_config.yaml"
 #artificial samples
 #configfile: "artificial_config.yaml"
 
-#print config file name and date
-import datetime
-
-print("Config settings are: ", config,".\n")
-now = datetime.datetime.now()
-print("Beginning analysis at", now.strftime("%Y-%m-%d %H:%M"))
-
 with open(config["sample_list"]) as samples_tmp:
 	samples=samples_tmp.read().splitlines()
+
+#read in patient list
+with open(config["patient_list"]) as patient_id:
+        patients=patient_id.read().splitlines()
+
+#read in patient-sample key
+import pandas as pd
+patient_key=pd.read_table(config["patient_key"])
+patient_key['filename'] = patient_key['sample_id']
+
 
 
 rule all:
 	input:
 		expand("../images/{sample_name}_cell_types.pdf",sample_name=samples),
-		expand("../images/{sample_name}_msi_plots.pdf",sample_name=samples)
+		expand("../images/{sample_name}_msi_plots.pdf",sample_name=samples),
+		expand("../integrated_samples/{patient}.rds",patient=patients)
 
 rule process_sample:
 	input:
@@ -110,4 +114,23 @@ rule create_plots:
 	shell:
 		"""
 		Rscript plot_all_gsm.R {wildcards.sample_name}
+		"""
+
+def match_patient_samples(wildcards):
+	indv_key = patient_key[patient_key['patient_id'].str.contains(wildcards.patient)]
+	matched_annotated_samples="../annotated_h5/" +indv_key['filename'].values +".rds"
+	return matched_annotated_samples
+
+checkpoint integrate_data:
+	input:
+		match_patient_samples
+	output:
+		"../integrated_samples/{patient}.rds",
+		"../integrated_samples/{patient}_cancer.rds",
+		"../temp/{patient}_cancer.csv"
+	conda:
+		"atomic"
+	shell:
+		"""
+		Rscript integrate_all2.R {wildcards.patient} 'Y'
 		"""
