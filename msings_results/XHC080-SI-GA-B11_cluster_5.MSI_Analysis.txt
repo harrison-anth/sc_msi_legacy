@@ -1,4 +1,4 @@
-Position	XHC080-SI-GA-B11
+Position	XHC080-SI-GA-B11_5
 unstable_loci	21
 passing_loci	131
 msing_score	0.1603

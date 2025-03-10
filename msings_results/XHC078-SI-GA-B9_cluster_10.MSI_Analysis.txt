@@ -1,4 +1,4 @@
-Position	XHC078-SI-GA-B9
+Position	XHC078-SI-GA-B9_10
 unstable_loci	1
 passing_loci	2
 msing_score	0.5000

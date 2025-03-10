@@ -1,4 +1,4 @@
-Position	XHC134-SI-GA-G11
+Position	XHC134-SI-GA-G11_7
 unstable_loci	2
 passing_loci	26
 msing_score	0.0769

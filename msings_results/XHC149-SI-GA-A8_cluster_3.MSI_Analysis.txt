@@ -1,4 +1,4 @@
-Position	XHC149-SI-GA-A8
+Position	XHC149-SI-GA-A8_3
 unstable_loci	4
 passing_loci	13
 msing_score	0.3077

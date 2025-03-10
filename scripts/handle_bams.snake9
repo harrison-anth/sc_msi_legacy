@@ -1,5 +1,5 @@
 #my snakemake run command
-#snakemake -s handle_bams.snake8 --profile ../conda_envs/slurm_profile/ --rerun-incomplete --rerun-triggers mtime
+#snakemake -s handle_bams.snake9 --profile ../conda_envs/slurm_profile/ --rerun-incomplete --rerun-triggers mtime --latency-wait 120
 
 #print snakemake dag
 #snakemake --forceall --rulegraph | dot -Tpdf > dag.pdf
@@ -37,7 +37,7 @@ rule all:
 		expand("../images/{sample_name}_cell_types.pdf",sample_name=samples),
 		expand("../images/{sample_name}_msi_plots.pdf",sample_name=samples),
 		expand("../integrated_samples/{patient}.rds",patient=patients),
-		expand("../vartrix_results/{sample_name}.mmx",sample_name=samples)
+		expand("../vartrix_results/{sample_name}_alt_matrix.mmx",sample_name=samples)
 
 rule cellranger:
 	input:
@@ -215,7 +215,7 @@ rule split_cigar:
 	params:
 		ref=config["vcf_ref"]
 	resources:
-		mem_mb="15000"
+		mem_mb="20000"
 	shell:
 		"""
 		module load java
@@ -256,17 +256,22 @@ rule filter_vcf:
 	input:
 		{rules.mutect2.output.vcf}
 	output:
-		filtered_vcf="../vcf/{sample_name}.filtered.vcf.gz"
+		filtered_vcf="../vcf/{sample_name}.filtered.final.vcf.gz"
 	conda:
 		"vcftools"
 	params:
-		ref=config["vcf_ref"]
+		ref=config["vcf_ref"],
+		filt_temp="../vcf/{sample_name}.filtered.vcf.gz"
 	shell:
 		"""
 		gatk FilterMutectCalls \
 		-V {input} \
 		-R {params.ref} \
-		-O {output.filtered_vcf}
+		-O {params.filt_temp}
+
+		vcftools --gzvcf {params.filt_temp} \
+		--recode --remove-filtered-all \
+		--stdout | gzip -c > {output.filtered_vcf}
 		"""
 
 rule vartrix:
@@ -278,9 +283,9 @@ rule vartrix:
 		 "../vartrix_results/{sample_name}_alt_matrix.mmx"
 	conda:
 		"seurat"
-	threads: 20
+	threads: 10
 	resources:
-		mem_mb="1000"
+		mem_mb="2000"
 	params:
 		ref=config["vcf_ref"]
 	shell:
@@ -326,6 +331,7 @@ checkpoint split_bam:
 
 		find ../bam/{wildcards.sample_name}/*.bam -printf "%f\n" > ../temp/{wildcards.sample_name}_temp_bams.txt
 		"""
+
 rule process_splits:
 	input:
 		"../temp/{sample_name}_temp_bams.txt",
@@ -343,7 +349,8 @@ rule process_splits:
 		mv {params.bam}.bam {params.bam}
 		samtools index {params.bam}
 		touch ../bam/{wildcards.sample_name}/*.bai
-		sleep 1
+		sleep 500
+		touch ../bam/{wildcards.sample_name}/*.bai
 		"""
 
 rule pro_local:

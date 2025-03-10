@@ -1,4 +1,4 @@
-Position	XHC083-SI-GA-C2
+Position	XHC083-SI-GA-C2_10
 unstable_loci	3
 passing_loci	12
 msing_score	0.2500

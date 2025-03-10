@@ -1,4 +1,4 @@
-Position	SRR23490337
+Position	SRR23490337_2
 unstable_loci	18
 passing_loci	88
 msing_score	0.2045

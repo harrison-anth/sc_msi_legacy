@@ -1,4 +1,4 @@
-Position	XHC141-SI-GA-A1
+Position	XHC141-SI-GA-A1_6
 unstable_loci	10
 passing_loci	101
 msing_score	0.0990

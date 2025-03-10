@@ -1,4 +1,4 @@
-Position	XHC143-SI-GA-A3
+Position	XHC143-SI-GA-A3_7
 unstable_loci	6
 passing_loci	27
 msing_score	0.2222

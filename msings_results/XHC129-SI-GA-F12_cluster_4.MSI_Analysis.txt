@@ -1,4 +1,4 @@
-Position	XHC129-SI-GA-F12
+Position	XHC129-SI-GA-F12_4
 unstable_loci	35
 passing_loci	398
 msing_score	0.0879

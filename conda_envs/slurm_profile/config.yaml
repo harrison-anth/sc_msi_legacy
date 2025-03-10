@@ -1,4 +1,4 @@
-jobs: unlimited
+jobs: 50
 jobname: "{rule}.{jobid}"
 #max-jobs-per-second: 200
 #max-status-checks-per-second: 200
@@ -9,7 +9,7 @@ cluster-generic-cancel-cmd: scancel
 #cores: all
 cluster-generic-submit-cmd:
   sbatch
-    --partition="normal,highmem"
+    --partition={resources.partition}
     --output=../stdout_files/{rule}.{jobid}
     --error=../error_files/{rule}.{jobid}
     --mem-per-cpu={resources.mem_mb}
@@ -22,6 +22,7 @@ use-conda: True
 #note the cluster option does not work with snakemake v8
 default-resources:
     mem_mb: 5000
+    partition: "normal,highmem"
 
 #can add --parsable to sbatch command
 
