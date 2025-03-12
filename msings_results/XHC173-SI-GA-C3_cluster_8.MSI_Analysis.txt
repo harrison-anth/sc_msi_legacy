@@ -1,4 +1,4 @@
-Position	XHC173-SI-GA-C3
+Position	XHC173-SI-GA-C3_8
 unstable_loci	5
 passing_loci	31
 msing_score	0.1613

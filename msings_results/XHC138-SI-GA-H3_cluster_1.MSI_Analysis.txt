@@ -1,4 +1,4 @@
-Position	XHC138-SI-GA-H3
+Position	XHC138-SI-GA-H3_1
 unstable_loci	23
 passing_loci	239
 msing_score	0.0962

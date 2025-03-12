@@ -1,4 +1,4 @@
-Position	XHC090-SI-GA-C9
+Position	XHC090-SI-GA-C9_2
 unstable_loci	19
 passing_loci	271
 msing_score	0.0701

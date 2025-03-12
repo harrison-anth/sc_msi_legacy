@@ -1,4 +1,4 @@
-Position	XHC110-SI-GA-E5
+Position	XHC110-SI-GA-E5_2
 unstable_loci	3
 passing_loci	90
 msing_score	0.0333

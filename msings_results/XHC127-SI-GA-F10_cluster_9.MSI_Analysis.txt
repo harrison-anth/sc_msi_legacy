@@ -1,4 +1,4 @@
-Position	XHC127-SI-GA-F10
+Position	XHC127-SI-GA-F10_9
 unstable_loci	3
 passing_loci	24
 msing_score	0.1250

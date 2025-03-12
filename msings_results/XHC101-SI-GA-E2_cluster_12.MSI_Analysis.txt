@@ -1,4 +1,4 @@
-Position	XHC101-SI-GA-E2
+Position	XHC101-SI-GA-E2_12
 unstable_loci	8
 passing_loci	63
 msing_score	0.1270

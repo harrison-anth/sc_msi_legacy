@@ -1,5 +1,5 @@
 #my snakemake run command
-#snakemake -s handle_bams.snake9 --profile ../conda_envs/slurm_profile/ --rerun-incomplete --rerun-triggers mtime --latency-wait 120
+#snakemake -s handle_bams.snake10 --profile ../conda_envs/slurm_profile/ --rerun-incomplete --rerun-triggers mtime --latency-wait 120
 
 #print snakemake dag
 #snakemake --forceall --rulegraph | dot -Tpdf > dag.pdf
@@ -15,9 +15,9 @@ os.environ['OPENBLAS_NUM_THREADS'] = '1'
 
 
 #define config file
-configfile: "bam_config.yaml"
+#configfile: "bam_config.yaml"
 #2 sample test file:
-#configfile: "bam_config_test.yaml"
+configfile: "bam_config_test.yaml"
 
 with open(config["sample_list"]) as samples_tmp:
 	samples=samples_tmp.read().splitlines()
@@ -264,7 +264,7 @@ rule filter_vcf:
 		ref=config["vcf_ref"],
 		filt_temp="../vcf/{sample_name}.filtered.vcf.gz"
 	shell:
-		"""
+		r"""
 		gatk FilterMutectCalls \
 		-V {input} \
 		-R {params.ref} \
@@ -273,6 +273,29 @@ rule filter_vcf:
 		vcftools --gzvcf {params.filt_temp} \
 		--recode --remove-filtered-all \
 		--stdout | gzip -c > {output.filtered_vcf}
+
+		#prep vcf for use with vartrix
+		zcat {output.filtered_vcf} | awk '{{print $1,$2}}' > ../vartrix_results/{wildcards.sample_name}.snv_loci.txt
+		sed -i 's/\s/:/g' ../vartrix_results/{wildcards.sample_name}.snv_loci.txt
+		"""
+
+rule annotate_variants:
+	input:
+		vcf={rules.filter_vcf.output.filtered_vcf}
+	output:
+		"../annovar_results/{sample_name}.avinput.variant_function"
+	params:
+		avinput="../annovar_results/{sample_name}.avinput"
+	conda:
+		"vcftools"
+	shell:
+		"""
+		#convert vcf to annovar format
+		perl ../temp/annovar/convert2annovar.pl -format vcf4 {input.vcf} > {params.avinput}
+		#annoatte variants
+		perl ../temp/annovar/annotate_variation.pl -geneanno -dbtype refGene -buildver hg38 {params.avinput} ../temp/annovar/humandb/
+		#filter variants
+		perl  ../temp/annovar/annotate_variation.pl -filter -dbtype exac03 -buildver hg38 {params.avinput} ../temp/annovar/humandb/
 		"""
 
 rule vartrix:
@@ -280,9 +303,12 @@ rule vartrix:
 		vcf={rules.filter_vcf.output.filtered_vcf},
 		barcodes={rules.process_sample.output.just_barcodes},
 		bam={rules.split_cigar.output},
-		s_obj="../annotated_h5/{sample_name}.rds"
+		s_obj="../filtered_h5/{sample_name}.rds",
+		annotations={rules.annotate_variants.output}
 	output:
-		 "../images/{sample_name}_muts.pdf"
+		ref_mat="../vartrix_results/{sample_name}_ref_matrix.mmx",
+		alt_mat="../vartrix_results/{sample_name}_alt_matrix.mmx",
+		genos_mat="../vartrix_results/{sample_name}_genos_matrix.mmx"
 	conda:
 		"seurat"
 	threads: 10
@@ -291,17 +317,42 @@ rule vartrix:
 	params:
 		ref=config["vcf_ref"]
 	shell:
-		r"""
+		"""
 		vartrix -v {input.vcf} -b {input.bam} -f {params.ref} -c \
 		{input.barcodes} --out-matrix ../vartrix_results/{wildcards.sample_name}_alt_matrix.mmx \
 		--log-level info --threads {threads} \
 		--ref-matrix ../vartrix_results/{wildcards.sample_name}_ref_matrix.mmx \
-		--out-variants ../vartrix_results/{wildcards.sample_name}_var_list.tsv
-		
-		zcat {input.vcf} | awk '{{print $1,$2}}' > ../vartrix_results/{wildcards.sample_name}.snv_loci.txt
-		sed -i 's/\s/:/g' ../vartrix_results/{wildcards.sample_name}.snv_loci.txt
+		--out-variants ../vartrix_results/{wildcards.sample_name}_var_list.tsv \
+		--scoring-method coverage \
+		--mapq 25
 
-		Rscript vartrix.R {wildcards.sample_name}
+		vartrix -v {input.vcf} -b {input.bam} -f {params.ref} -c \
+		{input.barcodes} --out-matrix ../vartrix_results/{wildcards.sample_name}_frac_matrix.mmx \
+		--log-level info --threads {threads} \
+		--scoring-method alt_frac \
+		--mapq 25
+		
+		vartrix -v {input.vcf} -b {input.bam} -f {params.ref} -c \
+		{input.barcodes} --out-matrix ../vartrix_results/{wildcards.sample_name}_genos_matrix.mmx \
+		--log-level info --threads {threads} \
+		--scoring-method consensus \
+		--mapq 25
+		"""
+rule plot_muts:
+	input:
+		{rules.vartrix.output.ref_mat},
+		{rules.vartrix.output.alt_mat},
+		{rules.vartrix.output.genos_mat}
+	output:
+		"../images/{sample_name}_muts.pdf"
+	conda:
+		"seurat"
+	threads: 1
+	resources:
+		mem_mb="30000"
+	shell:
+		"""
+		Rscript vartrix_coverage2.R {wildcards.sample_name}
 		"""
 
 def get_list_of_bams(wildcards):
@@ -470,8 +521,7 @@ def match_patient_samples(wildcards):
 	matched_annotated_samples="../annotated_h5/" +indv_key['filename'].values +".rds"
 	return matched_annotated_samples
 
-
-checkpoint integrate_data:
+rule integrate_data:
 	input:
 		match_patient_samples
 	output:
@@ -484,4 +534,3 @@ checkpoint integrate_data:
 		"""
 		Rscript integrate_all3.R {wildcards.patient} 'N'
 		"""
-

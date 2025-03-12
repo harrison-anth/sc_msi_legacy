@@ -1,4 +1,4 @@
-Position	XHC146-SI-GA-A5
+Position	XHC146-SI-GA-A5_1
 unstable_loci	11
 passing_loci	60
 msing_score	0.1833

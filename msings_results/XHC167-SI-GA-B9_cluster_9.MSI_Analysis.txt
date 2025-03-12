@@ -1,4 +1,4 @@
-Position	XHC167-SI-GA-B9
+Position	XHC167-SI-GA-B9_9
 unstable_loci	0
 passing_loci	4
 msing_score	0.0000

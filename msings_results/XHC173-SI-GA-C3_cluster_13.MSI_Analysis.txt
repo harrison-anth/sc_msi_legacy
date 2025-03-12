@@ -1,4 +1,4 @@
-Position	XHC173-SI-GA-C3
+Position	XHC173-SI-GA-C3_13
 unstable_loci	0
 passing_loci	0
 msi status	NEG

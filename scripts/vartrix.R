@@ -47,25 +47,35 @@ dev.off()
 
 
 
-#optional annotation code; not yet implemented
+annotations <- fread(paste0('../annovar_results/',sample_name,'.avinput.variant_function'))
+annotations$key <- paste0(annotations$V3,':',annotations$V4)
 
-#annotations <- fread(paste0('../annovar_results/',sample_name,'.',num,'.avinput.variant_function'))
-#annotations$key <- paste0(annotations$V3,':',annotations$V4)
+for(i in 1:ncol(snv_filt)){
+temp2 <- filter(annotations, annotations$key == colnames(snv_filt)[i])
 
-#for(i in 1:nrow(snv_matrix)){
-#temp2 <- filter(annotations, annotations$key == rownames(snv_matrix[i,]))
-
-#if(rownames(snv_matrix)[i] %in% annotations$key){
+if(colnames(snv_filt)[i] %in% annotations$key){
 
 #prevent duplicate rownames
-#if(temp2$V2[1] %in% rownames(snv_matrix)){
-#rownames(snv_matrix)[i] <- paste0(temp2$V2[1],'_',i)
-#} else{
-#
-#rownames(snv_matrix)[i] <- temp2$V2[1]}}
-#
-#}
-#
+if(temp2$V2[1] %in% colnames(snv_filt)){
+colnames(snv_filt)[i] <- paste0(temp2$V2[1],'_',i)
+} else{
+
+colnames(snv_filt)[i] <- temp2$V2[1]}}
+
+}
+
+#print it out all -- consider filtering further if too many snps or uninformative images are retained --
+pdf(paste0('../images/',sample_name,'_muts.pdf'))
+print_mut(s_obj=s_obj,snv_matrix=snv_filt,barcodes=barcodes)
+dev.off()
+
+
+
+
+
+
+
+
 #list of cool mutations
 
 #muts <- c('APC','TP53','KRAS','BRAF','EGFR','MLH','MSH','PSM')

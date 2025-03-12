@@ -1,4 +1,4 @@
-Position	XHC174-SI-GA-C4
+Position	XHC174-SI-GA-C4_4
 unstable_loci	21
 passing_loci	216
 msing_score	0.0972

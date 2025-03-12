@@ -13,8 +13,8 @@ cluster-generic-submit-cmd:
     --output=../stdout_files/{rule}.{jobid}
     --error=../error_files/{rule}.{jobid}
     --mem-per-cpu={resources.mem_mb}
-    --nice=5000
     --cpus-per-task={threads}
+    --nice=5000
 
 use-conda: True
 
