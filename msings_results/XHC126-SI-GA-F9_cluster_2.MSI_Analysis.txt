@@ -1,4 +1,4 @@
-Position	XHC126-SI-GA-F9
+Position	XHC126-SI-GA-F9_2
 unstable_loci	21
 passing_loci	194
 msing_score	0.1082

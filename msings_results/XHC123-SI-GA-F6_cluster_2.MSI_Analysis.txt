@@ -1,4 +1,4 @@
-Position	XHC123-SI-GA-F6
+Position	XHC123-SI-GA-F6_2
 unstable_loci	8
 passing_loci	78
 msing_score	0.1026

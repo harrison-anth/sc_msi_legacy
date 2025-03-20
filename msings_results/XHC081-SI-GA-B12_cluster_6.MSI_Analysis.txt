@@ -1,4 +1,4 @@
-Position	XHC081-SI-GA-B12
+Position	XHC081-SI-GA-B12_6
 unstable_loci	2
 passing_loci	15
 msing_score	0.1333

@@ -1,4 +1,4 @@
-Position	SRR12397038
+Position	SRR12397038_13
 unstable_loci	0
 passing_loci	0
 msi status	NEG

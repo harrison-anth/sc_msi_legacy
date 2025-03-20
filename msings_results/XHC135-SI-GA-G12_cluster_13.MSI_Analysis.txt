@@ -1,4 +1,4 @@
-Position	XHC135-SI-GA-G12
+Position	XHC135-SI-GA-G12_13
 unstable_loci	0
 passing_loci	3
 msing_score	0.0000

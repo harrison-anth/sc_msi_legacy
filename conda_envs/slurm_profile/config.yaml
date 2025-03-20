@@ -1,4 +1,4 @@
-jobs: 50
+jobs: 70
 jobname: "{rule}.{jobid}"
 #max-jobs-per-second: 200
 #max-status-checks-per-second: 200

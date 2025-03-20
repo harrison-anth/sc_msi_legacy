@@ -1,4 +1,4 @@
-Position	XHC144-SI-GA-A10
+Position	XHC144-SI-GA-A10_6
 unstable_loci	12
 passing_loci	88
 msing_score	0.1364

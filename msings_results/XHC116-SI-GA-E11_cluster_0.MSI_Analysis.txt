@@ -1,4 +1,4 @@
-Position	XHC116-SI-GA-E11
+Position	XHC116-SI-GA-E11_0
 unstable_loci	8
 passing_loci	111
 msing_score	0.0721

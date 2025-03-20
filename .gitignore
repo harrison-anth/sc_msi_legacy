@@ -25,3 +25,4 @@ numbat/*
 scripts/.snakemake/*
 scripts/.RData
 artifical_mtx/*
+images/*

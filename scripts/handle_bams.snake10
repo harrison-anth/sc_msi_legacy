@@ -15,9 +15,9 @@ os.environ['OPENBLAS_NUM_THREADS'] = '1'
 
 
 #define config file
-#configfile: "bam_config.yaml"
+configfile: "bam_config.yaml"
 #2 sample test file:
-configfile: "bam_config_test.yaml"
+#configfile: "bam_config_test.yaml"
 
 with open(config["sample_list"]) as samples_tmp:
 	samples=samples_tmp.read().splitlines()
@@ -216,7 +216,7 @@ rule split_cigar:
 	params:
 		ref=config["vcf_ref"]
 	resources:
-		mem_mb="20000"
+		mem_mb="30000"
 	shell:
 		"""
 		module load java
@@ -349,7 +349,8 @@ rule plot_muts:
 		"seurat"
 	threads: 1
 	resources:
-		mem_mb="30000"
+		mem_mb="35000",
+		partition="normal,highmem,gpu,interactive"
 	shell:
 		"""
 		Rscript vartrix_coverage2.R {wildcards.sample_name}
