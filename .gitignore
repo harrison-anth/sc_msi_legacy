@@ -26,3 +26,4 @@ scripts/.snakemake/*
 scripts/.RData
 artifical_mtx/*
 images/*
+infercnv_results/*

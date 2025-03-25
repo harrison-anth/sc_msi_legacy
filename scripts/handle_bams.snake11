@@ -38,7 +38,8 @@ rule all:
 		expand("../images/{sample_name}_msi_plots.pdf",sample_name=samples),
 		expand("../integrated_samples/{patient}.rds",patient=patients),
 		expand("../images/{sample_name}_muts.pdf",sample_name=samples),
-		expand("../images/{sample_name}_ccf.pdf",sample_name=samples)
+		expand("../images/{sample_name}_ccf.pdf",sample_name=samples),
+		expand("../infercnv_results/{sample_name}/infercnv_subclusters.png",sample_name=samples)
 
 
 rule cellranger:
@@ -545,6 +546,22 @@ rule create_plots:
 		"""
 		Rscript plot_all_bamog.R {wildcards.sample_name}
 		"""
+rule infercnv:
+	input:
+		"../annotated_h5/{sample_name}.rds"
+	output:
+		"../infercnv_results/{sample_name}/infercnv_subclusters.png"
+	conda:
+		"seurat"
+	shell:
+		"""
+		Rscript infer_cnv.R {wildcards.sample_name}
+		mkdir -p ../images/{wildcards.sample_name}_cnv/
+		cp ../infercnv_results/{wildcards.sample_name}/*.png ../images/{wildcards.sample_name}_cnv/
+		"""
+
+
+
 
 def match_patient_samples(wildcards):
 	indv_key = patient_key[patient_key['patient_id'].str.contains(wildcards.patient)]

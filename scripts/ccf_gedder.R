@@ -100,7 +100,9 @@ column_df[C,column] <- 0}
         
         column_df[rownames(column_df)%in% colnames(mini_s_obj),"p_value"] <- NA
       }
-      else{
+      else if(ccf_model$m$Rmat()[2,2] == 0){        column_df[rownames(column_df)%in% colnames(mini_s_obj),"ccf"] <- NA
+        column_df[rownames(column_df)%in% colnames(mini_s_obj),"p_value"] <- NA}else{
+
         ccf_model_summary <- summary(ccf_model)
       column_df[rownames(column_df)%in% colnames(mini_s_obj),"ccf"] <- ccf_model_summary$coefficients[1]
 
@@ -113,8 +115,9 @@ column_df[C,column] <- 0}
     
     }
 if(all(is.na(column_df$ccf))){
-    print(marrangeGrob(list(s1,s2,s3,s3),nrow=2,ncol=2))
-} else{
+	next
+#    print(marrangeGrob(list(s1,s2,s3,s3),nrow=2,ncol=2))
+} else if(sum(column_df$ccf,na.rm=TRUE)<1){next}else{
 
     s_obj <- AddMetaData(object=s_obj,metadata=column_df$ccf,col.name=paste0(column,'_ccf'))    
     s_obj <- AddMetaData(object=s_obj,metadata=column_df$p_value,col.name=paste0(column,'_pval'))    
