@@ -37,8 +37,8 @@ rule all:
 		expand("../images/{sample_name}_cell_types.pdf",sample_name=samples),
 		expand("../images/{sample_name}_msi_plots.pdf",sample_name=samples),
 		expand("../integrated_samples/{patient}.rds",patient=patients),
-		expand("../infercnv_results/sample_{sample_name}/infercnv_subclusters.png",sample_name=samples),
-		expand("../infercnv_results/patient_{patient}/infercnv_subclusters.png",patient=patients)
+		expand("../infercnv_results/sample_{sample_name}/infercnv.png",sample_name=samples),
+		expand("../infercnv_results/patient_{patient}/infercnv.png",patient=patients)
 
 
 
@@ -550,7 +550,7 @@ rule infercnv:
 	input:
 		"../annotated_h5/{sample_name}.rds"
 	output:
-		"../infercnv_results/sample_{sample_name}/infercnv_subclusters.png"
+		"../infercnv_results/sample_{sample_name}/infercnv.png"
 	params:
 		outdir="../infercnv_results/sample_{sample_name}/"
 	conda:
@@ -583,16 +583,16 @@ rule integrate_data:
 		"""
 rule infercnv_patient:
 	input:
-		"../annotated_h5/{patient}.rds"
+		"../integrated_samples/{patient}.rds"
 	output:
-		"../infercnv_results/patient_{patient}/infercnv_subclusters.png"
+		"../infercnv_results/patient_{patient}/infercnv.png"
 	params:
 		outdir="../infercnv_results/patient_{patient}/"
 	conda:
 		"seurat"
 	shell:
 		"""
-		Rscript infer_cnv.R {wildcards.patient} {params.outdir}
+		Rscript infer_patient_cnv.R {wildcards.patient} {params.outdir}
 		mkdir -p ../images/{wildcards.patient}_cnv/
 		cp {params.outdir}*.png ../images/{wildcards.patient}_cnv/
 		"""
