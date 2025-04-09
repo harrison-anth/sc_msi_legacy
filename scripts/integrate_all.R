@@ -30,7 +30,7 @@ gsm <- as.character(argus[2])
 set.seed(seed = 152727)
 
 if(gsm == 'Y'){key <- fread('../manifests/final_gsm_key.tsv',header=TRUE)
-} else if(gsm == 'N'){key <- fread('../manifests/final_key.tsv',header=TRUE)}
+} else if(gsm == 'N'){key <- fread('../manifests/final_key3.tsv',header=TRUE)}
 
 
 

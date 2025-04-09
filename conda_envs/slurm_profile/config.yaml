@@ -22,7 +22,7 @@ use-conda: True
 #note the cluster option does not work with snakemake v8
 default-resources:
     mem_mb: 5000
-    partition: "normal,highmem"
+    partition: "normal,highmem,MSC,gpu"
 
 #can add --parsable to sbatch command
 

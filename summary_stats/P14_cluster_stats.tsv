@@ -1,2 +1,2 @@
-paient_id	DF	Ssq	Msq	F	P	NumCc	Num_Samp
-P14	0	NA	NA	NA	NA	21	1
+paient_id	DF	Ssq	Msq	F	P	NumCc	Num_Samp	Num_MSS_subclones	Num_MSIH_subclones	Tot_subclones
+P14	0	NA	NA	NA	NA	21	0	NA	NA	NA

@@ -1,2 +1,2 @@
-patient_id	Df	Ssq	Msq	F	P	numCc	Num_Samp
-P30	5	5.4921	1.0984	26.6883	0	503	2
+patient_id	Df	Ssq	Msq	F	P	numCc	Num_Samp	Num_MSS_subclones	Num_MSIH_subclones	Tot_subclones
+P30	5	5.4921	1.0984	26.6883	0	503	0	14	2	16

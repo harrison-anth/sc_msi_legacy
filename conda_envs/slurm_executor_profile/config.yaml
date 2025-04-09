@@ -1,0 +1,24 @@
+jobs: 70
+#jobname: "{rule}.{jobid}"
+#max-jobs-per-second: 200
+#max-status-checks-per-second: 200
+executor: slurm
+show-failed-logs: True
+verbose: True
+default-resources:
+    slurm_account: "genomics"
+    slurm_partition: "normal,highmem,MSC"
+    mem_mb_per_cpu: 5000
+    runtime: "48h"
+#    slurm_extra: "'--job-name={rule}.{jobid} --error=../error_files/{rule}.{jobid} --output=../stdout_files/{rule}.{jobid}'"
+
+use-conda: True
+
+#sidenote had to edit site-packages/snakemake_executor_plugin_slurm_jobstep/__init__.pylib to include
+#call = f"srun -n1 --cpus-per-task={job.threads} --cpu_bind=q {self.format_job_exec(job)}"
+#as there is an ongoing issue with older installations of slurm having --cpu_bind versus --cpu-bind
+#also this fixes an old srun issue which does not fully utilize the cpus-per-task parallel capacity of clurm
+#see the following two git issues for more information:
+#https://github.com/snakemake/snakemake/issues/2447
+#https://github.com/snakemake/snakemake/issues/2071
+

@@ -17,12 +17,22 @@ s_obj <- readRDS(paste0('../integrated_samples/',sample_name,'.rds'))
 anno <- data.frame(cell_name=colnames(s_obj),cancer=s_obj$pan_cancer_cluster,
 type=s_obj$scATOMIC_pred,msi=s_obj$sensor_rna_status)
 
+if( nrow(filter(anno, msi == "MSI-H" & cancer == "Cancer")) <2 | nrow(filter(anno, msi == "MSS" & cancer == "Cancer")) < 2){
+print('Too few MSI-H or MSS classifications; continuing infercnv without MSI labels')
+final_anno <- data.frame(cell_name=anno$cell_name,type=anno$cancer)
+fwrite(final_anno,file=paste0('../temp/',sample_name,'_anno.tsv'),sep='\t',col.names=FALSE)
+
+
+
+} else{
 #change MSI NA's to MSS (on the basis that MSS unless otherwise proven high)
 anno$msi[is.na(anno$msi)] <- "MSS"
 
 anno$cancer2 <- paste0(anno$cancer,'_',anno$msi)
 final_anno <- data.frame(cell_name=anno$cell_name,type=ifelse(anno$cancer =="Normal",yes=anno$cancer,no=anno$cancer2))
 fwrite(final_anno,file=paste0('../temp/',sample_name,'_anno.tsv'),sep='\t',col.names=FALSE)
+}
+
 
 #create infercnv object
 cnv_obj <- CreateInfercnvObject(raw_counts_matrix=s_obj@assays$RNA$counts,
