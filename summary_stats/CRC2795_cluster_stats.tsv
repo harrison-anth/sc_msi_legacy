@@ -1,2 +1,2 @@
-patient_id	Df	Ssq	Msq	F	P	numCc	Num_Samp	Num_MSS_subclones	Num_MSIH_subclones	Tot_subclones
-CRC2795	5	1.6771	0.3354	8.1682	0	385	4	0	0	12
+Patient	Clusters	F	numCc	Num_Samp	Num_MSS_subclones	Num_MSIH_subclones	Tot_subclones
+CRC2795	6	8.1682	385	4	0	0	12

@@ -230,7 +230,7 @@ rule summary_stats:
 		"seurat"
 	shell:
 		"""
-		Rscript get_summary_stats.R {wildcards.patient} "N"
+		Rscript get_summary_stats.R {wildcards.patient} "Y"
 		"""
 
 		

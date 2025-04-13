@@ -127,7 +127,7 @@ title: `r sample_id`
 ```{r read-in-data}
 
 key <- fread('../manifests/combined_key.tsv')
-key <- filter(key, msi_status=='MSI-H')
+#key <- filter(key, msi_status=='MSI-H')
 treatment_meta_data <- fread('../manifests/final_gsm_key2.tsv')
 key$treatment <- NA
 for(i in 1:nrow(key)){

@@ -17,7 +17,7 @@ gsm <- as.character(argus[2])
 set.seed(seed = 152727)
 
 if(gsm == 'Y'){key <- fread('../manifests/final_gsm_key.tsv',header=TRUE)
-} else if(gsm == 'N'){key <- fread('../manifests/final_key.tsv',header=TRUE)}
+} else if(gsm == 'N'){key <- fread('../manifests/final_key3.tsv',header=TRUE)}
 
 get_summary_stats <- function(sample_name){
 
@@ -37,22 +37,26 @@ num_tot_samps <- nrow(indv_key)
 
 
 if(length(levels(droplevels(cancer_fin$seurat_clusters)))<2){
-print('Only one cluster of cancer cells; not aggregating expression')
+print('Only one cluster of cancer cells; cannot run anova')
 clustys <- cancer_fin
-f_df <- data.frame(paient_id=sample_name,
+anova_df <- data.frame(patient_id=sample_name,
 			DF=0,
 			Ssq="NA",
 			Msq="NA",
 			F="NA",
-			P="NA",
+			P="NA")
+subclone_df <- data.frame(Patient=sample_name,
+			Clusters=1,
+			F=NA,
 			NumCc = ncol(cancer_fin),
 			Num_Samp=num_tumor_samps,
-			Num_MSS_subclones="NA",
-			Num_MSIH_subclones="NA",
-			Tot_subclones="NA")
+                        Num_MSS_subclones=length(na.omit(str_extract(string=unique(cancer_fin$infercnv_subcluster),pattern='MSS'))),
+                        Num_MSIH_subclones=length(na.omit(str_extract(string=unique(cancer_fin$infercnv_subcluster),pattern='MSI-H'))),
+                        Tot_subclones=length(unique(cancer_fin$infercnv_subcluster)))
 
+fwrite(x=anova_df,file=paste0('../summary_stats/',sample_name,'_anova_results.tsv'),sep='\t')
+fwrite(x=subclone_df,file=paste0('../summary_stats/',sample_name,'_cluster_stats.tsv'),sep='\t')
 
-fwrite(x=f_df,file=paste0('../summary_stats/',sample_name,'_cluster_stats.tsv'),sep='\t')
 
 
 
@@ -64,20 +68,29 @@ anova_df <- data.frame(cluster=as.character(cancer_fin$seurat_clusters),
                         msi_score=as.numeric(cancer_fin$sensor_rna_prob))
 anova_result <- aov(msi_score ~ cluster,data=anova_df)
 
-f_df <- data.frame(patient_id=sample_name,
+anova_df <- data.frame(patient_id=sample_name,
                         Df=summary(anova_result)[[1]][["Df"]][1],
                         Ssq=round(summary(anova_result)[[1]][["Sum Sq"]][1],4),
                         Msq=round(summary(anova_result)[[1]][["Mean Sq"]][1],4),
                         F = round(summary(anova_result)[[1]][["F value"]][1],4),
-                        P = round(summary(anova_result)[[1]][["Pr(>F)"]][1],4),
+                        P = round(summary(anova_result)[[1]][["Pr(>F)"]][1],4))
+
+subclone_df <- data.frame(Patient=sample_name,
+                        Clusters=summary(anova_result)[[1]][["Df"]][1]+1,
+                        F = round(summary(anova_result)[[1]][["F value"]][1],4),
                         numCc = ncol(cancer_fin),
-			Num_Samp=num_tumor_samps,
+                        Num_Samp=num_tumor_samps,
                         Num_MSS_subclones=length(na.omit(str_extract(string=unique(cancer_fin$infercnv_subcluster),pattern='MSS'))),
-			Num_MSIH_subclones=length(na.omit(str_extract(string=unique(cancer_fin$infercnv_subcluster),pattern='MSI-H'))),
+                        Num_MSIH_subclones=length(na.omit(str_extract(string=unique(cancer_fin$infercnv_subcluster),pattern='MSI-H'))),
                         Tot_subclones=length(unique(cancer_fin$infercnv_subcluster)))
 
 
-fwrite(x=f_df,file=paste0('../summary_stats/',sample_name,'_cluster_stats.tsv'),sep='\t')
+
+fwrite(x=anova_df,file=paste0('../summary_stats/',sample_name,'_anova_results.tsv'),sep='\t')
+fwrite(x=subclone_df,file=paste0('../summary_stats/',sample_name,'_cluster_stats.tsv'),sep='\t')
+
+
+
 
 }
 }

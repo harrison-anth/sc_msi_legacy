@@ -19,8 +19,9 @@ library(scATOMIC)
 library(devtools)
 
 set.seed(seed = 152727)
-
-n_cores=detectCores()-1
+#running single-threaded at the moment to prevent memory hickups
+n_cores=1
+#detectCores()-1
 
 argus <- (commandArgs(asValues=TRUE, excludeReserved=TRUE)[-1])
 sample_name <- as.character(argus[1])
