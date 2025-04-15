@@ -7,7 +7,7 @@
 #key with sample names and PCR/IHC ground truth. 
 
 
-manifest=../manifests/final_key.tsv
+manifest=../manifests/final_key3.tsv
 
 
 module load Anaconda3

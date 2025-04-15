@@ -174,7 +174,6 @@ fwrite(new_data2,paste0('../temp/',sample_name,'.csv'),sep=',')
 
 #now just the cancer
 #get percent of cancer cells for each integrated cluster
-integrated <- subset(integrated, subset=site != "Normal" & tissue != "normal")
 
 int_ant <- calc_cancer_prop(integrated)
 cancer_int <- subset(int_ant,subset=pan_cancer_cluster == "Cancer")
