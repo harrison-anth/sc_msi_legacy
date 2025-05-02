@@ -2,7 +2,7 @@
 #also see the merge function from the seurat v4.3 archive https://satijalab.org/seurat/archive/v4.3/merge
 
 #set seed (remove this for random sampling)
-set.seed(9)
+#set.seed(9)
 
 #load libs
 library(Seurat)
@@ -84,6 +84,13 @@ all_mixing_tables <- data.frame()
 
 for(cv in 1:runs){
 print(paste0('starting run ', cv))
+
+#setting seed for each run to the n'th run. Easy way to keep track of seeds and things. Probably should switch to random seed generator though...
+set.seed(cv)
+
+
+
+
 
 
 #create mixing table to generate all possible combinations of MSIH and MSS cells
