@@ -1,6 +1,4 @@
-#Integrate sample from common patient ID's
-#Much of the integration code from user alg697's comment on seurat github issue
-#https://github.com/satijalab/seurat/issues/8938
+#Grab summary stats on the number of subclones and ANOVA results for individual scMSI runs
 
 #functions and libs
 library(data.table)
@@ -10,10 +8,17 @@ library(R.utils)
 library(tidyverse)
 library(infercnv)
 
+
+#read in arguments from command line
 argus <- (commandArgs(asValues=TRUE, excludeReserved=TRUE)[-1])
+
+#define sample name / patient ID
 sample_name <- as.character(argus[1])
+
+#Determine if this is from the GSM datasets (GEO) or the SRA datasets
 gsm <- as.character(argus[2])
 
+#set seed
 set.seed(seed = 152727)
 
 if(gsm == 'Y'){key <- fread('../manifests/final_gsm_key.tsv',header=TRUE)
@@ -36,6 +41,13 @@ num_tumor_samps <- nrow(filter(indv_key, site != "normal" & site != "Normal"))
 num_tot_samps <- nrow(indv_key)
 
 
+#get number of msi-h and mss cells used in the analysis (also a range of the MSI probability score)
+
+
+
+
+
+
 if(length(levels(droplevels(cancer_fin$seurat_clusters)))<2){
 print('Only one cluster of cancer cells; cannot run anova')
 clustys <- cancer_fin
@@ -49,6 +61,11 @@ subclone_df <- data.frame(Patient=sample_name,
 			Clusters=1,
 			F=NA,
 			NumCc = ncol(cancer_fin),
+                        NumMSIHcells = sum(cancer_fin$sensor_rna_status == "MSI-H",na.rm=TRUE),
+                        NumMSScells = sum(cancer_fin$sensor_rna_status == "MSS",na.rm=TRUE),
+                        min_score = min(cancer_fin$sensor_rna_prob,na.rm=TRUE),                        
+                        avg_score = mean(cancer_fin$sensor_rna_prob,na.rm=TRUE),
+                        max_score = max(cancer_fin$sensor_rna_prob,na.rm=TRUE),
 			Num_Samp=num_tumor_samps,
                         Num_MSS_subclones=length(na.omit(str_extract(string=unique(cancer_fin$infercnv_subcluster),pattern='MSS'))),
                         Num_MSIH_subclones=length(na.omit(str_extract(string=unique(cancer_fin$infercnv_subcluster),pattern='MSI-H'))),

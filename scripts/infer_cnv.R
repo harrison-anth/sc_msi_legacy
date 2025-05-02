@@ -48,6 +48,7 @@ infercnv_obj = infercnv::run(cnv_obj,
                              out_dir=paste0(outdir),
                              cluster_by_groups=T,   # cluster
                              denoise=T,
-                             HMM=T
+                             HMM=T,
+                             num_threads=1
                              )
 

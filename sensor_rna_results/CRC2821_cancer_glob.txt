@@ -1,0 +1,2 @@
+sample_id,msi_status,probability_of_MSI-H
+CRC2821,MSI-H,0.671

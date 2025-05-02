@@ -564,6 +564,9 @@ rule integrate_data:
 	output:
 		int_data="../integrated_samples/{patient}.rds",
 		canc_data="../integrated_samples/{patient}_cancer.rds"
+	threads: 5
+	resources:
+		mem_mb=10000
 	conda:
 		"atomic"
 	shell:
@@ -605,7 +608,7 @@ rule infercnv_patient:
 		"/data3/hanthony/infer_cnv_temp/patient_{patient}/infercnv.png"
 	params:
 		outdir="/data3/hanthony/infer_cnv_temp/patient_{patient}/"
-	threads: 5
+	threads: 6
 	resources:
 		mem_mb=10000
 	conda:

@@ -1,0 +1,2 @@
+sample_id,msi_status,probability_of_MSI-H
+SRR12397038,MSS,0.2256

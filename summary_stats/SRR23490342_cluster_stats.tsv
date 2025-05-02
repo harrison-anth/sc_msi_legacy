@@ -1,2 +1,2 @@
-Patient	Clusters	F	NumCc	Num_Samp	Num_MSS_subclones	Num_MSIH_subclones	Tot_subclones
-SRR23490342	1		48	1	0	0	2
+Patient	Clusters	F	NumCc	NumMSIHcells	NumMSScells	min_score	avg_score	max_score	Num_Samp	Num_MSS_subclones	Num_MSIH_subclones	Tot_subclones
+SRR23490342	1		48	0	48	0.0306		0.6938	1	0	0	2

@@ -28,7 +28,7 @@ gsm <- as.character(argus[2])
 
 set.seed(seed = 152727)
 
-if(gsm == 'Y'){key <- fread('../manifests/gsm_with_mix_key.tsv',header=TRUE)
+if(gsm == 'Y'){key <- fread('../manifests/mix_key_cv.tsv',header=TRUE)
 } else if(gsm == 'N'){
 key <- fread('../manifests/final_key3.tsv',header=TRUE)}
 

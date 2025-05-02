@@ -1,0 +1,149 @@
+[2025-05-02 14:22:09 +0100] 
+[2025-05-02 14:22:09 +0100] pyEGA3 - EGA python client version 5.2.0 (https://github.com/EGA-archive/ega-download-client)
+[2025-05-02 14:22:09 +0100] Parts of this software are derived from pyEGA (https://github.com/blachlylab/pyega) by James Blachly
+[2025-05-02 14:22:09 +0100] Python version : 3.6.15
+[2025-05-02 14:22:09 +0100] OS version : Linux #1 SMP Thu Jan 25 16:17:31 UTC 2024
+[2025-05-02 14:22:09 +0100] credential_file.json does not exist
+[2025-05-02 14:22:59 +0100] Server URL: https://ega.ebi.ac.uk:8443/v2
+[2025-05-02 14:22:59 +0100] Session-Id: 2806817843
+[2025-05-02 14:23:06 +0100] 
+[2025-05-02 14:23:06 +0100] pyEGA3 - EGA python client version 5.2.0 (https://github.com/EGA-archive/ega-download-client)
+[2025-05-02 14:23:06 +0100] Parts of this software are derived from pyEGA (https://github.com/blachlylab/pyega) by James Blachly
+[2025-05-02 14:23:06 +0100] Python version : 3.6.15
+[2025-05-02 14:23:06 +0100] OS version : Linux #1 SMP Thu Jan 25 16:17:31 UTC 2024
+[2025-05-02 14:23:06 +0100] credential_file.json does not exist
+[2025-05-02 14:49:57 +0100] 
+[2025-05-02 14:49:57 +0100] pyEGA3 - EGA python client version 5.2.0 (https://github.com/EGA-archive/ega-download-client)
+[2025-05-02 14:49:57 +0100] Parts of this software are derived from pyEGA (https://github.com/blachlylab/pyega) by James Blachly
+[2025-05-02 14:49:57 +0100] Python version : 3.6.15
+[2025-05-02 14:49:57 +0100] OS version : Linux #1 SMP Thu Jan 25 16:17:31 UTC 2024
+[2025-05-02 14:49:57 +0100] Server URL: https://ega.ebi.ac.uk:8443/v2
+[2025-05-02 14:49:57 +0100] Session-Id: 2179184715
+[2025-05-02 14:49:57 +0100] Starting new HTTPS connection (1): ipinfo.io:443
+[2025-05-02 14:49:57 +0100] https://ipinfo.io:443 "GET /json HTTP/1.1" 200 None
+[2025-05-02 14:49:57 +0100] Starting new HTTPS connection (1): ega.ebi.ac.uk:8443
+[2025-05-02 14:52:08 +0100] 
+[2025-05-02 14:52:08 +0100] pyEGA3 - EGA python client version 5.2.0 (https://github.com/EGA-archive/ega-download-client)
+[2025-05-02 14:52:08 +0100] Parts of this software are derived from pyEGA (https://github.com/blachlylab/pyega) by James Blachly
+[2025-05-02 14:52:08 +0100] Python version : 3.6.15
+[2025-05-02 14:52:08 +0100] OS version : Linux #1 SMP Thu Jan 25 16:17:31 UTC 2024
+[2025-05-02 14:52:08 +0100] Server URL: https://ega.ebi.ac.uk:8443/v2
+[2025-05-02 14:52:08 +0100] Session-Id: 2069239510
+[2025-05-02 14:54:15 +0100] Invalid username, password or secret key - please check and retry. If problem persists contact helpdesk on helpdesk@ega-archive.org
+Traceback (most recent call last):
+  File "/data3/hanthony/.conda_envs/aws/lib/python3.6/site-packages/urllib3/connection.py", line 175, in _new_conn
+    (self._dns_host, self.port), self.timeout, **extra_kw
+  File "/data3/hanthony/.conda_envs/aws/lib/python3.6/site-packages/urllib3/util/connection.py", line 96, in create_connection
+    raise err
+  File "/data3/hanthony/.conda_envs/aws/lib/python3.6/site-packages/urllib3/util/connection.py", line 86, in create_connection
+    sock.connect(sa)
+TimeoutError: [Errno 110] Connection timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/data3/hanthony/.conda_envs/aws/lib/python3.6/site-packages/urllib3/connectionpool.py", line 706, in urlopen
+    chunked=chunked,
+  File "/data3/hanthony/.conda_envs/aws/lib/python3.6/site-packages/urllib3/connectionpool.py", line 382, in _make_request
+    self._validate_conn(conn)
+  File "/data3/hanthony/.conda_envs/aws/lib/python3.6/site-packages/urllib3/connectionpool.py", line 1010, in _validate_conn
+    conn.connect()
+  File "/data3/hanthony/.conda_envs/aws/lib/python3.6/site-packages/urllib3/connection.py", line 358, in connect
+    conn = self._new_conn()
+  File "/data3/hanthony/.conda_envs/aws/lib/python3.6/site-packages/urllib3/connection.py", line 187, in _new_conn
+    self, "Failed to establish a new connection: %s" % e
+urllib3.exceptions.NewConnectionError: <urllib3.connection.HTTPSConnection object at 0x7f13f5ecfb00>: Failed to establish a new connection: [Errno 110] Connection timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/data3/hanthony/.conda_envs/aws/lib/python3.6/site-packages/requests/adapters.py", line 449, in send
+    timeout=timeout
+  File "/data3/hanthony/.conda_envs/aws/lib/python3.6/site-packages/urllib3/connectionpool.py", line 756, in urlopen
+    method, url, error=e, _pool=self, _stacktrace=sys.exc_info()[2]
+  File "/data3/hanthony/.conda_envs/aws/lib/python3.6/site-packages/urllib3/util/retry.py", line 574, in increment
+    raise MaxRetryError(_pool, url, error or ResponseError(cause))
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='ega.ebi.ac.uk', port=8443): Max retries exceeded with url: /ega-openid-connect-server/token (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7f13f5ecfb00>: Failed to establish a new connection: [Errno 110] Connection timed out',))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/data3/hanthony/.conda_envs/aws/lib/python3.6/site-packages/pyega3/libs/auth_client.py", line 37, in token
+    r = requests.post(self.url, headers=headers, data=data)
+  File "/data3/hanthony/.conda_envs/aws/lib/python3.6/site-packages/requests/api.py", line 117, in post
+    return request('post', url, data=data, json=json, **kwargs)
+  File "/data3/hanthony/.conda_envs/aws/lib/python3.6/site-packages/requests/api.py", line 61, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/data3/hanthony/.conda_envs/aws/lib/python3.6/site-packages/requests/sessions.py", line 542, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/data3/hanthony/.conda_envs/aws/lib/python3.6/site-packages/requests/sessions.py", line 655, in send
+    r = adapter.send(request, **kwargs)
+  File "/data3/hanthony/.conda_envs/aws/lib/python3.6/site-packages/requests/adapters.py", line 516, in send
+    raise ConnectionError(e, request=request)
+requests.exceptions.ConnectionError: HTTPSConnectionPool(host='ega.ebi.ac.uk', port=8443): Max retries exceeded with url: /ega-openid-connect-server/token (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7f13f5ecfb00>: Failed to establish a new connection: [Errno 110] Connection timed out',))
+[2025-05-02 14:54:50 +0100] 
+[2025-05-02 14:54:50 +0100] pyEGA3 - EGA python client version 5.2.0 (https://github.com/EGA-archive/ega-download-client)
+[2025-05-02 14:54:50 +0100] Parts of this software are derived from pyEGA (https://github.com/blachlylab/pyega) by James Blachly
+[2025-05-02 14:54:50 +0100] Python version : 3.6.15
+[2025-05-02 14:54:50 +0100] OS version : Linux #1 SMP Thu Jan 25 16:17:31 UTC 2024
+[2025-05-02 14:54:50 +0100] Server URL: https://ega.ebi.ac.uk:8443/v2
+[2025-05-02 14:54:50 +0100] Session-Id: 1483379269
+[2025-05-02 14:56:57 +0100] Invalid username, password or secret key - please check and retry. If problem persists contact helpdesk on helpdesk@ega-archive.org
+Traceback (most recent call last):
+  File "/data3/hanthony/.conda_envs/aws/lib/python3.6/site-packages/urllib3/connection.py", line 175, in _new_conn
+    (self._dns_host, self.port), self.timeout, **extra_kw
+  File "/data3/hanthony/.conda_envs/aws/lib/python3.6/site-packages/urllib3/util/connection.py", line 96, in create_connection
+    raise err
+  File "/data3/hanthony/.conda_envs/aws/lib/python3.6/site-packages/urllib3/util/connection.py", line 86, in create_connection
+    sock.connect(sa)
+TimeoutError: [Errno 110] Connection timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/data3/hanthony/.conda_envs/aws/lib/python3.6/site-packages/urllib3/connectionpool.py", line 706, in urlopen
+    chunked=chunked,
+  File "/data3/hanthony/.conda_envs/aws/lib/python3.6/site-packages/urllib3/connectionpool.py", line 382, in _make_request
+    self._validate_conn(conn)
+  File "/data3/hanthony/.conda_envs/aws/lib/python3.6/site-packages/urllib3/connectionpool.py", line 1010, in _validate_conn
+    conn.connect()
+  File "/data3/hanthony/.conda_envs/aws/lib/python3.6/site-packages/urllib3/connection.py", line 358, in connect
+    conn = self._new_conn()
+  File "/data3/hanthony/.conda_envs/aws/lib/python3.6/site-packages/urllib3/connection.py", line 187, in _new_conn
+    self, "Failed to establish a new connection: %s" % e
+urllib3.exceptions.NewConnectionError: <urllib3.connection.HTTPSConnection object at 0x7fa42ec37be0>: Failed to establish a new connection: [Errno 110] Connection timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/data3/hanthony/.conda_envs/aws/lib/python3.6/site-packages/requests/adapters.py", line 449, in send
+    timeout=timeout
+  File "/data3/hanthony/.conda_envs/aws/lib/python3.6/site-packages/urllib3/connectionpool.py", line 756, in urlopen
+    method, url, error=e, _pool=self, _stacktrace=sys.exc_info()[2]
+  File "/data3/hanthony/.conda_envs/aws/lib/python3.6/site-packages/urllib3/util/retry.py", line 574, in increment
+    raise MaxRetryError(_pool, url, error or ResponseError(cause))
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='ega.ebi.ac.uk', port=8443): Max retries exceeded with url: /ega-openid-connect-server/token (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7fa42ec37be0>: Failed to establish a new connection: [Errno 110] Connection timed out',))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/data3/hanthony/.conda_envs/aws/lib/python3.6/site-packages/pyega3/libs/auth_client.py", line 37, in token
+    r = requests.post(self.url, headers=headers, data=data)
+  File "/data3/hanthony/.conda_envs/aws/lib/python3.6/site-packages/requests/api.py", line 117, in post
+    return request('post', url, data=data, json=json, **kwargs)
+  File "/data3/hanthony/.conda_envs/aws/lib/python3.6/site-packages/requests/api.py", line 61, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/data3/hanthony/.conda_envs/aws/lib/python3.6/site-packages/requests/sessions.py", line 542, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/data3/hanthony/.conda_envs/aws/lib/python3.6/site-packages/requests/sessions.py", line 655, in send
+    r = adapter.send(request, **kwargs)
+  File "/data3/hanthony/.conda_envs/aws/lib/python3.6/site-packages/requests/adapters.py", line 516, in send
+    raise ConnectionError(e, request=request)
+requests.exceptions.ConnectionError: HTTPSConnectionPool(host='ega.ebi.ac.uk', port=8443): Max retries exceeded with url: /ega-openid-connect-server/token (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7fa42ec37be0>: Failed to establish a new connection: [Errno 110] Connection timed out',))
+[2025-05-02 15:03:07 +0100] 
+[2025-05-02 15:03:07 +0100] pyEGA3 - EGA python client version 5.2.0 (https://github.com/EGA-archive/ega-download-client)
+[2025-05-02 15:03:07 +0100] Parts of this software are derived from pyEGA (https://github.com/blachlylab/pyega) by James Blachly
+[2025-05-02 15:03:07 +0100] Python version : 3.6.15
+[2025-05-02 15:03:07 +0100] OS version : Linux #1 SMP Thu Jan 25 16:17:31 UTC 2024
+[2025-05-02 15:03:07 +0100] Server URL: https://ega.ebi.ac.uk:8443/v2
+[2025-05-02 15:03:07 +0100] Session-Id: 1480127200
