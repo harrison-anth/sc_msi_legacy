@@ -28,7 +28,9 @@ key <- fread(paste0('../manifests/',manifest))
 
 
 #define funcs
-cell_sampler <- function(sample_name,msi_status,prop_cancer,prop_normal){
+cell_sampler <- function(sample_name,msi_status,prop_cancer,prop_normal,seed){
+
+
 
 #description of paramters
 #sample_name; give sample name of s_obj to be used
@@ -58,7 +60,9 @@ tot_cells = as.numeric(num_cancer_cells + num_normal_cells)
 
 
 #subsample seurat object based on desired number of cancer cells
+set.seed(seed)
 sampled_cancer <- cancer_cells[, sample(colnames(cancer_cells), size = num_cancer_cells, replace=F)]
+set.seed(seed)
 sampled_normal <- normal_cells[, sample(colnames(normal_cells), size = num_normal_cells, replace=F)]
 
 #merge subsamples
@@ -86,9 +90,6 @@ for(cv in 1:runs){
 print(paste0('starting run ', cv))
 
 #setting seed for each run to the n'th run. Easy way to keep track of seeds and things. Probably should switch to random seed generator though...
-set.seed(cv)
-
-
 
 
 
@@ -104,10 +105,12 @@ mixing_table <- data.frame(prop_msih_cancer=mix_intervals,prop_mss_cancer=rev(mi
 #generate msih and mss lists of seurat objects with varying mixes of cells based on mixing table.
 
 print(paste("creating objects for sample",sample1_name))
-msih_objs <- apply(X=mixing_table,function(x) cell_sampler(sample_name=sample1_name,msi_status='msih',x[1],x[3]),MARGIN=1)
+set.seed(cv)
+
+msih_objs <- apply(X=mixing_table,function(x) cell_sampler(sample_name=sample1_name,seed=cv, msi_status='msih',x[1],x[3]),MARGIN=1)
 
 print(paste("creating objects for sample",sample2_name))
-mss_objs <- apply(X=mixing_table,function(x) cell_sampler(sample_name=sample2_name,msi_status='mss',x[2],x[4]),MARGIN=1)
+mss_objs <- apply(X=mixing_table,function(x) cell_sampler(sample_name=sample2_name,seed=cv,msi_status='mss',x[2],x[4]),MARGIN=1)
 
 
 #add ground truth metadata
