@@ -68,7 +68,6 @@ sampled_normal <- normal_cells[, sample(colnames(normal_cells), size = num_norma
 #merge subsamples
 #can add cell idents with add.cell.ids
 subbed <- merge(sampled_cancer,y=sampled_normal)
-
 subbed[["RNA"]] <- JoinLayers(subbed[["RNA"]])
 
 
@@ -133,7 +132,22 @@ mixing_table$msih_tot_cells[i] <-floor(as.numeric(msih_objs[[i]]$tot_cells[1]))
 print("mixing samples together")
 all_tomorrows <- Map(merge,msih_objs,mss_objs)
 for(i in 1:length(all_tomorrows)){
-all_tomorrows[[i]][["RNA"]] <- JoinLayers(all_tomorrows[[i]][["RNA"]])
+ pre <- all_tomorrows[[i]] %>% NormalizeData(.) %>% FindVariableFeatures(.) %>% ScaleData(.) %>% RunPCA(.) %>%
+FindNeighbors(.,dims=1:10, reduction = "pca") %>% FindClusters(., resolution = c(0.5)) %>%
+RunUMAP(.,dims=1:10, reduction = "pca")
+
+
+integrated <- IntegrateLayers(object = pre, method = CCAIntegration, orig.reduction = "pca",
+new.reduction="integrated.cca", verbose = TRUE,k.weight=50)
+
+integrated[["RNA"]] <- JoinLayers(integrated[["RNA"]])
+
+integrated <- integrated %>% FindNeighbors(., reduction = "integrated.cca", dims = 1:10) %>%
+FindClusters(.,res=c(0.5), cluster.name = "integrated.clusters") %>%
+RunUMAP(., dims=1:10, reduction= "integrated.cca", reduction.name = "integrated.umap")
+
+all_tomorrows[[i]] <- integrated
+
 }
 
 #write out artifical_manifest (if we want to do this earlier in the script, we'll have to change the apply function
