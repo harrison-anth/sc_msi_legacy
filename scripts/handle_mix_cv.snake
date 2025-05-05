@@ -174,7 +174,7 @@ rule infercnv:
 		outdir="/data3/hanthony/infer_cnv_temp/sample_{sample_name}/"
 	threads: 5
 	resources:
-		mem_mb=10000
+		mem_mb=5000
 	conda:
 		"seurat"
 	shell:
@@ -208,7 +208,7 @@ rule infercnv_patient:
 		outdir="/data3/hanthony/infer_cnv_temp/patient_{patient}/"
 	threads: 5
 	resources:
-		mem_mb=10000
+		mem_mb=5000
 	conda:
 		"seurat"
 	shell:
