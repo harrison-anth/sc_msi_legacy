@@ -8,3 +8,15 @@ To access the computational pipeline associated with this research, SC-MSI, plea
 the legacy repository contains thousands of txt files related to the results of the manuscript, and older code not needed to run SC-MSI. 
 
 ## Description of repository structure
+conda_envs/ -- contains all the conda environments used for the Snakemake pipeline
+images/ -- contains UMAP and other preliminary plots for every sample
+manifests -- stores all the files used to download data and lists of patients/samples
+markdown_files -- Rmarkdown files used to create patient reports
+msings_results -- early results of samples/patients using mSINGS when we were still deciding which tool to use
+pro_results -- early results of samples/patients using MSIsensor-pro when we were still deciding which tool to use
+pseudobulk_barcodes -- cell barcodes for all samples and individuals
+reports -- patient reports generated as part of the Snakemake pipeline
+scripts -- all original code used for the study
+sensor2_results -- early results of samples/patients using MSIsensor2 when we were still deciding which tool to use
+sensor_rna_results -- MSIsensor-RNA results for each individual and sample (the tool we ultimately used in the study)
+
