@@ -1,0 +1,10 @@
+prop_msih_cancer	prop_mss_cancer	prop_msih_norm	prop_mss_norm	mss_num_norm	mss_num_cancer	mss_tot_cells	msih_num_norm	msih_num_cancer	msih_tot_cells	sample_id	file_prefix
+0.1	0.9	0.1	0.9	1923	437	2360	206	32	239	mix_1_13	mix_1_13
+0.2	0.8	0.2	0.8	1709	388	2098	413	65	479	mix_2_13	mix_2_13
+0.3	0.7	0.3	0.7	1495	340	1836	620	98	718	mix_3_13	mix_3_13
+0.4	0.6	0.4	0.6	1282	291	1573	826	131	958	mix_4_13	mix_4_13
+0.5	0.5	0.5	0.5	1068	243	1311	1033	164	1197	mix_5_13	mix_5_13
+0.6	0.4	0.6	0.4	854	194	1049	1240	196	1437	mix_6_13	mix_6_13
+0.7	0.3	0.7	0.3	641	145	786	1446	229	1676	mix_7_13	mix_7_13
+0.8	0.2	0.8	0.2	427	97	524	1653	262	1916	mix_8_13	mix_8_13
+0.9	0.1	0.9	0.1	213	48	262	1860	295	2155	mix_9_13	mix_9_13

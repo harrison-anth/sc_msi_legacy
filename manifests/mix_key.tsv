@@ -1,0 +1,10 @@
+sample_id	cancer_type	site	treatment	sequencing_type	file_prefix	patient_id
+mix_1	colon	tumor	Anti-PD-1+celecoxib	scRNA-seq	mix_1	mix_1
+mix_2	colon	tumor	Anti-PD-1+celecoxib	scRNA-seq	mix_2	mix_2
+mix_3	colon	tumor	anti-PD-1	scRNA-seq	mix_3	mix_3
+mix_4	colon	tumor	anti-PD-1	scRNA-seq	mix_4	mix_4
+mix_5	colon	tumor	Anti-PD-1+celecoxib	scRNA-seq	mix_5	mix_5
+mix_6	colon	tumor	anti-PD-1	scRNA-seq	mix_6	mix_6
+mix_7	colon	tumor	anti-PD-1	scRNA-seq	mix_7	mix_7
+mix_8	colon	tumor	anti-PD-1	scRNA-seq	mix_8	mix_8
+mix_9	colon	tumor	anti-PD-1	scRNA-seq	mix_9	mix_9
