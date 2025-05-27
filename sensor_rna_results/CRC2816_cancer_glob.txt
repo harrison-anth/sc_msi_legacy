@@ -1,0 +1,2 @@
+sample_id,msi_status,probability_of_MSI-H
+CRC2816,MSS,0.0637

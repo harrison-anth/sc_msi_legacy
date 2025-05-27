@@ -1,0 +1,2 @@
+sample_id,msi_status,probability_of_MSI-H
+P31,MSI-H,0.7167

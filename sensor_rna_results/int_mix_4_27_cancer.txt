@@ -1,0 +1,7 @@
+sample_id,msi_status,probability_of_MSI-H
+g0,MSS,0.0194
+g1,MSS,0.0425
+g2,MSI-H,0.743
+g3,MSS,0.0704
+g4,MSI-H,0.753
+g5,MSS,0.0255
