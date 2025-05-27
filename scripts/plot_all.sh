@@ -7,6 +7,7 @@
 #declare variables
 
 samples=$1
+gsm=$2
 gnorts=$(sed "${SLURM_ARRAY_TASK_ID}q;d" ../manifests/$samples)
 
 if [[ ! -f ../images/"$gnorts".pdf ]]
@@ -16,8 +17,16 @@ conda activate seurat
 
 #Rscript plot_all.mult.R $gnorts
 
-Rscript plot_all_new.R $gnorts
+if [[ $gsm == "N" ]]
+then
+
+Rscript plot_all_bamog.R $gnorts
+
+elif [[ $gsm == "Y" ]]
+then
+Rscript plot_all_gsm.R $gnorts
+
 
 fi
-
+fi
 

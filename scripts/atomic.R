@@ -1,4 +1,3 @@
-library(scATOMIC)
 library(plyr)
 library(dplyr)
 library(data.table)
@@ -10,17 +9,19 @@ library(Rmagic)
 library(Matrix)
 library(Seurat)
 library(agrmt)
-library(cutoff.scATOMIC)
-library(copykat)
 library(ggplot2)
 library(R.utils)
-library(scATOMIC)
 library(foreach)
 library(parallel)
+library(copykat)
+library(cutoff.scATOMIC)
+library(scATOMIC)
+library(devtools)
 
 set.seed(seed = 152727)
-
-n_cores=detectCores()-1
+#running single-threaded at the moment to prevent memory hickups
+n_cores=1
+#detectCores()-1
 
 argus <- (commandArgs(asValues=TRUE, excludeReserved=TRUE)[-1])
 sample_name <- as.character(argus[1])

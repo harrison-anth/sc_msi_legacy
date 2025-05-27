@@ -7,13 +7,18 @@
 #key with sample names and PCR/IHC ground truth. 
 
 
-manifest=../manifests/final_key.tsv
+manifest=../manifests/final_key3.tsv
 
 
 module load Anaconda3
 conda activate seurat
 
-Rscript cellMixe.R $manifest
+#msih homogenous
+sample1_name='GSM6213995'
+#mss homogenousish
+sample2_name='XHC118-SI-GA-F1'
+
+Rscript cellMixe.R $manifest $sample1_name $sample2_name
 
 
 

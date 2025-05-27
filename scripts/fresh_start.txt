@@ -1,0 +1,22 @@
+#!/bin/bash
+
+source ~/.bash_profile
+
+
+cd ../sensor2_results/
+zero
+
+cd ../msings_results/
+zero
+
+cd ../pro_results/
+zero
+
+cd ../bam/
+zero
+bam_fix
+
+cd ../vcf/
+zero
+
+sc

@@ -74,14 +74,17 @@ if [[ $msi == "Y" ]]
 then
 sbatch msi_passer.sh $gnorts $gsm
 fi
+
 if [[ $copykat == "Y" ]]
 then
 sbatch kit_kat.sh $gnorts $gsm
 fi
-if [[ $numbat == "Y" ]]
+
+if [[ $numbat == "Y" ]] && [[ $gsm == "N" ]]
 then
 sbatch numbat.sh $gnorts
 fi
+
 if [[ $atomic == "Y" ]]
 then
 sbatch atomic.sh $gnorts

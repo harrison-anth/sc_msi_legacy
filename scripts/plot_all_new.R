@@ -42,31 +42,28 @@ plots <-  ggarrange(
   print(FeaturePlot(s_obj,features=c('sensor2'),cols=c('blue','red')) + 
   ggtitle(paste0('MSIsensor2 (',sensor2_global$`%`,' overall)'))),
   
-#  print(FeaturePlot(s_obj,features=c('msings'),cols=c('blue','red')) + 
-#  ggtitle(paste0('mSINGS (',msings_global,' overall)'))),
+  print(FeaturePlot(s_obj,features=c('msings'),cols=c('blue','red')) + 
+  ggtitle(paste0('mSINGS (',msings_global,' overall)'))),
   
   print(FeaturePlot(s_obj,features=c('pro'),cols=c('blue','red')) + 
   ggtitle(paste0('MSIsensor-pro (',pro_global$`%`,' overall)'))),
 
-#  print(FeaturePlot(s_obj,features=c('premsim_prob'),cols=c('blue','red')) +
-#  ggtitle('premsim probs')),
- 
- print(FeaturePlot(s_obj,features=c('sensor_rna_prob'),cols=c('blue','red')) +
- ggtitle('sensor_rna probs')),
-  
   print(DimPlot(s_obj,group.by = 'numbat',cols=c('blue','red'))+ggtitle(paste0('Numbat'))),
   print(DimPlot(s_obj,group.by='copykat',cols=c('red','blue','grey'))+ggtitle(paste0('Copykat'))),
   print(DimPlot(s_obj,group.by='pan_cancer_cluster',cols=c('red','blue','grey'))+ggtitle(paste0('ATOMIC'))),
-  print(DimPlot(s_obj,group.by='sensor_rna_status',cols=c('red','blue'))+ggtitle(paste0('sensor_rna')))
-#  print(DimPlot(s_obj,group.by='sensor_rna_prob',cols=c('red','blue'))+ggtitle(paste0('sensor_rna_prob')))
-#  print(DimPlot(s_obj,group.by='premsim_prob',cols=c('red','blue'))+ggtitle(paste0('premsim_prob'))),
-#  print(DimPlot(s_obj,group.by='premsim_status',cols=c('red','blue'))+ggtitle(paste0('premsim')))
+  print(DimPlot(s_obj,group.by='sensor_rna_status',cols=c('red','blue'))+ggtitle(paste0('sensor_rna'))),
+  print(FeaturePlot(s_obj,features=c('sensor_rna_prob'),cols=c('blue','red')) +ggtitle('sensor_rna probs')),
+  print(DimPlot(s_obj,group.by='premsim_status',cols=c('red','blue'))+ggtitle(paste0('premsim'))),
+  print(FeaturePlot(s_obj,features=c('premsim_prob'),cols=c('blue','red')) +ggtitle('premsim probs')),
+nrow=3,ncol=3
 
   )
 
-plots_final <- print(annotate_figure(plots,top=text_grob(paste0(sample_info$filename,'; ',sample_info$site,'; ',
-                                                sample_info$msi_status,'; ',sample_info$msi_test),
-color='black',face='bold',size=20)))
+plots_final <- print(plots)
+
+#plots_final <- print(annotate_figure(plots,top=text_grob(paste0(sample_info$filename,'; ',sample_info$site,'; ',
+#                                                sample_info$msi_status,'; ',sample_info$msi_test),
+#color='black',face='bold',size=20)))
 
 double_plot <- ggarrange(print(DimPlot(s_obj)+ggtitle(paste0('Clusters'))),
 print(DimPlot(s_obj, group.by = "scATOMIC_pred") + ggtitle("ATOMIC cells")+

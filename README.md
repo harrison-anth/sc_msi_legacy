@@ -1,20 +1,37 @@
-# Performance assessment of computational tools to detect microsatellite instability
-## Article DOI: https://doi.org/10.1093/bib/bbae390
+# Intratumoral heterogeneity in microsatellite instability status at single cell resolution
+## Article DOI: Under review
 
 ### Information about the author(s) of this code:
 Name(s): Harrison Anthony 
 contact information: h dot anthony1 at universityofgalway dot ie
 
-## Repository information
+### License type
+MIT with attribution and commercial use restriction; see LICENSE file for more information.
 
-This repository contains all the code needed to reproduce the benchmarking results of our recent manuscript.
-We compared the performance of several MSI tools on different next-generation sequencing datasets.
-Examples of how to run each MSI tool are provided in the test/ directory. The structure of the GitHub repository is described
-below.
+### Repository information
 
-### Conda environments
-The conda_envs folder contains all conda environments used for data handling and all MSI tools.
+This repository contains all the code needed to reproduce the results of our recent manuscript and will be archived after the manuscript is published.
+Also included in this repository are the raw results (MSI scores, summary statistics, etc.).
+To access the distributable version of the SC-MSI pipeline visit https://github.com/harrison-anth/sc_msi
 
+## Information on directories and files in this repository
+### Conda environments and Snakemake profiles
+The conda_envs folder contains all conda environments and Snakemake profiles
+
+atomic.yml -- used for any R code that requires scATOMIC to be run
+seurat.yml -- used for any R code that involves Seurat objects
+slurm_executor_profile -- contains settings for using the SLURM executor plugin with Snakemake
+
+### images
+Contains preliminary plots for all the samples prior to integration 
+
+### manifests
+This directory contains all the manifest files used to run the Snakemake pipeline
+all_artificial_samples_{1..10}.tsv -- the mix ID's for different mixing experiment runs.
+all_gsm_samples.txt -- sample names for data from GSE205506
+all_mixing_tables_manifest.tsv -- master manifest file to run the Snakemake pipeline for mixed samples
+all_mix_patients.txt -- formatted mix ID's for Snakemake pipeline
+all_samples.tsv -- All samples for data from EGAD00001008555, EGAD00001008584, EGAD00001008585
 sensor.yml was used to run MSIsensor MSIsensor2 and MSIsensor-pro
 
 msings.yml was used to run mSINGS

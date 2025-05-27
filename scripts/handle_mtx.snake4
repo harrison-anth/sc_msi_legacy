@@ -1,0 +1,245 @@
+#my snakemake run command
+#snakemake --profile ../conda_envs/slurm_profile/ --verbose -s handle_mtx.snake2 --latency-wait 120 --rerun-incomplete --rerun-triggers mtime --keep-going
+
+#print snakemake dag
+#snakemake --forceall --rulegraph | dot -Tpdf | grep -v "\-> 0\|0\[label = \"all\"" > dag.pdf
+
+# workflow - SC-MSI
+
+#define config file
+#gsm samples
+configfile: "mtx_config.yaml"
+
+#artificial samples
+#configfile: "artificial_config.yaml"
+
+with open(config["sample_list"]) as samples_tmp:
+	samples=samples_tmp.read().splitlines()
+
+#read in patient list
+with open(config["patient_list"]) as patient_id:
+        patients=patient_id.read().splitlines()
+
+#read in patient-sample key
+import pandas as pd
+patient_key=pd.read_table(config["patient_key"])
+patient_key['filename'] = patient_key['sample_id']
+
+
+
+rule all:
+	input:
+		expand("../images/{sample_name}_cell_types.pdf",sample_name=samples),
+		expand("../images/{sample_name}_msi_plots.pdf",sample_name=samples),
+		expand("../infercnv_results/sample_{sample_name}/infercnv.png",sample_name=samples),
+		expand("../patient_reports/{patient}.html",patient=patients),
+		expand("../infercnv_results/patient_{patient}/infercnv.png",patient=patients),
+		expand("../summary_stats/{patient}_cluster_stats.tsv",patient=patients)
+
+rule process_sample:
+	input:
+	output:
+		"../pseudobulk_barcodes/{sample_name}/{sample_name}_all_cell_barcodes.tsv",
+		"../pseudobulk_barcodes/{sample_name}/just_barcodes.tsv",
+		"../filtered_h5/{sample_name}.rds"
+	params:
+		sample_key=config["key"]
+	conda:
+		 "seurat"
+	resources:
+		partition="normal,highmem,MSC,gpu,interactive"
+	shell:
+		"""
+		if [[ ! -d ../pseudobulk_barcodes/{wildcards.sample_name} ]]
+		then
+		mkdir ../pseudobulk_barcodes/{wildcards.sample_name}
+		fi
+		Rscript gsm_barcode_generator.R {wildcards.sample_name} 'Y' {params.sample_key}
+		if [[ ! -f ../pseudobulk_barcodes/{wildcards.sample_name}/just_barcodes.tsv ]]
+		then
+		cut -f 1 ../pseudobulk_barcodes/{wildcards.sample_name}/{wildcards.sample_name}_all_cell_barcodes.tsv > \
+		 ../pseudobulk_barcodes/{wildcards.sample_name}/just_barcodes.tsv
+		fi
+		"""
+
+rule find_cancer:
+	input:
+		"../filtered_h5/{sample_name}.rds"
+	output:
+		"../pseudobulk_barcodes/{sample_name}/{sample_name}_cancer_barcodes.tsv",
+		"../atomic/{sample_name}.rds"
+	conda:
+		"atomic"
+	threads: 10
+	resources:
+		mem="0G"
+	shell:
+		"""
+		Rscript atomic.R {wildcards.sample_name}
+		"""
+rule find_msi:
+	input:
+		"../filtered_h5/{sample_name}.rds"
+	output:
+		"../sensor_rna_results/{sample_name}.txt"
+	conda:
+		"seurat"
+	resources:
+		 partition="normal,highmem,MSC,gpu,interactive"
+	shell:
+		"""
+		Rscript sensor_rna_shaper.R {wildcards.sample_name}
+		conda deactivate
+		training_model=../temp/{wildcards.sample_name}_training_model.csv
+		msisensor-rna train -i $training_model -m ../temp/{wildcards.sample_name}.model -t PanCancer
+		msisensor-rna detection -i ../temp/{wildcards.sample_name}.csv -o ../sensor_rna_results/{wildcards.sample_name}.txt -m ../temp/{wildcards.sample_name}.model -d True
+		"""
+
+rule annotate_h5:
+	input:
+		"../atomic/{sample_name}.rds",
+		"../sensor_rna_results/{sample_name}.txt",
+		"../filtered_h5/{sample_name}.rds"
+	output:
+		"../annotated_h5/{sample_name}.rds"
+	conda:
+		"seurat"
+	shell:
+		"""
+		Rscript annotate_gsmog.R {wildcards.sample_name}
+		"""
+rule create_plots:
+	input:
+		"../annotated_h5/{sample_name}.rds"
+	output:
+		"../images/{sample_name}_cell_types.pdf",
+		"../images/{sample_name}_msi_plots.pdf"
+	conda:
+		"seurat"
+	shell:
+		"""
+		Rscript plot_all_gsm.R {wildcards.sample_name}
+		"""
+
+def match_patient_samples(wildcards):
+	indv_key = patient_key[patient_key['patient_id'].str.contains(wildcards.patient)]
+	matched_annotated_samples="../annotated_h5/" +indv_key['filename'].values +".rds"
+	return matched_annotated_samples
+
+rule integrate_data:
+	input:
+		match_patient_samples
+	output:
+		"../temp/{patient}_cancer.csv",
+		int_data="../integrated_samples/{patient}.rds",
+		canc_data="../integrated_samples/{patient}_cancer.rds"
+	conda:
+		"atomic"
+	resources:
+		mem="0G"
+	shell:
+		"""
+		Rscript integrate_all4.R {wildcards.patient} 'Y'
+		"""
+
+rule int_msi:
+	input:
+		{rules.integrate_data.output.int_data}
+	output:
+		"../sensor_rna_results/int_{patient}.txt"
+	resources:
+		 partition="normal,highmem,MSC,gpu,interactive"
+	shell:
+		"""
+		training_model=../temp/{wildcards.patient}_training_model.csv
+		msisensor-rna train -i $training_model -m ../temp/{wildcards.patient}.model -t PanCancer
+		msisensor-rna detection -i ../temp/{wildcards.patient}.csv \
+		-o ../sensor_rna_results/int_{wildcards.patient}.txt -m ../temp/{wildcards.patient}.model -d True
+		"""
+
+rule canc_int_msi:
+	input:
+		"../integrated_samples/{patient}_cancer.rds"
+	output:
+		"../sensor_rna_results/int_{patient}_cancer.txt"
+	params:
+		p_name="{patient}_cancer"
+	resources:
+		 partition="normal,highmem,MSC,gpu,interactive"
+	shell:
+		"""
+		training_model=../temp/{params.p_name}_training_model.csv
+		msisensor-rna train -i $training_model -m ../temp/{params.p_name}.model -t PanCancer
+		msisensor-rna detection -i ../temp/{params.p_name}.csv \
+		-o ../sensor_rna_results/int_{params.p_name}.txt -m ../temp/{params.p_name}.model -d True
+		"""
+
+rule infercnv:
+	input:
+		"../annotated_h5/{sample_name}.rds"
+	output:
+		"../infercnv_results/sample_{sample_name}/infercnv.png"
+	params:
+		outdir="../infercnv_results/sample_{sample_name}/"
+	resources:
+		mem="30G"
+	conda:
+		"seurat"
+	shell:
+		"""
+		Rscript infer_cnv.R {wildcards.sample_name} {params.outdir}
+		mkdir -p ../images/{wildcards.sample_name}_cnv/
+		cp {params.outdir}*.png ../images/{wildcards.sample_name}_cnv/
+		"""
+
+rule patient_report:
+	input:
+		"../integrated_samples/{patient}.rds",
+		"../integrated_samples/{patient}_cancer.rds",
+		{rules.int_msi.output},
+		{rules.canc_int_msi.output}
+	output:
+		"../patient_reports/{patient}.html"
+	conda:
+		"atomic"
+	resources:
+		 partition="normal,highmem,MSC,gpu,interactive"
+	shell:
+		"""
+		Rscript patient_report_generator.R {wildcards.patient}
+		"""
+
+rule infercnv_patient:
+	input:
+		{rules.integrate_data.output.int_data}
+	output:
+		"../infercnv_results/patient_{patient}/infercnv.png"
+	resources:
+		mem="0G"
+	params:
+		outdir="../infercnv_results/patient_{patient}/"
+	conda:
+		"seurat"
+	shell:
+		"""
+		Rscript infer_patient_cnv.R {wildcards.patient} {params.outdir}
+		mkdir -p ../images/{wildcards.patient}_cnv/
+		cp {params.outdir}*.png ../images/{wildcards.patient}_cnv/
+		"""
+
+rule summary_stats:
+	input:
+		{rules.infercnv_patient.output}
+	output:
+		"../summary_stats/{patient}_cluster_stats.tsv"
+	resources:
+		partition="normal,highmem,MSC,gpu,interactive",
+		mem="30G"
+	conda:
+		"seurat"
+	shell:
+		"""
+		Rscript get_summary_stats2.R {wildcards.patient} "N"
+		"""
+
+		

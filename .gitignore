@@ -22,3 +22,4 @@ vartrix_results/*
 vcf/*
 numbat/*
 scripts/.snakemake/*
+scripts/.*

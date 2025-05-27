@@ -1,0 +1,19 @@
+# Config file for SC-MSI Snakemake file
+
+# edit the following parameters below. Note the curent sample list must consist of matrix (mtx) files.
+
+#specify list of sample names
+sample_list: "../manifests/all_gsm_samples.txt"
+
+#specify list of patient id's
+patient_list: "../manifests/gsm_patients.txt"
+
+#specify key that links sample names and patient id's
+patient_key: "../manifests/final_gsm_key.tsv"
+
+#reference transcriptome
+transcriptome: "/data3/hanthony/reference_files/refdata-gex-GRCh38-2020-A"
+
+#give key file
+key: "../manifests/final_gsm_key.tsv"
+

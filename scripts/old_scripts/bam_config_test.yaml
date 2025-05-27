@@ -1,0 +1,58 @@
+# Config file for SC-MSI Snakemake file
+
+# edit the following parameters below. Note the curent sample list must consist of matrix (mtx) files.
+
+#specify list of patient id's
+patient_list: "../manifests/patient_ids_test.txt"
+
+#specify key that links sample names and patient id's
+patient_key: "../manifests/final_key.tsv"
+
+
+#specify list of sample names
+sample_list: "../manifests/bam_test1.tsv"
+
+#reference transcriptome
+transcriptome: "/data3/hanthony/reference_files/refdata-gex-GRCh38-2020-A"
+
+#cellranger path
+cellranger: "/home/hanthony/bin/programs/cellranger-7.2.0/cellranger"
+
+#MSIsensor2 models
+sensor2_models: "/data4/hanthony/tcga_msi_tools/baselines/hg38_models"
+
+#list of MS loci found with MSIsensor scan function on TCGA WXS data
+ms_loci: "/data3/hanthony/reference_files/scan_tcga_ms.bed"
+
+#MSIsensor-pro baseline
+pro_baseline: "/data4/hanthony/tcga_msi_tools/baselines/pro_rna/scan_tcga_ms.bed_baseline"
+
+#mSINGS settings (set to tool defaults)
+msings_path: "/home/hanthony/bin/programs/msings/msi"
+msings_baseline: "/data4/hanthony/tcga_msi_tools/baselines/msings_50_filtered.baseline"
+msings_loci: "/data4/hanthony/tcga_msi_tools/bed_files/ms_sites_premium+.bed"
+hg38: "/data3/hanthony/reference_files/hg38.fa"
+#"multiplier" is the number of standard deviations from the 
+#baseline that is required to call instability
+multiplier: "2.0"
+#"msi_min_threshold" is the maximum fraction of unstable sites allowed to call
+#a specimen MSI negative and
+#"msi_max_threshold" is the minimum fraction of unstable sites allowed to call a specimen
+# MSI positive
+msi_min_threshold: "0.2"
+msi_max_threshold: "0.2"
+
+
+
+
+
+
+#vcf fasta reference
+vcf_ref: "/data3/hanthony/reference_files/refdata-gex-GRCh38-2020-A/fasta/genome.fa"
+
+#panel of normals for Mutect2
+pon: "/data3/hanthony/reference_files/protected_references/gatk4_mutect2_4136_pon.vcf.gz"
+
+#gnomad common somatic variants for Mutect2
+gnome: "/data3/hanthony/reference_files/protected_references/somatic-hg38_af-only-gnomad.hg38.vcf"
+

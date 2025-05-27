@@ -19,22 +19,22 @@ vcf=N
 
 count=$(ls ../bam/"$gnorts"/*.bam | wc -l )
 
-if [[ "$sensor2" == "Y" -a "$gsm" == "N"  ]]
+if [[ $sensor2 == "Y" ]] && [[ $gsm == "N"  ]]
 then
 sbatch --array 1-$count sensor2.sh $gnorts
 fi
 
-if [[ $msings == "Y" -a "$gsm" == "N" ]]
+if [[ $msings == "Y" ]] && [[ $gsm == "N"  ]]
 then
 sbatch --array 1-$count msings.sh $gnorts
 fi
 
-if [[ $pro == "Y" -a "$gsm" == "N" ]]
+if [[ $pro == "Y" ]] && [[ $gsm == "N"  ]]
 then
 sbatch --array 1-$count pro.sh $gnorts
 fi
 
-if [[ $vcf == "Y" -a "$gsm" == "N" ]]
+if [[ $vcf == "Y" ]] && [[ $gsm == "N"  ]]
 then 
 sbatch --array 1-$count make_vcf.sh $gnorts
 fi

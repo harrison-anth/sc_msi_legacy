@@ -1,135 +1,87 @@
+#my snakemake run command
+#snakemake --executor cluster-generic --cluster-generic-submit-cmd "sbatch" --use-conda --latency-wait 60 --profile ../conda_envs/slurm_profile/ --verbose
+
+#print snakemake dag
+snakemake --forceall --rulegraph | dot -Tpdf > dag.pdf
+
 # workflow - SC-MSI
 
-
-
+#define config file
 configfile: "Snakemake_config.yaml"
 
 
+#print config file name and date
+import datetime
 
-samples = ["sample{i}" for i in range(1, 2)]
+print("Config settings are: ", config,".\n")
+now = datetime.datetime.now()
+print("Beginning analysis at", now.strftime("%Y-%m-%d %H:%M"))
+
+with open(config["sample_list"]) as samples_tmp:
+	samples=samples_tmp.read().splitlines()
 
 
-#rule all:
-#    input:
-#        expand("../output/{sample_name}",
-#	      sample_name=samples)
 rule all:
-    input:
-        expand("../output/{sample_name}/representative_sequences.qza",sample_name=samples)
+	input:
+		expand("../atomic/{sample_name}.rds",sample_name=samples),
+		expand("../sensor_rna_results/{sample_name}.txt",sample_name=samples)
 
-#rule all:
-#     input:
-#        expand("../final_tables/{sample_name}_super_table.tsv",
-#        sample_name=samples)
+rule process_sample:
+	input:
+	output:
+		"../pseudobulk_barcodes/{sample_name}/{sample_name}_all_cell_barcodes.tsv",
+		"../pseudobulk_barcodes/{sample_name}/just_barcodes.tsv",
+		"../filtered_h5/{sample_name}.rds"
+	log:
+		stdout="../stdout/{sample_name}/process_sample.out",
+		stderr="../error_files/{sample_name}/process_sample.error"
+	conda:
+		 "seurat"
+	threads: 1
+	shell:
+		"""
+		if [[ ! -d ../pseudobulk_barcodes/{wildcards.sample_name} ]]
+		then
+		mkdir ../pseudobulk_barcodes/{wildcards.sample_name}
+		fi
+		Rscript barcode_generator.R {wildcards.sample_name} 'Y'
+		if [[ ! -f ../pseudobulk_barcodes/{wildcards.sample_name}/just_barcodes.tsv ]]
+		then
+		cut -f 1 ../pseudobulk_barcodes/{wildcards.sample_name}/{wildcards.sample_name}_all_cell_barcodes.tsv > \
+		 ../pseudobulk_barcodes/{wildcards.sample_name}/just_barcodes.tsv
+		fi
+		"""
 
-#rule all:
-#     input:
-#        expand("../taxonomies/{sample_name}.qza",
-#        sample_name=samples)
-
-
-
-rule import_sequences:
-    input:
-        manifest="../manifests/{sample_name}_manifest.tsv"
-    output:
-        demux_qza="../output/{sample_name}.demux.qza"
-    params:
-        phred="PairedEndFastqManifestPhred33V2"  # Optional parameter
-    shell:
-        """
-        qiime tools import --type 'SampleData[PairedEndSequencesWithQuality]' \
-        --input-path {input.manifest} \
-        --output-path {output.demux_qza} \
-        --input-format {params.phred}
-        """
-
-rule dada2:
-    input:
-        seq = rules.import_sequences.output.demux_qza
-    output:
-       # dir = directory("../output/{sample_name}")
-        "../output/{sample_name}/representative_sequences.qza"
-
-    threads: workflow.cores * 1/len(samples)
-    shell:
-        """
-        qiime dada2 denoise-paired \
-        --i-demultiplexed-seqs {input.seq} \
-        --p-trunc-len-f 250 \
-	--p-trunc-len-r 240 \
-	--p-max-ee-f 2 \
-	--p-max-ee-r 4 \
-	--p-n-reads-learn 1000000 \
-	--p-chimera-method pooled \
-	--output-dir "../output/{wildcards.sample_name}" \
-        --p-n-threads {threads}
-        """
-
-rule filt_viz:
-    input:
-        noise_stats="../output/{sample_name}/denoising_stats.qza"
-    output:
-        viz="../output/{sample_name}/denoising_stats.qza.gzv"
-    shell:
-        """
-        qiime metadata tabulate \
-        --m-input-file {input.noise_stats} \
-        --o-visualization ../output/{wildcards.sample_name}/denoising_stats.qza
-        """
-
-rule classify:
-    input:
-        sequences="../output/{sample_name}/representative_sequences.qza"
-    output:
-        taxa=directory("../taxonomies/{sample_name}")
-    shell:
-        """
-        qiime feature-classifier classify-sklearn \
-        --i-classifier ../input/new_classifier.qza \
-        --i-reads {input.sequences} \
-        --o-classification {output.taxa}
-        """
-
-rule export_tables:
-    input:
-        feature_table="../output/{sample_name}/table.qza",
-        taxonomy_table="../taxonomies/{sample_name}.qza"
-    output:
-        feature_fin="../output/{sample_name}/table.tsv",
-        taxonomy_fin=directory("../taxonomies/{sample_name}")
-    shell:
-        """
-#export feature table
-        qiime tools export \
-        --input-path {input.feature_table} \
-        --output-path ../feature_tables/{wildcards.sample_name}
-
-#change feature table format
-        biom convert \
-        -i ../feature_tables/{wildcards.sample_name}/feature-table.biom \
-        -o {output.feature_fin} --to-tsv
-
-#export taxonomy
-        qiime tools export \
-        --input-path {input.taxonomy_table} \
-        --output-path {output.taxonomy_fin}
-        """
-rule super_table:
-    input:
-        taxonomy_in = "../taxonomies/{sample_name}/taxonomy.tsv",
-        feature_in = "../output/{sample_name}/table.tsv"
-    output:
-        super_table = "../final_tables/{sample_name}_super_table.tsv"
-    shell:
-         """
-#create super table for aideen and john
-            cut -f 2,3 {input.taxonomy_in} > ../taxonomies/{sample_name}/taxonomy_join.tsv
-            tail -n +2 {input.feature_in} > ../output/{sample_name}/table_prepped.tsv
-            paste ../taxonomies/{sample_name}/taxonomy_join.tsv ../output/{sample_name}/table_prepped.tsv \
-            > {output.super_table}
-         """
-
-
+rule find_cancer:
+	input:
+		"../filtered_h5/{sample_name}.rds"
+	output:
+		"../pseudobulk_barcodes/{sample_name}/{sample_name}_cancer_barcodes.tsv",
+		"../atomic/{sample_name}.rds"
+	conda:
+		"atomic"
+	threads: 10
+	shell:
+		"""
+		Rscript atomic.R {wildcards.sample_name}
+		"""
+rule find_msi:
+	input:
+		"../filtered_h5/{sample_name}.rds"
+	output:
+		"../sensor_rna_results/{sample_name}.txt"
+	threads: 1
+	conda:
+		"seurat"
+	shell:
+		"""
+		Rscript sensor_rna_shaper.R {wildcards.sample_name}
+		conda deactivate
+		training_model=../temp/{wildcards.sample_name}_training_model.csv
+		msisensor-rna train -i $training_model -m ../temp/{wildcards.sample_name}.model -t PanCancer
+		msisensor-rna detection -i ../temp/{wildcards.sample_name}.csv -o ../sensor_rna_results/{wildcards.sample_name}.txt -m ../temp/{wildcards.sample_name}.model -d True
+		"""
+		
+				
 
 
