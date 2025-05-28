@@ -1,0 +1,219 @@
+---
+title: "The heterogeneity of 18 MSI-H single cell RNA-seq samples "
+author: "Harrison Anthony"
+date: "2024-07-02"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+
+```{r setup, echo=FALSE,message=FALSE,warning=FALSE}
+#good notes https://satijalab.org/seurat/articles/pbmc3k_tutorial.html#setup-the-seurat-object
+knitr::opts_chunk$set(echo = FALSE,warning=FALSE,message = FALSE)
+knitr::opts_knit$set(root.dir = 'C:/Users/Harrison Anthony/Desktop/git_repos/single_msi/markdown_files/')
+
+library(Seurat)
+library(patchwork)
+library(tidyverse)
+library(scAnnotatR)
+library(PreMSIm)
+library(data.table)
+library(cowplot)
+library(Nebulosa)
+library(ggpubr)
+
+set.seed(seed = 152727)
+
+
+path = system.file("extdata", "example.txt", package = "PreMSIm", mustWork = TRUE)
+input_data = data_pre(path, type = "ID")
+#cell labeller models pretrained from scannotater
+#default_models <- load_models("default")
+
+process_data <- function(file_name,sample_name,filter_norm){
+  print(paste("Begin processing sample",sample_name,sep=" "))
+  print(paste("Read in file",file_name,sep=" "))
+  temp <- Read10X_h5(filename = paste0("cell_ranger_matrices/new/",file_name))
+  print(paste("Converting to Seurat object, filtering, and normalizing"))
+  temp <- CreateSeuratObject(counts=temp,
+                          project="MSI",
+                          min.cells=3,
+                          min.features=200)
+  #add percent mitochondrial
+ temp[["percent.mt"]] <- PercentageFeatureSet(temp, pattern = "^MT-")
+  #filter by minimum/maximum number of genes and percent mitochondrial
+ #show pre-filter graphs
+ #VlnPlot(temp, features = c("nFeature_RNA", "nCount_RNA", "percent.mt"), ncol = 3)
+ #show feature scatterplot between any two features
+ #FeatureScatter(temp,feature1="nCount_RNA",feature2="percent.mt")
+ print(paste('Filtering normal cells'))
+copykat <- fread(paste0('copy_kat_results/',sample_name,'_copykat_prediction.txt'))
+temp[['tumor']] <- NA
+for (i in 1:length(names(temp$tumor))){
+temp2 <- filter(copykat, cell.names == names(temp$tumor[i]))
+temp$tumor[i] <- temp2$copykat.pred
+
+}
+if(filter_norm==TRUE)
+{
+temp <- subset(temp,subset=tumor == "aneuploid")
+}
+temp <- subset(temp,subset = nFeature_RNA > 200 & nFeature_RNA < 2500 & percent.mt < 5)
+temp <- NormalizeData(temp,normalization.method = "LogNormalize",scale.factor = 10000)
+temp <- FindVariableFeatures(temp, selection.method = "vst", nfeatures = 2000)
+
+#plot most variable genes
+#top10 <- head(VariableFeatures(temp),10)
+#LabelPoints(plot=(VariableFeaturePlot(temp),points=top10,repel=TRUE))
+#scale data
+all.genes <- rownames(temp)
+#might still need to "regress out" mitchonodrial and other sources of variation
+temp <- ScaleData(temp,feature=all.genes)
+temp <- RunPCA(temp, features=VariableFeatures(object=temp))
+
+
+print(paste("Identifying clusters"))
+
+temp <- FindNeighbors(temp,dims=1:15)
+temp <- FindClusters(temp,resolution = 0.5)
+temp <- RunUMAP(temp, dims = 1:15)
+#find marker genes that are differentially expressed in clusters
+
+
+
+
+
+
+return(temp)
+
+
+}
+
+single_msi <- function(s_obj){
+s_obj[['msi_status']] <- NA
+
+temp <- t(as.data.frame(as.matrix(GetAssayData(s_obj,assay = 'RNA',slot = 'scale.data'))))
+
+msi_results <- msi_pre(temp[,c(colnames(input_data))])
+
+for (i in 1:length(names(s_obj$msi_status))){
+temp2 <- filter(msi_results, Sample == names(s_obj$msi_status[i]))
+s_obj$msi_status[i] <- as.numeric(as.character(droplevels(temp2$MSI_status)))
+  
+}
+
+return(s_obj)   
+  
+  
+}
+#read in sensor2 data for each cluster
+sensor2 <- function(s_obj,sample_name,abc){
+  s_obj[['sensor2']] <- NA
+  if(abc == FALSE){
+    cluster_info <- fread(paste0('cluster_barcodes/',sample_name,'_cancer_barcodes.tsv'))
+    cluster_info <- data.frame(clusters = sort(unique(cluster_info$V2)))
+
+        for(i in 1:nrow(cluster_info)){
+   num <- cluster_info$clusters[i]
+      temp15 <- fread(paste0('sensor2_results/all_clusters/',sample_name,'_cluster_',num))
+      cluster_info$msi[i] <- temp15$`%`
+      cluster_info$tot_sites[i] <- temp15$Total_Number_of_Sites
+      
+      
+    }
+    
+  } else if (abc == TRUE){
+    cluster_info <- fread(paste0('cluster_barcodes/',sample_name,'_all_barcodes.tsv'))
+    cluster_info <- data.frame(clusters = sort(unique(cluster_info$V2)))
+    for(i in 1:nrow(cluster_info)){
+      num <- cluster_info$clusters[i]
+      temp15 <- fread(paste0('sensor2_results/all_clusters/',sample_name,'_cluster_',num))
+      cluster_info$msi[i] <- temp15$`%`
+      cluster_info$tot_sites[i] <- temp15$Total_Number_of_Sites
+      
+  }
+
+for(i in 1:nrow(s_obj[['sensor2']])){
+  temp_name <- names(s_obj$sensor2[i])
+  temp_cluster <- as.numeric(as.character(s_obj$seurat_clusters[temp_name == names(s_obj$seurat_clusters)]))
+  temp_msi_score <- filter(cluster_info, clusters == temp_cluster)
+s_obj$sensor2[i] <- temp_msi_score$msi
+  
+}
+  }
+  
+
+return(s_obj)   
+  
+  
+}
+
+
+
+plotter <- function(s_obj, sample_name){
+      ll <- plot_density(s_obj,features = c('MSH2','MLH1','MSH6','PMS2'),joint = TRUE,combine = FALSE) 
+
+  ggarrange(
+  print(DimPlot(s_obj)+ggtitle(paste0(sample_name,' Clusters'))),
+  print(FeaturePlot(s_obj,features=c('sensor2')) + ggtitle(paste0(sample_name,' MSIsensor2 score'))),
+  print(ll[[length(ll)]]),
+  print(FeaturePlot(s_obj,features=c('numbat'))+ggtitle(paste0(sample_name,'Normies'))))
+  
+}
+
+#to print violin plot VlnPlot(test, features = c("nFeature_RNA", "nCount_RNA", "percent.mt"), ncol = 3)
+  
+
+
+
+```
+```{r read-in-data}
+
+S1 <- readRDS('../annotated_h5/SRR23490342.rds')
+S2 <- readRDS('../annotated_h5/SRR23490341.rds')
+S3 <- readRDS('../annotated_h5/SRR23490340.rds')
+R1 <- readRDS('../annotated_h5/SRR23490339.rds')
+R2 <- readRDS('../annotated_h5/SRR23490338.rds')
+R3 <- readRDS('../annotated_h5/SRR23490337.rds')
+U1 <- readRDS('../annotated_h5/SRR12397031.rds')
+U2 <- readRDS('../annotated_h5/SRR12397032.rds')
+U3 <- readRDS('../annotated_h5/SRR12397033.rds')
+U4 <- readRDS('../annotated_h5/SRR12397034.rds')
+U5 <- readRDS('../annotated_h5/SRR12397035.rds')
+U6 <- readRDS('../annotated_h5/SRR12397036.rds')
+U7 <- readRDS('../annotated_h5/SRR12397037.rds')
+U8 <- readRDS('../annotated_h5/SRR12397038.rds')
+E1 <- readRDS('../annotated_h5/SRR17547562.rds')
+E2 <- readRDS('../annotated_h5/SRR17547563.rds')
+E3 <- readRDS('../annotated_h5/SRR17547564.rds')
+E4 <- readRDS('../annotated_h5/SRR17547565.rds')
+
+
+
+
+
+```
+```{r umaps,fig.height = 10, fig.width = 10}
+plotter(S1,'S1')
+plotter(S2,'S2')
+plotter(S3,'S3')
+plotter(R1,'R1')
+plotter(R2,'R2')
+plotter(R3,'R3')
+plotter(U1,'U1')
+plotter(U2,'U2')
+plotter(U3,'U3')
+plotter(U4,'U4')
+plotter(U5,'U5')
+plotter(U6,'U6')
+plotter(U7,'U7')
+plotter(U8,'U8')
+plotter(E1, 'E1')
+plotter(E2, 'E2')
+plotter(E3, 'E3')
+plotter(E4, 'E4')
+
+
+
+```

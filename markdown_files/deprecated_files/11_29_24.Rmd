@@ -1,0 +1,103 @@
+---
+title: "More intregrations"
+author: "Harrison Anthony"
+date: "2024-11-20"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,warning = FALSE,message=FALSE,dev='png',dpi=300)
+#knitr::opts_chunk$set(fig.path = 'C:/Users/Harrison Anthony/Desktop/msi_benchmark_results/')
+
+#knitr::opts_knit$set(root.dir = 'C:/Users/Harrison Anthony/Desktop/msi_benchmark_results/')
+```
+
+
+
+```{r libs-and-functions}
+library(Seurat)
+library(gridExtra)
+library(patchwork)
+library(tidyverse)
+library(scAnnotatR)
+library(data.table)
+library(cowplot)
+library(Nebulosa)
+library(ggpubr)
+library(R.utils)
+library(kableExtra)
+
+set.seed(seed = 152727)
+
+```
+
+
+
+```{r read-in-data,results='asis'}
+key <- fread('C:/Users/Harrison Anthony/Desktop/git_repos/sc_msi/manifests/combined_key.tsv')
+patients <- unique(key$patient_id)
+
+for(patient in patients){
+sample_info <- filter(key, patient_id == patient )
+if(! file.exists(paste0('E:/temp/newest_dir/normal/',patient,'.rds')) | 
+  ! file.exists(paste0('E:/temp/newest_dir/no_normal/',patient,'.rds')) |
+  patient == "P21"){next}
+else{
+ 
+if(nrow(sample_info) == 0){
+  sample_info <- data.frame(patient_id = sample,
+                            site ='tumor',
+                            filename = sample,
+                            msi_status = 'MSI-H',
+                            msi_test='IHC/PCR')
+} 
+  
+  
+  
+  
+assign(x = 's_obj_norm',value = readRDS(paste0('E:/temp/newest_dir/normal/',patient,'.rds'))) 
+assign(x = 's_obj_no_norm',value = readRDS(paste0('E:/temp/newest_dir/no_normal/',patient,'.rds'))) 
+assign(x = 's_obj_cancer',value = readRDS(paste0('E:/temp/newest_dir/normal/',patient,'_cancer.rds')))
+assign(x = 's_obj_cancer2',value= readRDS(paste0('E:/temp/newest_dir/no_normal/',patient,'_cancer.rds')))
+
+
+  
+  
+}
+
+
+#create centroid info for num of cells labelling
+cluster_counts <- table(Idents(s_obj_norm))
+s_obj_norm$cluster_counts <- s_obj_norm$integrated.clusters
+temp <- as.numeric(levels(s_obj_norm$cluster_counts))[s_obj_norm$cluster_counts]
+z=0
+for(i in 1:length(cluster_counts)){
+temp[temp == z]  <- paste0('n= ',as.numeric(cluster_counts[i]))
+ z=z+1 
+}
+s_obj_norm$cluster_counts <- temp
+
+tissue_plot <- DimPlot(s_obj_norm,group.by ='tissue',cols=c(DiscretePalette(length(unique(s_obj_norm$tissue)), palette = NULL, shuffle = FALSE)))
+tissue_plot$data$cluster_counts<- as.factor(s_obj_norm$cluster_counts)
+
+
+
+plots <-  ggarrange(
+#print(DimPlot(s_obj)+ggtitle(paste0('Clusters of cells','; n=',length(s_obj$pan_cancer_cluster)))),
+
+print(FeaturePlot(s_obj_norm,features=c('sensor_rna_prob'),cols=c('blue','red')) +
+ ggtitle('sensor_rna probs')),
+print(FeaturePlot(s_obj_cancer,features=c("sensor_rna_prob"),cols=c('red','blue'))+ggtitle(paste0('cancer cluster'))),
+print(FeaturePlot(s_obj_cancer2,features=c("sensor_rna_prob"),cols=c('red','blue'))+ggtitle(paste0('cancer cluster no normals'))),
+nrow=1,ncol=2
+
+)
+print(plots)
+}
+
+
+
+
+```

@@ -1,0 +1,111 @@
+---
+title: "First intregrations"
+author: "Harrison Anthony"
+date: "2024-11-06"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,warning = FALSE,message=FALSE,dev='png',dpi=300)
+#knitr::opts_chunk$set(fig.path = 'C:/Users/Harrison Anthony/Desktop/msi_benchmark_results/')
+
+#knitr::opts_knit$set(root.dir = 'C:/Users/Harrison Anthony/Desktop/msi_benchmark_results/')
+```
+
+
+
+```{r libs-and-functions}
+library(Seurat)
+library(gridExtra)
+library(patchwork)
+library(tidyverse)
+library(scAnnotatR)
+library(data.table)
+library(cowplot)
+library(Nebulosa)
+library(ggpubr)
+library(R.utils)
+library(kableExtra)
+
+set.seed(seed = 152727)
+
+```
+
+
+
+```{r read-in-data,results='asis'}
+key <- fread('C:/Users/Harrison Anthony/Desktop/git_repos/single_msi/manifests/final_key.tsv')
+
+files <- list.files(path='E:/temp/',pattern = '*.rds')
+
+for(file in files){
+file_name <- gsub(pattern = '.rds',replacement = '',x = file)
+
+sample_info <- filter(key, patient_id == file_name )
+if(nrow(sample_info) == 0){
+  sample_info <- data.frame(patient_id = sample,
+                            site ='tumor',
+                            filename = sample,
+                            msi_status = 'MSI-H',
+                            msi_test='IHC/PCR')
+}
+
+assign(x = 's_obj',value = readRDS(paste0('E:/temp/new_int/',file))) 
+assign(x = 's_obj_cancer',value = readRDS(paste0('E:/temp/new_int/cancer_only/',file_name,'_cancer.rds'))) 
+
+
+
+
+#print(paste('Integrated samples for',sample_info$patient_id[1],'. They are MSS, determined #by',sample_info$msi_test[1],'. This integration includes the following tissues: ',
+#c(sample_info$site[1:nrow(sample_info)])))
+
+
+
+
+
+plots <-  ggarrange(
+print(DimPlot(s_obj)+ggtitle(paste0('Clusters'))),
+
+print(DimPlot(s_obj, group.by = "scATOMIC_pred",cols=c(DiscretePalette(length(unique(s_obj$scATOMIC_pred)), palette = NULL, shuffle = FALSE))) + ggtitle("ATOMIC cells")+
+labs(fill="cell types")+
+guides(colour = guide_legend(override.aes = list(size=1.6),ncol=1))+ 
+  theme(legend.text=element_text(size=7))),
+        
+print(FeaturePlot(s_obj,features=c('sensor_rna_prob'),cols=c('blue','red')) +
+ ggtitle('sensor_rna probs')),
+
+print(DimPlot(s_obj,group.by='sensor_rna_status',cols=c('red','blue'))+ggtitle(paste0('sensor_rna'))),
+nrow=1,ncol=1
+)
+
+
+plots2 <-  ggarrange(
+print(DimPlot(s_obj_cancer)+ggtitle(paste0('Clusters'))),
+
+print(DimPlot(s_obj_cancer, group.by = "scATOMIC_pred",cols=c(DiscretePalette(length(unique(s_obj_cancer$scATOMIC_pred)), palette = NULL, shuffle = FALSE))) + ggtitle("ATOMIC cells")+
+labs(fill="cell types")+
+guides(colour = guide_legend(override.aes = list(size=1.6),ncol=1))+ 
+  theme(legend.text=element_text(size=7))),
+        
+print(FeaturePlot(s_obj_cancer,features=c('sensor_rna_prob'),cols=c('blue','red')) +
+ ggtitle('sensor_rna probs')),
+
+print(DimPlot(s_obj_cancer,group.by='sensor_rna_status',cols=c('red','blue'))+ggtitle(paste0('sensor_rna'))),
+nrow=1,ncol=1
+)
+
+
+
+
+print(kable_styling(kable(sample_info)))
+
+print(plots)
+print(plots2)
+
+cat("\n\n\\pagebreak\n")
+}
+
+
+```

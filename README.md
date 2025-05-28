@@ -14,13 +14,17 @@ This repository contains all the code needed to reproduce the results of our rec
 Also included in this repository are the raw results (MSI scores, summary statistics, etc.).
 To access the distributable version of the SC-MSI pipeline visit https://github.com/harrison-anth/sc_msi
 
+Note: Each directory in this repository might have a deprecated code or files folder. These, while useful to archive, were not used in the final results for the manuscript.
+
 ## Information on directories and files in this repository
 
 ### conda_envs
 Contains all conda environments and Snakemake profiles
 
 atomic.yml -- used for any R code that requires scATOMIC to be run
+
 seurat.yml -- used for any R code that involves Seurat objects
+
 slurm_executor_profile -- contains settings for using the SLURM executor plugin with Snakemake
 
 ### images
@@ -58,6 +62,24 @@ mix_patients{1..10}.txt -- list of mix ID's for sanekamke pipeline
 patient_ids.txt -- list of patients from EGAD00001008555, EGAD00001008584, EGAD00001008585, and PRJNA932556
 
 ### markdown_files
+parallelized_reporter.rmd -- Patient report generator
+
+### mix_summary_stats
+The summary stats files for all mixes in the study
+
+### msings_results
+mSINGS scores for each individual in the study with a BAM file that was run at the individual and pseudobulk level (left out of final results due to lack of agreement with scATOMIC)
+
+### pro_results
+MSIsensor-pro scores for each individual in the study with a BAM file that was run at the individual and pseudobulk level (left out of final results due to lack of agreement with scATOMIC)
+
+### pseudobulk_barcodes
+The barcodes for each individual/mix in the manuscript used to generate pseudobulk data
+
+### scripts
+annotate_bamog.R -- used to annotate seurat objects with MSI score, number of subclones, etc. from BAM files
+
+annotate_gsmog.R -- used to annotate seurat objects with MSI score, number of subclones, etc. from MTX files
 
 
 

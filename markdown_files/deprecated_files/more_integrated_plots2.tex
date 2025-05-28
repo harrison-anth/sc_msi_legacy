@@ -1,0 +1,1347 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{xcolor}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={More intregrations},
+  pdfauthor={Harrison Anthony},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{More intregrations}
+\author{Harrison Anthony}
+\date{2024-11-20}
+
+\begin{document}
+\maketitle
+
+\begin{longtable}[t]{llllll}
+\toprule
+ega\_id & patient\_id & site & filename & msi\_status & msi\_test\\
+\midrule
+EGAN00003484463 & CRC2783 & Normal & XHC083-SI-GA-C2 & MSI-H & IHC\\
+EGAN00003484465 & CRC2783 & LymphNode & XHC082-SI-GA-C1 & MSI-H & IHC\\
+EGAN00003484470 & CRC2783 & Core2 & XHC079-SI-GA-B10 & MSI-H & IHC\\
+EGAN00003484471 & CRC2783 & Core1 & XHC078-SI-GA-B9 & MSI-H & IHC\\
+EGAN00003484472 & CRC2783 & Invasive2 & XHC081-SI-GA-B12 & MSI-H & IHC\\
+\addlinespace
+EGAN00003484474 & CRC2783 & Invasive1 & XHC080-SI-GA-B11 & MSI-H & IHC\\
+\bottomrule
+\end{longtable}
+
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-1.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-2.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-3.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-4.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-5.png}
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-6.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-7.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-8.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-9.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+
+\pagebreak
+
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-10.png}
+
+\begin{longtable}[t]{llllll}
+\toprule
+ega\_id & patient\_id & site & filename & msi\_status & msi\_test\\
+\midrule
+EGAN00003484427 & CRC2786 & Normal & XHC091-SI-GA-C10 & MSS & IHC\\
+EGAN00003484429 & CRC2786 & Invasive2 & XHC090-SI-GA-C9 & MSS & IHC\\
+EGAN00003484430 & CRC2786 & Invasive1 & XHC089-SI-GA-C8 & MSS & IHC\\
+EGAN00003484431 & CRC2786 & Core2 & XHC088-SI-GA-C7 & MSS & IHC\\
+EGAN00003484468 & CRC2786 & Core1 & XHC087-SI-GA-C6 & MSS & IHC\\
+\bottomrule
+\end{longtable}
+
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-11.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-12.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-13.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-14.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-15.png}
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-16.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-17.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-18.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-19.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+
+\pagebreak
+
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-20.png}
+
+\begin{longtable}[t]{llllll}
+\toprule
+ega\_id & patient\_id & site & filename & msi\_status & msi\_test\\
+\midrule
+EGAN00003484423 & CRC2787 & Invasive & XHC085-SI-GA-C4 & MSS & IHC\\
+EGAN00003484425 & CRC2787 & Core & XHC084-SI-GA-C3 & MSS & IHC\\
+EGAN00003484506 & CRC2787 & Normal & XHC086-SI-GA-C5 & MSS & IHC\\
+\bottomrule
+\end{longtable}
+
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-21.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-22.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-23.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-24.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-25.png}
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-26.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-27.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-28.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-29.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+
+\pagebreak
+
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-30.png}
+
+\begin{longtable}[t]{llllll}
+\toprule
+ega\_id & patient\_id & site & filename & msi\_status & msi\_test\\
+\midrule
+EGAN00003484461 & CRC2795 & Normal & XHC101-SI-GA-E2 & MSS & IHC\\
+EGAN00003484494 & CRC2795 & Invasive2 & XHC100-SI-GA-E1 & MSS & IHC\\
+EGAN00003484496 & CRC2795 & Invasive1 & XHC099-SI-GA-D12 & MSS & IHC\\
+EGAN00003484498 & CRC2795 & Core2 & XHC098-SI-GA-D11 & MSS & IHC\\
+EGAN00003484500 & CRC2795 & Core1 & XHC097-SI-GA-D10 & MSS & IHC\\
+\bottomrule
+\end{longtable}
+
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-31.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-32.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-33.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-34.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-35.png}
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-36.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-37.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-38.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-39.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+
+\pagebreak
+
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-40.png}
+
+\begin{longtable}[t]{llllll}
+\toprule
+ega\_id & patient\_id & site & filename & msi\_status & msi\_test\\
+\midrule
+EGAN00003484447 & CRC2801 & Normal & XHC107-SI-GA-D4 & MSS & IHC\\
+EGAN00003484453 & CRC2801 & LymphNode & XHC106-SI-GA-D3 & MSS & IHC\\
+EGAN00003484455 & CRC2801 & Invasive2 & XHC105-SI-GA-D2 & MSS & IHC\\
+EGAN00003484457 & CRC2801 & Invasive1 & XHC104-SI-GA-D1 & MSS & IHC\\
+EGAN00003484459 & CRC2801 & Core2 & XHC103-SI-GA-C12 & MSS & IHC\\
+\addlinespace
+EGAN00003484460 & CRC2801 & Core1 & XHC102-SI-GA-C11 & MSS & IHC\\
+\bottomrule
+\end{longtable}
+
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-41.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-42.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-43.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-44.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-45.png}
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-46.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-47.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-48.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-49.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+
+\pagebreak
+
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-50.png}
+
+\begin{longtable}[t]{llllll}
+\toprule
+ega\_id & patient\_id & site & filename & msi\_status & msi\_test\\
+\midrule
+EGAN00003484441 & CRC2803 & Invasive1 & XHC110-SI-GA-E5 & MSS & IHC\\
+EGAN00003484443 & CRC2803 & Core2 & XHC109-SI-GA-E4 & MSS & IHC\\
+EGAN00003484445 & CRC2803 & Core1 & XHC108-SI-GA-E3 & MSS & IHC\\
+EGAN00003484450 & CRC2803 & Invasive2 & XHC111-SI-GA-E6 & MSS & IHC\\
+EGAN00003484451 & CRC2803 & Normal & XHC112-SI-GA-E7 & MSS & IHC\\
+\bottomrule
+\end{longtable}
+
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-51.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-52.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-53.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-54.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-55.png}
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-56.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-57.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-58.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-59.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+
+\pagebreak
+
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-60.png}
+
+\begin{longtable}[t]{llllll}
+\toprule
+ega\_id & patient\_id & site & filename & msi\_status & msi\_test\\
+\midrule
+EGAN00003484452 & CRC2810 & Core1 & XHC113-SI-GA-E8 & MSS & IHC\\
+EGAN00003484454 & CRC2810 & Core2 & XHC114-SI-GA-E9 & MSS & IHC\\
+EGAN00003484456 & CRC2810 & Invasive1 & XHC115-SI-GA-E10 & MSS & IHC\\
+EGAN00003484458 & CRC2810 & Invasive2 & XHC116-SI-GA-E11 & MSS & IHC\\
+EGAN00003484507 & CRC2810 & Normal & XHC117-SI-GA-E12 & MSS & IHC\\
+\bottomrule
+\end{longtable}
+
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-61.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-62.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-63.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-64.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-65.png}
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-66.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-67.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-68.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-69.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+
+\pagebreak
+
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-70.png}
+
+\begin{longtable}[t]{llllll}
+\toprule
+ega\_id & patient\_id & site & filename & msi\_status & msi\_test\\
+\midrule
+EGAN00003484493 & CRC2811 & Core2 & XHC119-SI-GA-F2 & MSS & IHC\\
+EGAN00003484495 & CRC2811 & Invasive1 & XHC120-SI-GA-F3 & MSS & IHC\\
+EGAN00003484497 & CRC2811 & Invasive2 & XHC121-SI-GA-F4 & MSS & IHC\\
+EGAN00003484499 & CRC2811 & Normal & XHC122-SI-GA-F5 & MSS & IHC\\
+EGAN00003484508 & CRC2811 & Core1 & XHC118-SI-GA-F1 & MSS & IHC\\
+\bottomrule
+\end{longtable}
+
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-71.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-72.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-73.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-74.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-75.png}
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-76.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-77.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-78.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-79.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+
+\pagebreak
+
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-80.png}
+
+\begin{longtable}[t]{llllll}
+\toprule
+ega\_id & patient\_id & site & filename & msi\_status & msi\_test\\
+\midrule
+EGAN00003484420 & CRC2816 & LymphNode & XHC127-SI-GA-F10 & MSS & IHC\\
+EGAN00003484421 & CRC2816 & Normal & XHC128-SI-GA-F11 & MSS & IHC\\
+EGAN00003484432 & CRC2816 & Core1 & XHC123-SI-GA-F6 & MSS & IHC\\
+EGAN00003484433 & CRC2816 & Core2 & XHC124-SI-GA-F7 & MSS & IHC\\
+EGAN00003484434 & CRC2816 & Invasive1 & XHC125-SI-GA-F8 & MSS & IHC\\
+\addlinespace
+EGAN00003484435 & CRC2816 & Invasive2 & XHC126-SI-GA-F9 & MSS & IHC\\
+\bottomrule
+\end{longtable}
+
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-81.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-82.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-83.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-84.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-85.png}
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-86.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-87.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-88.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-89.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+
+\pagebreak
+
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-90.png}
+
+\begin{longtable}[t]{llllll}
+\toprule
+ega\_id & patient\_id & site & filename & msi\_status & msi\_test\\
+\midrule
+EGAN00003484422 & CRC2817 & Core1 & XHC134-SI-GA-G11 & MSI-H & IHC\\
+EGAN00003484424 & CRC2817 & Core2 & XHC135-SI-GA-G12 & MSI-H & IHC\\
+EGAN00003484426 & CRC2817 & Core3 & XHC136-SI-GA-H1 & MSI-H & IHC\\
+EGAN00003484428 & CRC2817 & Core4 & XHC137-SI-GA-H2 & MSI-H & IHC\\
+EGAN00003484478 & CRC2817 & Invasive4 & XHC139-SI-GA-H4 & MSI-H & IHC\\
+\addlinespace
+EGAN00003484479 & CRC2817 & LymphNode1 & XHC129-SI-GA-F12 & MSI-H & IHC\\
+EGAN00003484480 & CRC2817 & LymphNode2 & XHC130-SI-GA-G1 & MSI-H & IHC\\
+EGAN00003484481 & CRC2817 & Invasive1 & XHC154-SI-GA-H6 & MSI-H & IHC\\
+EGAN00003484482 & CRC2817 & Invasive2 & XHC166-SI-GA-B8 & MSI-H & IHC\\
+EGAN00003484483 & CRC2817 & Invasive3 & XHC138-SI-GA-H3 & MSI-H & IHC\\
+\addlinespace
+EGAN00003484489 & CRC2817 & Normal & XHC131-SI-GA-G2 & MSI-H & IHC\\
+\bottomrule
+\end{longtable}
+
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-91.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-92.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-93.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-94.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-95.png}
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-96.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-97.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-98.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-99.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+
+\pagebreak
+
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-100.png}
+
+\begin{longtable}[t]{llllll}
+\toprule
+ega\_id & patient\_id & site & filename & msi\_status & msi\_test\\
+\midrule
+EGAN00003484462 & CRC2821 & Core3 & XHC167-SI-GA-B9 & MSS & IHC\\
+EGAN00003484464 & CRC2821 & Invasive2 & XHC155-SI-GA-H9 & MSS & IHC\\
+EGAN00003484466 & CRC2821 & Invasive3 & XHC156-SI-GA-H10 & MSS & IHC\\
+EGAN00003484467 & CRC2821 & Core4 & XHC152-SI-GA-H8 & MSS & IHC\\
+EGAN00003484469 & CRC2821 & Invasive1 & XHC168-SI-GA-B10 & MSS & IHC\\
+\addlinespace
+EGAN00003484473 & CRC2821 & Invasive4 & XHC169-SI-GA-B11 & MSS & IHC\\
+EGAN00003484475 & CRC2821 & LymphNode & XHC153-SI-GA-H11 & MSS & IHC\\
+EGAN00003484486 & CRC2821 & Normal & XHC157-SI-GA-H12 & MSS & IHC\\
+EGAN00003484491 & CRC2821 & Core1 & XHC140-SI-GA-H5 & MSS & IHC\\
+EGAN00003484492 & CRC2821 & Core2 & XHC151-SI-GA-H7 & MSS & IHC\\
+\bottomrule
+\end{longtable}
+
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-101.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-102.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-103.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-104.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-105.png}
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-106.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-107.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-108.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-109.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+
+\pagebreak
+
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-110.png}
+
+\begin{longtable}[t]{llllll}
+\toprule
+ega\_id & patient\_id & site & filename & msi\_status & msi\_test\\
+\midrule
+EGAN00003484484 & CRC2829 & Core & XHC132-SI-GA-G3 &  & \\
+EGAN00003484485 & CRC2829 & Invasive & XHC133-SI-GA-G4 &  & \\
+\bottomrule
+\end{longtable}
+
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-111.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-112.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-113.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-114.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-115.png}
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-116.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-117.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-118.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-119.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+
+\pagebreak
+
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-120.png}
+
+\begin{longtable}[t]{llllll}
+\toprule
+ega\_id & patient\_id & site & filename & msi\_status & msi\_test\\
+\midrule
+EGAN00003484436 & CRC2841 & T1-Core1 & XHC141-SI-GA-A1 & MSS & IHC\\
+EGAN00003484436 & CRC2841 & T1Core1 & XHC141-SI-GA-A1 & MSS & IHC\\
+EGAN00003484437 & CRC2841 & T2Core2 & XHC146-SI-GA-A5 & MSS & IHC\\
+EGAN00003484438 & CRC2841 & T2Invasive1 & XHC147-SI-GA-A6 & MSS & IHC\\
+EGAN00003484439 & CRC2841 & T1-Core2 & XHC142-SI-GA-A2 & MSS & IHC\\
+\addlinespace
+EGAN00003484439 & CRC2841 & T1Core2 & XHC142-SI-GA-A2 & MSS & IHC\\
+EGAN00003484440 & CRC2841 & T2Core1 & XHC145-SI-GA-A4 & MSS & IHC\\
+EGAN00003484446 & CRC2841 & T2Invasive2 & XHC148-SI-GA-A7 & MSS & IHC\\
+EGAN00003484448 & CRC2841 & T2LymphNode & XHC150-SI-GA-A9 & MSS & IHC\\
+EGAN00003484487 & CRC2841 & T1LymphNode & XHC149-SI-GA-A8 & MSS & IHC\\
+\addlinespace
+EGAN00003484488 & CRC2841 & Normal & XHC144-SI-GA-A10 & MSS & IHC\\
+EGAN00003484490 & CRC2841 & T1Invasive & XHC143-SI-GA-A3 & MSS & IHC\\
+\bottomrule
+\end{longtable}
+
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-121.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-122.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-123.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-124.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-125.png}
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-126.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-127.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-128.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-129.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+
+\pagebreak
+
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-130.png}
+
+\begin{longtable}[t]{llllll}
+\toprule
+ega\_id & patient\_id & site & filename & msi\_status & msi\_test\\
+\midrule
+EGAN00003484442 & CRC2899 & Core1 & XHC170-SI-GA-B12 & MSS & IHC\\
+EGAN00003484444 & CRC2899 & Core2 & XHC171-SI-GA-C1 & MSS & IHC\\
+EGAN00003484449 & CRC2899 & Invasive1 & XHC172-SI-GA-C2 & MSS & IHC\\
+EGAN00003484476 & CRC2899 & Invasive2 & XHC173-SI-GA-C3 & MSS & IHC\\
+EGAN00003484477 & CRC2899 & Normal & XHC174-SI-GA-C4 & MSS & IHC\\
+\bottomrule
+\end{longtable}
+
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-131.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-132.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-133.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-134.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-135.png}
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-136.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-137.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-138.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-139.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+
+\pagebreak
+
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-140.png}
+
+\begin{longtable}[t]{llllll}
+\toprule
+ega\_id & patient\_id & site & filename & msi\_status & msi\_test\\
+\midrule
+ & P11 & tumor & GSM6213956\_Colon\_MGI\_111\_v2 & MSI-H & IHC\\
+ & P11 & normal & GSM6213957\_Colon\_MGI\_112\_v3 & MSI-H & IHC\\
+\bottomrule
+\end{longtable}
+
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-141.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-142.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-143.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-144.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-145.png}
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-146.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-147.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-148.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-149.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+
+\pagebreak
+
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-150.png}
+
+\begin{longtable}[t]{llllll}
+\toprule
+ega\_id & patient\_id & site & filename & msi\_status & msi\_test\\
+\midrule
+ & P12 & tumor & GSM6213958\_Colon\_MGI\_121\_v3 & MSI-H & IHC\\
+ & P12 & normal & GSM6213959\_Colon\_MGI\_122\_v3 & MSI-H & IHC\\
+\bottomrule
+\end{longtable}
+
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-151.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-152.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-153.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-154.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-155.png}
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-156.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-157.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-158.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-159.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+
+\pagebreak
+
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-160.png}
+
+\begin{longtable}[t]{llllll}
+\toprule
+ega\_id & patient\_id & site & filename & msi\_status & msi\_test\\
+\midrule
+ & P15 & tumor & GSM6213961\_Colon\_MGI\_151\_v3 & MSI-H & IHC\\
+ & P15 & normal & GSM6213962\_Colon\_MGI\_152\_v3 & MSI-H & IHC\\
+\bottomrule
+\end{longtable}
+
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-161.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-162.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-163.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-164.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-165.png}
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-166.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-167.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-168.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-169.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+
+\pagebreak
+
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-170.png}
+
+\begin{longtable}[t]{llllll}
+\toprule
+ega\_id & patient\_id & site & filename & msi\_status & msi\_test\\
+\midrule
+ & P17 & tumor & GSM6213963\_Colon\_171\_v3 & MSI-H & IHC\\
+ & P17 & normal & GSM6213964\_Colon\_172\_v3 & MSI-H & IHC\\
+\bottomrule
+\end{longtable}
+
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-171.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-172.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-173.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-174.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-175.png}
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-176.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-177.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-178.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-179.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+
+\pagebreak
+
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-180.png}
+
+\begin{longtable}[t]{llllll}
+\toprule
+ega\_id & patient\_id & site & filename & msi\_status & msi\_test\\
+\midrule
+ & P18 & tumor & GSM6213965\_Colon\_181\_v2 & MSI-H & IHC\\
+ & P18 & normal & GSM6213966\_Colon\_182\_v2 & MSI-H & IHC\\
+\bottomrule
+\end{longtable}
+
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-181.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-182.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-183.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-184.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-185.png}
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-186.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-187.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-188.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-189.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+
+\pagebreak
+
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-190.png}
+
+\begin{longtable}[t]{llllll}
+\toprule
+ega\_id & patient\_id & site & filename & msi\_status & msi\_test\\
+\midrule
+ & P19 & tumor & GSM6213967\_Colon\_MGI\_191\_v3 & MSI-H & IHC\\
+ & P19 & normal & GSM6213968\_Colon\_MGI\_192\_v3 & MSI-H & IHC\\
+\bottomrule
+\end{longtable}
+
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-191.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-192.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-193.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-194.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-195.png}
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-196.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-197.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-198.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-199.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+
+\pagebreak
+
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-200.png}
+
+\begin{longtable}[t]{llllll}
+\toprule
+ega\_id & patient\_id & site & filename & msi\_status & msi\_test\\
+\midrule
+ & P21 & tumor & GSM6213969\_Colon\_MGI\_211\_v3 & MSI-H & IHC\\
+ & P21 & tumor & GSM6213970\_Colon\_MGI\_213\_v3 & MSI-H & IHC\\
+\bottomrule
+\end{longtable}
+
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-201.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-202.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-203.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-204.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-205.png}
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-206.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-207.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-208.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-209.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+
+\pagebreak
+
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-210.png}
+
+\begin{longtable}[t]{llllll}
+\toprule
+ega\_id & patient\_id & site & filename & msi\_status & msi\_test\\
+\midrule
+ & P24 & tumor & GSM6213972\_Colon\_MGI\_241\_v3 & MSI-H & IHC\\
+ & P24 & tumor & GSM6213973\_Colon\_MGI\_243\_v3 & MSI-H & IHC\\
+\bottomrule
+\end{longtable}
+
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-211.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-212.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-213.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-214.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-215.png}
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-216.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-217.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-218.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-219.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+
+\pagebreak
+
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-220.png}
+
+\begin{longtable}[t]{llllll}
+\toprule
+ega\_id & patient\_id & site & filename & msi\_status & msi\_test\\
+\midrule
+ & P25 & tumor & GSM6213974\_Colon\_MGI\_251\_v3 & MSI-H & IHC\\
+ & P25 & normal & GSM6213975\_Colon\_MGI\_252\_v3 & MSI-H & IHC\\
+ & P25 & tumor & GSM6213976\_Colon\_MGI\_253\_v3 & MSI-H & IHC\\
+\bottomrule
+\end{longtable}
+
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-221.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-222.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-223.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-224.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-225.png}
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-226.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-227.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-228.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-229.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+
+\pagebreak
+
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-230.png}
+
+\begin{longtable}[t]{llllll}
+\toprule
+ega\_id & patient\_id & site & filename & msi\_status & msi\_test\\
+\midrule
+ & P27 & tumor & GSM6213978\_Colon\_MGI\_271\_v3 & MSI-H & IHC\\
+ & P27 & normal & GSM6213979\_Colon\_MGI\_272\_v3 & MSI-H & IHC\\
+ & P27 & tumor & GSM6213980\_Colon\_MGI\_273\_v3 & MSI-H & IHC\\
+\bottomrule
+\end{longtable}
+
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-231.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-232.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-233.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-234.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-235.png}
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-236.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-237.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-238.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-239.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+
+\pagebreak
+
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-240.png}
+
+\begin{longtable}[t]{llllll}
+\toprule
+ega\_id & patient\_id & site & filename & msi\_status & msi\_test\\
+\midrule
+ & P28 & tumor & GSM6213981\_Colon\_MGI\_281\_v3 & MSI-H & IHC\\
+ & P28 & normal & GSM6213982\_Colon\_MGI\_282\_v3 & MSI-H & IHC\\
+ & P28 & tumor & GSM6213983\_Colon\_MGI\_283\_v3 & MSI-H & IHC\\
+\bottomrule
+\end{longtable}
+
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-241.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-242.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-243.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-244.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-245.png}
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-246.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-247.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-248.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-249.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+
+\pagebreak
+
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-250.png}
+
+\begin{longtable}[t]{llllll}
+\toprule
+ega\_id & patient\_id & site & filename & msi\_status & msi\_test\\
+\midrule
+ & P29 & tumor & GSM6213984\_Colon\_MGI\_291\_v3 & MSI-H & IHC\\
+ & P29 & normal & GSM6213985\_Colon\_MGI\_292\_v3 & MSI-H & IHC\\
+\bottomrule
+\end{longtable}
+
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-251.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-252.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-253.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-254.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-255.png}
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-256.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-257.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-258.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-259.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+
+\pagebreak
+
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-260.png}
+
+\begin{longtable}[t]{llllll}
+\toprule
+ega\_id & patient\_id & site & filename & msi\_status & msi\_test\\
+\midrule
+ & P30 & tumor & GSM6213986\_Colon\_MGI\_301\_v3 & MSI-H & IHC\\
+ & P30 & normal & GSM6213987\_Colon\_MGI\_302\_v3 & MSI-H & IHC\\
+ & P30 & tumor & GSM6213988\_Colon\_MGI\_303\_v3 & MSI-H & IHC\\
+\bottomrule
+\end{longtable}
+
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-261.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-262.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-263.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-264.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-265.png}
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-266.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-267.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-268.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-269.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+
+\pagebreak
+
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-270.png}
+
+\begin{longtable}[t]{llllll}
+\toprule
+ega\_id & patient\_id & site & filename & msi\_status & msi\_test\\
+\midrule
+ & P31 & tumor & GSM6213989\_Colon\_MGI\_311\_v3 & MSI-H & IHC\\
+ & P31 & normal & GSM6213990\_Colon\_MGI\_312\_v3 & MSI-H & IHC\\
+ & P31 & tumor & GSM6213991\_Colon\_MGI\_313\_v3 & MSI-H & IHC\\
+\bottomrule
+\end{longtable}
+
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-271.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-272.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-273.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-274.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-275.png}
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-276.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-277.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-278.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-279.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+
+\pagebreak
+
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-280.png}
+
+\begin{longtable}[t]{llllll}
+\toprule
+ega\_id & patient\_id & site & filename & msi\_status & msi\_test\\
+\midrule
+ & P32 & tumor & GSM6213992\_Colon\_MGI\_321\_v3 & MSI-H & IHC\\
+ & P32 & normal & GSM6213993\_Colon\_MGI\_322\_v3 & MSI-H & IHC\\
+ & P32 & tumor & GSM6213994\_Colon\_MGI\_323\_v3 & MSI-H & IHC\\
+\bottomrule
+\end{longtable}
+
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-281.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-282.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-283.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-284.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-285.png}
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-286.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-287.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-288.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-289.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+
+\pagebreak
+
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-290.png}
+
+\begin{longtable}[t]{llllll}
+\toprule
+ega\_id & patient\_id & site & filename & msi\_status & msi\_test\\
+\midrule
+EGAN00003499116 & SC024 & normal & EXT017 & MSS & PCR\\
+EGAN00003499117 & SC024 & tumor2 & EXT016 & MSS & PCR\\
+EGAN00003499118 & SC024 & tumor1 & EXT015 & MSS & PCR\\
+\bottomrule
+\end{longtable}
+
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-291.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-292.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-293.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-294.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-295.png}
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-296.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-297.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-298.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-299.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+
+\pagebreak
+
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-300.png}
+
+\begin{longtable}[t]{llllll}
+\toprule
+ega\_id & patient\_id & site & filename & msi\_status & msi\_test\\
+\midrule
+EGAN00003499145 & SC027 & normal & EXT020 & MSS & PCR\\
+EGAN00003499147 & SC027 & tumor2 & EXT019 & MSS & PCR\\
+EGAN00003499149 & SC027 & tumor1 & EXT018 & MSS & PCR\\
+\bottomrule
+\end{longtable}
+
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-301.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-302.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-303.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-304.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-305.png}
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-306.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-307.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-308.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-309.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+
+\pagebreak
+
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-310.png}
+
+\begin{longtable}[t]{llllll}
+\toprule
+ega\_id & patient\_id & site & filename & msi\_status & msi\_test\\
+\midrule
+EGAN00003499126 & SC029 & normal & EXT026 & MSS & PCR\\
+EGAN00003499127 & SC029 & tumor2 & EXT025 & MSS & PCR\\
+EGAN00003499128 & SC029 & tumor1 & EXT024 & MSS & PCR\\
+\bottomrule
+\end{longtable}
+
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-311.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-312.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-313.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-314.png}
+\$\texttt{5}
+
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-315.png}
+\$\texttt{1}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-316.png}
+\$\texttt{2}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-317.png}
+\$\texttt{3}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-318.png}
+\$\texttt{4}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-319.png}
+\$\texttt{5}
+\includegraphics{more_integrated_plots2_files/figure-latex/read-in-data-320.png}
+attr(,``class'') {[}1{]} ``list'' ``ggarrange''
+
+\pagebreak
+
+\end{document}
