@@ -26,20 +26,34 @@ slurm_executor_profile -- contains settings for using the SLURM executor plugin 
 Contains preliminary plots for all the samples prior to integration 
 
 ### manifests
-This directory contains all the manifest files used to run the Snakemake pipeline
+This directory contains all the manifest files used to run the Snakemake pipeline.
+
 all_artificial_samples_{1..10}.tsv -- the mix ID's for different mixing experiment runs.
+
 all_gsm_samples.txt -- sample names for data from GSE205506
+
 all_mixing_tables_manifest.tsv -- master manifest file to run the Snakemake pipeline for mixed samples
+
 all_mix_patients.txt -- formatted mix ID's for Snakemake pipeline
+
 all_samples.tsv -- All samples for data from EGAD00001008555, EGAD00001008584, EGAD00001008585, and PRJNA932556
+
 combined_key.tsv -- A key of all samples and patient IDs for use with the Snakemake pipeline
+
 excluded_sample_names.txt -- list of excluded sample names removed from the master key due to no identified cancer cells
+
 final_key.tsv -- key that links sample names and patient id's
+
 glob_patients.txt -- list of all patients (for use with MSIsensor-RNA glob script)
+
 gsm_patients.txt -- list of patients from GSE205506
+
 mixing_table_manifest_{1..100).tsv -- information on the proportion of cells sampled for each mixing run
+
 mix_key{1..10}.tsv -- keys used to link file name and mix ID for Snakemake pipeline
+
 mix_patients{1..10}.txt -- list of mix ID's for sanekamke pipeline
+
 patient_ids.txt -- list of patients from EGAD00001008555, EGAD00001008584, EGAD00001008585, and PRJNA932556
 
 ### markdown_files
