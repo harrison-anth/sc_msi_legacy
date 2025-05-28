@@ -31,41 +31,20 @@ all_artificial_samples_{1..10}.tsv -- the mix ID's for different mixing experime
 all_gsm_samples.txt -- sample names for data from GSE205506
 all_mixing_tables_manifest.tsv -- master manifest file to run the Snakemake pipeline for mixed samples
 all_mix_patients.txt -- formatted mix ID's for Snakemake pipeline
-all_samples.tsv -- All samples for data from EGAD00001008555, EGAD00001008584, EGAD00001008585
-sensor.yml was used to run MSIsensor MSIsensor2 and MSIsensor-pro
+all_samples.tsv -- All samples for data from EGAD00001008555, EGAD00001008584, EGAD00001008585, and PRJNA932556
+combined_key.tsv -- A key of all samples and patient IDs for use with the Snakemake pipeline
+excluded_sample_names.txt -- list of excluded sample names removed from the master key due to no identified cancer cells
+final_key.tsv -- key that links sample names and patient id's
+glob_patients.txt -- list of all patients (for use with MSIsensor-RNA glob script)
+gsm_patients.txt -- list of patients from GSE205506
+mixing_table_manifest_{1..100).tsv -- information on the proportion of cells sampled for each mixing run
+mix_key{1..10}.tsv -- keys used to link file name and mix ID for Snakemake pipeline
+mix_patients{1..10}.txt -- list of mix ID's for sanekamke pipeline
+patient_ids.txt -- list of patients from EGAD00001008555, EGAD00001008584, EGAD00001008585, and PRJNA932556
 
-msings.yml was used to run mSINGS
+### markdown_files
 
-MSIR.yml was used to run R code
 
-mantis.yml was used to run MANTIS
-
-vcf2maf.yml was used to convert from vcf file format to maf file format (note even with this environment, vcf2maf is notoriously finicky and will require 
-a working local installation of VEP)
-
-### Publication results
-The TCGA results and scripts required to generate them are included in the tcga/ folder alongside a separate README.md
- detailing the pipeline. 
-
-The results of all non-TCGA datasets are in the non_tcga/ folder. Each separate dataset has its own subfolder and README.md. 
-
-### Graphs
-
-All the code necessary to generate the graphs used in the paper are stored in the manuscript_graphs/ directory. The Rmarkdown files
-used cater to my local paths and settings but can be adapated by any experienced R user. 
-All graphs were generated using R version 4.1.2
-
-### Baselines and reference files
-
-The reference files are available from the GDC (https://gdc.cancer.gov/about-data/gdc-data-processing/gdc-reference-files)
-
-The baselines created for each tool and used in this study are included in the baselines/ directory. 
-
-### Test example
-
-To ensure reproducibility of the results and quick implementation of our pipelines for other researchers who want to use these tools, we have included
-a test example that allows for the user to quickly use each MSI tool on small BAM and gene count matrices that have been subset down to only the microsatellites found on 
-chromosome 7. See the test/ directory for a separate README.md related to their use. 
 
 
 

@@ -1,0 +1,87 @@
+#my snakemake run command
+#snakemake --executor cluster-generic --cluster-generic-submit-cmd "sbatch" --use-conda --latency-wait 60 --profile ../conda_envs/slurm_profile/ --verbose
+
+#print snakemake dag
+snakemake --forceall --rulegraph | dot -Tpdf > dag.pdf
+
+# workflow - SC-MSI
+
+#define config file
+configfile: "Snakemake_config.yaml"
+
+
+#print config file name and date
+import datetime
+
+print("Config settings are: ", config,".\n")
+now = datetime.datetime.now()
+print("Beginning analysis at", now.strftime("%Y-%m-%d %H:%M"))
+
+with open(config["sample_list"]) as samples_tmp:
+	samples=samples_tmp.read().splitlines()
+
+
+rule all:
+	input:
+		expand("../atomic/{sample_name}.rds",sample_name=samples),
+		expand("../sensor_rna_results/{sample_name}.txt",sample_name=samples)
+
+rule process_sample:
+	input:
+	output:
+		"../pseudobulk_barcodes/{sample_name}/{sample_name}_all_cell_barcodes.tsv",
+		"../pseudobulk_barcodes/{sample_name}/just_barcodes.tsv",
+		"../filtered_h5/{sample_name}.rds"
+	log:
+		stdout="../stdout/{sample_name}/process_sample.out",
+		stderr="../error_files/{sample_name}/process_sample.error"
+	conda:
+		 "seurat"
+	threads: 1
+	shell:
+		"""
+		if [[ ! -d ../pseudobulk_barcodes/{wildcards.sample_name} ]]
+		then
+		mkdir ../pseudobulk_barcodes/{wildcards.sample_name}
+		fi
+		Rscript barcode_generator.R {wildcards.sample_name} 'Y'
+		if [[ ! -f ../pseudobulk_barcodes/{wildcards.sample_name}/just_barcodes.tsv ]]
+		then
+		cut -f 1 ../pseudobulk_barcodes/{wildcards.sample_name}/{wildcards.sample_name}_all_cell_barcodes.tsv > \
+		 ../pseudobulk_barcodes/{wildcards.sample_name}/just_barcodes.tsv
+		fi
+		"""
+
+rule find_cancer:
+	input:
+		"../filtered_h5/{sample_name}.rds"
+	output:
+		"../pseudobulk_barcodes/{sample_name}/{sample_name}_cancer_barcodes.tsv",
+		"../atomic/{sample_name}.rds"
+	conda:
+		"atomic"
+	threads: 10
+	shell:
+		"""
+		Rscript atomic.R {wildcards.sample_name}
+		"""
+rule find_msi:
+	input:
+		"../filtered_h5/{sample_name}.rds"
+	output:
+		"../sensor_rna_results/{sample_name}.txt"
+	threads: 1
+	conda:
+		"seurat"
+	shell:
+		"""
+		Rscript sensor_rna_shaper.R {wildcards.sample_name}
+		conda deactivate
+		training_model=../temp/{wildcards.sample_name}_training_model.csv
+		msisensor-rna train -i $training_model -m ../temp/{wildcards.sample_name}.model -t PanCancer
+		msisensor-rna detection -i ../temp/{wildcards.sample_name}.csv -o ../sensor_rna_results/{wildcards.sample_name}.txt -m ../temp/{wildcards.sample_name}.model -d True
+		"""
+		
+				
+
+
