@@ -6,7 +6,7 @@ Name(s): Harrison Anthony
 contact information: h dot anthony1 at universityofgalway dot ie
 
 ### License type
-MIT with attribution and commercial use restriction; see LICENSE file for more information.
+MIT; see LICENSE file for more information.
 
 ### Repository information
 
@@ -15,8 +15,9 @@ Also included in this repository are the raw results (MSI scores, summary statis
 To access the distributable version of the SC-MSI pipeline visit https://github.com/harrison-anth/sc_msi
 
 ## Information on directories and files in this repository
-### Conda environments and Snakemake profiles
-The conda_envs folder contains all conda environments and Snakemake profiles
+
+### conda_envs
+Contains all conda environments and Snakemake profiles
 
 atomic.yml -- used for any R code that requires scATOMIC to be run
 seurat.yml -- used for any R code that involves Seurat objects
