@@ -108,7 +108,7 @@ subclone_df <- data.frame(Patient=sample_name,
                         Num_Samp=num_tumor_samps,
                         Num_MSS_subclones=length(na.omit(str_extract(string=unique(cancer_fin$infercnv_subcluster),pattern='MSS'))),
                         Num_MSIH_subclones=length(na.omit(str_extract(string=unique(cancer_fin$infercnv_subcluster),pattern='MSI-H'))),
-                        Tot_subclones=length(unique(cancer_fin$infercnv_subcluster)))
+                        Tot_subclones=length(na.omit(unique(cancer_fin$infercnv_subcluster))))
 
 
 
