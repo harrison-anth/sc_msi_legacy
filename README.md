@@ -158,8 +158,14 @@ sum_stat_catter.sh -- Bash file to quickly concatenate results from all runs (no
 
 old_scripts/ -- directory containing many useful (and not useful) old versions of code or code used with the project that was deemed no longer necessary to generate the results of the manuscript (but retained for internal use)
 
+### sensor2_results
+MSIsensor2 scores for each individual in the study with a BAM file that was run at the individual and pseudobulk level (left out of final results due to lack of agreement with scATOMIC)
 
+### sensor_rna_results
+MSIsensor-rna scores for each individual in the study with a BAM file that was run at the individual and pseudobulk level (left out of final results due to lack of agreement with scATOMIC)
 
+### summary_stats
+All final results for each individual that detail the extent of heterogeneity (cluster_stats.tsv files) and more information about the ANOVA test run on the clusters (anova_results.tsv files)
 
 Please feel free to reach out with any questions if this README has not answered your questions. 
 
