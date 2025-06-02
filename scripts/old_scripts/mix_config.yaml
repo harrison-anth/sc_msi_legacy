@@ -9,12 +9,12 @@ sample_list: "../manifests/all_artificial_samples.tsv"
 transcriptome: "/data3/hanthony/reference_files/refdata-gex-GRCh38-2020-A"
 
 #give key file
-key: "../manifests/all_mixing_tables_manifest.tsv"
+key: "../manifests/mixing_table_manifest.tsv"
 
 
 #specify list of patient id's
-patient_list: "../manifests/all_mix_patients.txt"
+patient_list: "../manifests/mix_patients.txt"
 
 #specify key that links sample names and patient id's
-patient_key: "../manifests/mix_key_cv.tsv"
+patient_key: "../manifests/mix_key.tsv"
 

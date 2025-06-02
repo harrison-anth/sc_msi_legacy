@@ -26,11 +26,11 @@ gsm <- as.character(argus[2])
 
 
 
+
 set.seed(seed = 152727)
 
-if(gsm == 'Y'){key <- fread('../manifests/gsm_with_mix_key.tsv',header=TRUE)
-} else if(gsm == 'N'){
-key <- fread('../manifests/final_key4.tsv',header=TRUE)}
+if(gsm == 'Y'){key <- fread('../manifests/final_gsm_key.tsv',header=TRUE)
+} else if(gsm == 'N'){key <- fread('../manifests/final_key.tsv',header=TRUE)}
 
 
 
@@ -93,12 +93,9 @@ if(num_tot_samps <2 | num_tumor_samps < 2){
 print('Fewer than 2 tumor samples, no need to integrate')
 
 indv_key <- filter(indv_key, site != "normal" & site != "Normal")
-if(gsm == 'Y'){
 file_name <- indv_key$sample_id[1]
-} else if (gsm == 'N'){file_name <- indv_key$filename[1]}
 
 integrated <- calc_msi_prop(readRDS(paste0('../annotated_h5/',file_name,'.rds')))
-
 saveRDS(integrated, paste0('../integrated_samples/',sample_name,'.rds'))
 
 } else{
@@ -117,8 +114,7 @@ file_name <- indv_key$sample_id[i]
 
 assign(x = paste0('s_obj'),value = readRDS(paste0('../annotated_h5/',file_name,'.rds')))
 
-#can't quite remember what this code was for originally as classification_confidence is a string..
-#s_obj$classification_confidence <- as.numeric(s_obj$classification_confidence)
+s_obj$classification_confidence <- as.numeric(s_obj$classification_confidence)
 
 
 s_obj$sensor_rna_prob <- as.numeric(s_obj$sensor_rna_prob)
@@ -175,12 +171,7 @@ fwrite(new_data2,paste0('../temp/',sample_name,'.csv'),sep=',')
 
 #now just the cancer
 #get percent of cancer cells for each integrated cluster
-
-
-#now don't really need this step as all non-normal samples are not included in the key
-#integrated <- subset(integrated, subset=site != "Normal" & site != "normal")
-#integrated <- subset(integrated, subset=tissue != "Normal" & tissue != "normal")
-
+integrated <- subset(integrated, subset=tissue != "Normal" & tissue != "normal")
 
 int_ant <- calc_cancer_prop(integrated)
 cancer_int <- subset(int_ant,subset=pan_cancer_cluster == "Cancer")
@@ -235,6 +226,7 @@ new_data <- ct_mat %>% select(all_of(c('SampleID',common_names)))
 new_data2 <- new_data[ rowSums(new_data[,2:ncol(new_data)]) >0, ]
 
 fwrite(new_data2,paste0('../temp/',sample_name,'_cancer.csv'),sep=',')
+
 
 }
 

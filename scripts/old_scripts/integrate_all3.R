@@ -26,11 +26,11 @@ gsm <- as.character(argus[2])
 
 
 
+
 set.seed(seed = 152727)
 
-if(gsm == 'Y'){key <- fread('../manifests/gsm_with_mix_key.tsv',header=TRUE)
-} else if(gsm == 'N'){
-key <- fread('../manifests/final_key4.tsv',header=TRUE)}
+if(gsm == 'Y'){key <- fread('../manifests/final_gsm_key.tsv',header=TRUE)
+} else if(gsm == 'N'){key <- fread('../manifests/final_key.tsv',header=TRUE)}
 
 
 
@@ -93,12 +93,9 @@ if(num_tot_samps <2 | num_tumor_samps < 2){
 print('Fewer than 2 tumor samples, no need to integrate')
 
 indv_key <- filter(indv_key, site != "normal" & site != "Normal")
-if(gsm == 'Y'){
 file_name <- indv_key$sample_id[1]
-} else if (gsm == 'N'){file_name <- indv_key$filename[1]}
 
 integrated <- calc_msi_prop(readRDS(paste0('../annotated_h5/',file_name,'.rds')))
-
 saveRDS(integrated, paste0('../integrated_samples/',sample_name,'.rds'))
 
 } else{
@@ -117,8 +114,7 @@ file_name <- indv_key$sample_id[i]
 
 assign(x = paste0('s_obj'),value = readRDS(paste0('../annotated_h5/',file_name,'.rds')))
 
-#can't quite remember what this code was for originally as classification_confidence is a string..
-#s_obj$classification_confidence <- as.numeric(s_obj$classification_confidence)
+s_obj$classification_confidence <- as.numeric(s_obj$classification_confidence)
 
 
 s_obj$sensor_rna_prob <- as.numeric(s_obj$sensor_rna_prob)
@@ -175,12 +171,7 @@ fwrite(new_data2,paste0('../temp/',sample_name,'.csv'),sep=',')
 
 #now just the cancer
 #get percent of cancer cells for each integrated cluster
-
-
-#now don't really need this step as all non-normal samples are not included in the key
-#integrated <- subset(integrated, subset=site != "Normal" & site != "normal")
-#integrated <- subset(integrated, subset=tissue != "Normal" & tissue != "normal")
-
+integrated <- subset(integrated, subset=tissue != "Normal" & tissue != "normal")
 
 int_ant <- calc_cancer_prop(integrated)
 cancer_int <- subset(int_ant,subset=pan_cancer_cluster == "Cancer")
@@ -208,8 +199,39 @@ saveRDS(cancer_fin, paste0('../integrated_samples/',sample_name,'_cancer.rds'))
 if(length(levels(droplevels(cancer_fin$seurat_clusters)))<2){
 print('Only one cluster of cancer cells; not aggregating expression')
 clustys <- cancer_fin
+f_df <- data.frame(paient_id=sample_name,
+			DF=0,
+			Ssq="NA",
+			Msq="NA",
+			F="NA",
+			P="NA",
+			NumCc = ncol(cancer_fin),
+			Num_Samp=num_tumor_samps)
+
+fwrite(x=f_df,file=paste0('../summary_stats/',sample_name,'_cluster_stats.tsv'),sep='\t')
+
+
+
+
 } else{
 clustys <- AggregateExpression(cancer_fin,return.seurat=TRUE,group.by=c('seurat_clusters'))
+
+#Write out cluster f and summary stats
+anova_df <- data.frame(cluster=as.character(cancer_fin$seurat_clusters),
+                        msi_score=as.numeric(cancer_fin$sensor_rna_prob))
+anova_result <- aov(msi_score ~ cluster,data=anova_df)
+
+f_df <- data.frame(patient_id=sample_name,
+                        Df=summary(anova_result)[[1]][["Df"]][1],
+                        Ssq=round(summary(anova_result)[[1]][["Sum Sq"]][1],4),
+                        Msq=round(summary(anova_result)[[1]][["Mean Sq"]][1],4),
+                        F = round(summary(anova_result)[[1]][["F value"]][1],4),
+                        P = round(summary(anova_result)[[1]][["Pr(>F)"]][1],4),
+                        numCc = ncol(cancer_fin),
+			Num_Samp=num_tumor_samps)
+
+fwrite(x=f_df,file=paste0('../summary_stats/',sample_name,'_cluster_stats.tsv'),sep='\t')
+
 }
 
 

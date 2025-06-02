@@ -26,11 +26,11 @@ gsm <- as.character(argus[2])
 
 
 
+
 set.seed(seed = 152727)
 
-if(gsm == 'Y'){key <- fread('../manifests/gsm_with_mix_key.tsv',header=TRUE)
-} else if(gsm == 'N'){
-key <- fread('../manifests/final_key4.tsv',header=TRUE)}
+if(gsm == 'Y'){key <- fread('../manifests/final_gsm_key.tsv',header=TRUE)
+} else if(gsm == 'N'){key <- fread('../manifests/final_key3.tsv',header=TRUE)}
 
 
 
@@ -59,7 +59,7 @@ return(new_s_obj)
 
 calc_cancer_prop <- function(int_s_obj){
 cancer_temp <- data.frame(cell_names = colnames(int_s_obj),
-                        clusters=as.numeric(as.character(droplevels(int_s_obj$seurat_clusters))),
+                        clusters=as.numeric(as.character(int_s_obj$seurat_clusters)),
                         cancer_cell=as.character(int_s_obj$pan_cancer_cluster))
 cancer_temp$prop_cancer <- NA
 for( i in 0:max(cancer_temp$clusters)){
@@ -84,28 +84,15 @@ integrate_data <- function(sample_name){
 indv_key <- filter(key, patient_id == sample_name)
   print(paste("Begin processing sample",sample_name,sep=" "))
   print(paste("Integrating", nrow(indv_key),"samples", sep=" "))
-
-#check to make sure integration is needed
-num_tumor_samps <- nrow(filter(indv_key, site != "normal" & site != "Normal"))
-num_tot_samps <- nrow(indv_key)
-
-if(num_tot_samps <2 | num_tumor_samps < 2){
-print('Fewer than 2 tumor samples, no need to integrate')
-
-indv_key <- filter(indv_key, site != "normal" & site != "Normal")
-if(gsm == 'Y'){
+if(nrow(indv_key)<2){
+print('Only 1 sample no need to integrate')
 file_name <- indv_key$sample_id[1]
-} else if (gsm == 'N'){file_name <- indv_key$filename[1]}
 
 integrated <- calc_msi_prop(readRDS(paste0('../annotated_h5/',file_name,'.rds')))
-
 saveRDS(integrated, paste0('../integrated_samples/',sample_name,'.rds'))
 
 } else{
 all_objs <- list()
-
-#Using this to try to remedy issue of small %of cancer cells making up cancer cluster
-indv_key <- filter(indv_key, site != "normal" & site != "Normal")
  
 for(i in 1:nrow(indv_key)) {
 
@@ -117,8 +104,7 @@ file_name <- indv_key$sample_id[i]
 
 assign(x = paste0('s_obj'),value = readRDS(paste0('../annotated_h5/',file_name,'.rds')))
 
-#can't quite remember what this code was for originally as classification_confidence is a string..
-#s_obj$classification_confidence <- as.numeric(s_obj$classification_confidence)
+s_obj$classification_confidence <- as.numeric(s_obj$classification_confidence)
 
 
 s_obj$sensor_rna_prob <- as.numeric(s_obj$sensor_rna_prob)
@@ -150,8 +136,8 @@ integrated <- calc_msi_prop(integrated)
 
 saveRDS(integrated, paste0('../integrated_samples/',sample_name,'.rds'))
 
+###
 }
-
 clustys <- AggregateExpression(integrated,return.seurat=TRUE,group.by=c('seurat_clusters'))
 ct_mat <- t(as.matrix(clustys@assays$RNA$counts))
 
@@ -175,27 +161,19 @@ fwrite(new_data2,paste0('../temp/',sample_name,'.csv'),sep=',')
 
 #now just the cancer
 #get percent of cancer cells for each integrated cluster
-
-
-#now don't really need this step as all non-normal samples are not included in the key
-#integrated <- subset(integrated, subset=site != "Normal" & site != "normal")
-#integrated <- subset(integrated, subset=tissue != "Normal" & tissue != "normal")
-
+integrated <- subset(integrated, subset=tissue != "Normal" & tissue != "normal")
 
 int_ant <- calc_cancer_prop(integrated)
-cancer_int <- subset(int_ant,subset=pan_cancer_cluster == "Cancer")
-#might want to include this in the subset command & percent_cancer >= 60)
+cancer_int <- subset(int_ant,subset=pan_cancer_cluster == "Cancer" & percent_cancer >= 70)
 cancer_int <- calc_msi_prop(cancer_int)
 
 #recluster
-
-
 
 DefaultAssay(cancer_int) <- "RNA"
 cancer_fin <- cancer_int %>% FindVariableFeatures(., selection.method = "vst", nfeatures = 2000) %>%
 #ScaleData(., vars.to.regress = c("percent.mt")) %>%
 ScaleData(.) %>%
-RunPCA(.,npcs=10) %>% RunUMAP(., dims = 1:10,n.neighbors=10) %>% FindNeighbors(., dims = 1:10) %>%
+RunPCA(.) %>% RunUMAP(., dims = 1:30) %>% FindNeighbors(., dims = 1:30) %>%
 FindClusters(., resolution = 0.8)
 
 
@@ -204,18 +182,7 @@ FindClusters(., resolution = 0.8)
 saveRDS(cancer_fin, paste0('../integrated_samples/',sample_name,'_cancer.rds'))
 
 
-
-if(length(levels(droplevels(cancer_fin$seurat_clusters)))<2){
-print('Only one cluster of cancer cells; not aggregating expression')
-clustys <- cancer_fin
-} else{
 clustys <- AggregateExpression(cancer_fin,return.seurat=TRUE,group.by=c('seurat_clusters'))
-}
-
-
-
-
-
 ct_mat <- t(as.matrix(clustys@assays$RNA$counts))
 
 ct_mat <- as.data.frame(ct_mat) %>% rownames_to_column('SampleID')
@@ -235,6 +202,7 @@ new_data <- ct_mat %>% select(all_of(c('SampleID',common_names)))
 new_data2 <- new_data[ rowSums(new_data[,2:ncol(new_data)]) >0, ]
 
 fwrite(new_data2,paste0('../temp/',sample_name,'_cancer.csv'),sep=',')
+
 
 }
 

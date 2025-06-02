@@ -27,6 +27,8 @@ seurat.yml -- used for any R code that involves Seurat objects
 
 slurm_executor_profile -- contains settings for using the SLURM executor plugin with Snakemake
 
+slurm_profile -- contains the settings used specifically for the University of Galway HPC
+
 ### images
 Contains preliminary plots for all the samples prior to integration 
 
@@ -77,10 +79,84 @@ MSIsensor-pro scores for each individual in the study with a BAM file that was r
 The barcodes for each individual/mix in the manuscript used to generate pseudobulk data
 
 ### scripts
+
 annotate_bamog.R -- used to annotate seurat objects with MSI score, number of subclones, etc. from BAM files
 
 annotate_gsmog.R -- used to annotate seurat objects with MSI score, number of subclones, etc. from MTX files
 
+artificial_config.yaml -- The config file used to run the Snakemake pipeline with artificial mix data
+
+atomic_mix.R -- R script used to run scATOMIC on the artificial mix data
+
+atomic.R -- R script used to run scATOMIC on BAM/MTX data
+
+atomic.sh -- bash script used to call scATOMIC
+
+bam_config.yaml -- configuration file for Snakemake used to handle BAM/FASTQ files
+
+barcode_generator.R -- R script used to create and filter sample level seurat objects. Also exports cell barcode information to pseudobulk_barcodes/ directory
+
+blender_cv.sh -- Bash script used to create artificial mix data
+
+cellMix.R -- R script used to mix together different single-cell sequencing samples. (Currently hardcoded to integrate the expression data of each sample, but will make optional in the future).
+
+get_summary_stats_mix.R -- R script to retrieve summary stats for mixed samples (number of subclone, MSI-H cells, etc.)
+
+get_summary_stats.R -- R script to retrieve summary stats for a patient (number of subclones, MSI-H cells, etc.); mainly used in the final patient report.
+
+glob_sensor_cancer.sh -- Quick bash script used to get the aggregated gene expression MSIsensor-RNA result for only the cancer cells in an individual
+
+glob_sensor.sh -- Quick bash script used to get the aggregated gene expression MSIsensor-RNA result for all cells in an individual
+
+glob_shaper_cancer.R -- Rscript used to arrange data into MSIsensor-RNA compatible structure (for use with an individual's aggregated cancer cells)
+
+glob_shaper.R -- Rscript used to arrange data into MSIsensor-RNA compatible structure (for use with an individual's aggregated cells)
+
+handle_bams.snake -- Snakefile used to run the SC-MSI pipeline on FASTQ/BAM files
+
+handle_mix.snake -- Snakefile used to run the SC-MSI pipeline on mixture files 
+
+infer_cnv.R -- R script used to run inferCNV on samples
+
+infer_cnv_CRC2821.R -- R script used for CRC2821 inferCNV run (required a higher k_nn setting)
+
+infer_patient_cnv.R -- R script used to run inferCNV on individuals
+
+integrate_all.R -- R script that handles the integration step of the Seurat pipeline
+
+integrate_mixes.R -- R script that handles the integration step of the Seurat pipeline for artificial mix samples
+
+integrate.sh -- Bash script that calls the integrate_all R script
+
+mix_config.yaml -- The configuration file for use with Snakemake on mixture files
+
+mix_manifest_gen.R -- R script that creates a manifest file for mixture files (for use with Snakemake)
+
+msings.sh -- Bash script used to run mSINGS in pseudobulk/aggregate expression mode (not used for manuscript results)
+
+mtx_config.yaml -- Configure file for Snakemake to be used with MTX files
+
+no_msi_clustering.R  -- R script used to test if removing genes used in MSIsensor-RNA baseline from samples changed clustering
+
+patient_report_generator.R -- R script used to run Rmarkdown that creates document to plot results for each individual
+
+plot_all_bamog.R -- R script that plots the samples for each individual (from BAM files)
+
+plot_all_gsm.R -- R script that plots the samples for each individual (from MTX files)
+
+pro.sh -- Bash script used to run MSIsensor-pro on pseudobulk/aggregate expression for each individual (not sued for manuscript results)
+
+sensor2.sh -- Bash script used to run MSIsensor2 on pseudobulk/aggregate expression for each individual (not sued for manuscript results)
+
+sensor_rna.sh -- Bash script used to run MSIsensor-RNA (also sensor_rna_shaper.R)
+
+sensor_rna_shaper.R -- R script used to coerce single-cell data into compatible format for MSIsensor-RNA
+
+seurat_interaction.R -- R script from inferCNV team edited to allow non-overlap in cell barcode names in integrated samples file and inferCNV object
+
+sum_stat_catter.sh -- Bash file to quickly concatenate results from all runs (note: will overwrite any files generated from previous use without edit)
+
+old_scripts/ -- directory containing many useful (and not useful) old versions of code or code used with the project that was deemed no longer necessary to generate the results of the manuscript (but retained for internal use)
 
 
 
