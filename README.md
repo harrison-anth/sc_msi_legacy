@@ -14,7 +14,7 @@ This repository contains all the code needed to reproduce the results of our rec
 Also included in this repository are the raw results (MSI scores, summary statistics, etc.).
 To access the distributable version of the SC-MSI pipeline visit https://github.com/harrison-anth/sc_msi
 
-Note: Each directory in this repository might have a deprecated code or files folder. These, while useful to archive, were not used in the final results for the manuscript.
+Note: Each directory in this repository might have a deprecated/old code or files folder. These, while useful for archival purposes and transparency, were not used in the final results for the manuscript.
 
 ## Information on directories and files in this repository
 
