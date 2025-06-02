@@ -1,2 +1,2 @@
 Patient	Clusters	F	numCc	NumMSIHcells	NumMSScells	min_score	avg_score	max_score	Num_Samp	Num_MSS_subclones	Num_MSIH_subclones	Tot_subclones
-CRC2817	7	10.617	503	56	442	0.0608	0.620802208835341	0.8862	10	11	2	13
+CRC2817	7	10.617	503	56	442	0.0608	0.620802208835341	0.8862	10	12	2	14

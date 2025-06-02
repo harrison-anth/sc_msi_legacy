@@ -1,2 +1,2 @@
 Patient	Clusters	F	numCc	NumMSIHcells	NumMSScells	min_score	avg_score	max_score	Num_Samp	Num_MSS_subclones	Num_MSIH_subclones	Tot_subclones
-P33	6	15.7139	328	24	301	0.048	0.595246153846154	0.8463	0	11	1	12
+P33	6	15.7139	328	24	301	0.048	0.595246153846154	0.8463	0	8	1	9
