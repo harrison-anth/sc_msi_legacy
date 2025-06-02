@@ -7,7 +7,7 @@ library(Seurat)
 library(R.utils)
 library(tidyverse)
 library(infercnv)
-
+library(futile.logger)
 
 #read in arguments from command line
 argus <- (commandArgs(asValues=TRUE, excludeReserved=TRUE)[-1])
@@ -22,15 +22,20 @@ gsm <- as.character(argus[2])
 set.seed(seed = 152727)
 
 if(gsm == 'Y'){key <- fread('../manifests/final_gsm_key.tsv',header=TRUE)
-} else if(gsm == 'N'){key <- fread('../manifests/final_key3.tsv',header=TRUE)}
+} else if(gsm == 'N'){key <- fread('../manifests/final_key4.tsv',header=TRUE)}
 
 get_summary_stats <- function(sample_name){
 
 int_s_obj <-readRDS(paste0('../integrated_samples/',sample_name,'.rds'))
-int_s_obj <- add_to_seurat(seurat_obj=int_s_obj, 
+
+#infercnv source code does not allow for adding cells with missing data (very silly)
+#edited their code to include the ability to do so. Will just source the necessary function
+source('seurat_interaction.R')
+
+int_s_obj <- add_to_seurat(seurat_obj=int_s_obj,
 infercnv_output_path=paste0('/data3/hanthony/infer_cnv_temp/patient_',sample_name,'/'),top_n=10)
 
-int_s_obj <- subset(int_s_obj, subset=tissue != "Normal" & tissue != "normal")
+#int_s_obj <- subset(int_s_obj, subset=tissue != "Normal" & tissue != "normal")
 
 int_cancer_obj <- readRDS(paste0('../integrated_samples/',sample_name,'_cancer.rds'))
 
@@ -39,6 +44,9 @@ cancer_fin <- AddMetaData(int_cancer_obj,metadata=int_s_obj$infercnv_subcluster,
 indv_key <- filter(key, patient_id == sample_name)
 num_tumor_samps <- nrow(filter(indv_key, site != "normal" & site != "Normal"))
 num_tot_samps <- nrow(indv_key)
+if(gsm == 'N'){treatment <- 'untreated'}else{treatment <- indv_key$treatment[1]}
+
+
 
 
 #get number of msi-h and mss cells used in the analysis (also a range of the MSI probability score)
@@ -69,7 +77,7 @@ subclone_df <- data.frame(Patient=sample_name,
 			Num_Samp=num_tumor_samps,
                         Num_MSS_subclones=length(na.omit(str_extract(string=unique(cancer_fin$infercnv_subcluster),pattern='MSS'))),
                         Num_MSIH_subclones=length(na.omit(str_extract(string=unique(cancer_fin$infercnv_subcluster),pattern='MSI-H'))),
-                        Tot_subclones=length(unique(cancer_fin$infercnv_subcluster)))
+                        Tot_subclones=length(na.omit(unique(cancer_fin$infercnv_subcluster))))
 
 fwrite(x=anova_df,file=paste0('../summary_stats/',sample_name,'_anova_results.tsv'),sep='\t')
 fwrite(x=subclone_df,file=paste0('../summary_stats/',sample_name,'_cluster_stats.tsv'),sep='\t')
@@ -96,10 +104,15 @@ subclone_df <- data.frame(Patient=sample_name,
                         Clusters=summary(anova_result)[[1]][["Df"]][1]+1,
                         F = round(summary(anova_result)[[1]][["F value"]][1],4),
                         numCc = ncol(cancer_fin),
+			NumMSIHcells = sum(cancer_fin$sensor_rna_status == "MSI-H",na.rm=TRUE),
+                        NumMSScells = sum(cancer_fin$sensor_rna_status == "MSS",na.rm=TRUE),
+                        min_score = min(cancer_fin$sensor_rna_prob,na.rm=TRUE),
+                        avg_score = mean(cancer_fin$sensor_rna_prob,na.rm=TRUE),
+                        max_score = max(cancer_fin$sensor_rna_prob,na.rm=TRUE),
                         Num_Samp=num_tumor_samps,
                         Num_MSS_subclones=length(na.omit(str_extract(string=unique(cancer_fin$infercnv_subcluster),pattern='MSS'))),
                         Num_MSIH_subclones=length(na.omit(str_extract(string=unique(cancer_fin$infercnv_subcluster),pattern='MSI-H'))),
-                        Tot_subclones=length(unique(cancer_fin$infercnv_subcluster)))
+                        Tot_subclones=length(na.omit(unique(cancer_fin$infercnv_subcluster))))
 
 
 

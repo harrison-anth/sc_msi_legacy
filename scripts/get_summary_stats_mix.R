@@ -9,6 +9,9 @@ library(Seurat)
 library(R.utils)
 library(tidyverse)
 library(infercnv)
+library(futile.logger)
+
+
 
 argus <- (commandArgs(asValues=TRUE, excludeReserved=TRUE)[-1])
 sample_name <- as.character(argus[1])
@@ -22,6 +25,9 @@ if(gsm == 'Y'){key <- fread('../manifests/final_gsm_key.tsv',header=TRUE)
 get_summary_stats <- function(sample_name){
 
 int_s_obj <-readRDS(paste0('../integrated_samples/',sample_name,'.rds'))
+source('seurat_interaction.R')
+
+
 int_s_obj <- add_to_seurat(seurat_obj=int_s_obj, 
 infercnv_output_path=paste0('/data3/hanthony/infer_cnv_temp/patient_',sample_name,'/'),top_n=10)
 
@@ -50,7 +56,7 @@ subclone_df <- data.frame(Patient=sample_name,
 			Num_Samp=num_tumor_samps,
                         Num_MSS_subclones=length(na.omit(str_extract(string=unique(cancer_fin$infercnv_subcluster),pattern='MSS'))),
                         Num_MSIH_subclones=length(na.omit(str_extract(string=unique(cancer_fin$infercnv_subcluster),pattern='MSI-H'))),
-                        Tot_subclones=length(unique(cancer_fin$infercnv_subcluster)))
+                        Tot_subclones=length(na.omit(unique(cancer_fin$infercnv_subcluster))))
 
 fwrite(x=anova_df,file=paste0('../summary_stats/',sample_name,'_anova_results.tsv'),sep='\t')
 fwrite(x=subclone_df,file=paste0('../summary_stats/',sample_name,'_cluster_stats.tsv'),sep='\t')
@@ -80,7 +86,7 @@ subclone_df <- data.frame(Patient=sample_name,
                         Num_Samp=num_tumor_samps,
                         Num_MSS_subclones=length(na.omit(str_extract(string=unique(cancer_fin$infercnv_subcluster),pattern='MSS'))),
                         Num_MSIH_subclones=length(na.omit(str_extract(string=unique(cancer_fin$infercnv_subcluster),pattern='MSI-H'))),
-                        Tot_subclones=length(unique(cancer_fin$infercnv_subcluster)))
+                        Tot_subclones=length(na.omit(unique(cancer_fin$infercnv_subcluster))))
 
 
 

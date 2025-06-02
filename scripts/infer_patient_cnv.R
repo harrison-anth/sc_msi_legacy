@@ -11,6 +11,7 @@ set.seed(seed = 152727)
 argus <- (commandArgs(asValues=TRUE, excludeReserved=TRUE)[-1])
 sample_name <- as.character(argus[1])
 outdir <- as.character(argus[2])
+num_threads <- as.numeric(argus[3])
 
 s_obj <- readRDS(paste0('../integrated_samples/',sample_name,'.rds'))
 #create annotations file
@@ -26,12 +27,18 @@ fwrite(final_anno,file=paste0('../temp/',sample_name,'_anno.tsv'),sep='\t',col.n
 
 } else{
 #change MSI NA's to MSS (on the basis that MSS unless otherwise proven high)
-anno$msi[is.na(anno$msi)] <- "MSS"
+#anno$msi[is.na(anno$msi)] <- "MSS"
+##double checking the NA conversion doesn't impact clonality too much
+
 
 anno$cancer2 <- paste0(anno$cancer,'_',anno$msi)
 final_anno <- data.frame(cell_name=anno$cell_name,type=ifelse(anno$cancer =="Normal",yes=anno$cancer,no=anno$cancer2))
+#filter NA's here (see above comment)
+final_anno <- filter(final_anno, type != "Cancer_NA")
+
 fwrite(final_anno,file=paste0('../temp/',sample_name,'_anno.tsv'),sep='\t',col.names=FALSE)
 }
+
 
 
 #create infercnv object
@@ -50,5 +57,6 @@ infercnv_obj = infercnv::run(cnv_obj,
                              cluster_by_groups=T,   # cluster
                              denoise=T,
                              HMM=T,
-                             num_threads=1
+                             num_threads=num_threads,
+                             leiden_resolution='auto'
                              )

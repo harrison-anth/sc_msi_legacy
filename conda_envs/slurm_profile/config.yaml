@@ -1,3 +1,8 @@
+##### This Snakemake config file is designed specifically for use with the University of Galway's HPC Lugh #####
+##### Author: Harrison Anthony #####
+##### Last edited: 6/2/25 #####
+
+
 jobs: 500
 jobname: "{rule}.{jobid}"
 #max-jobs-per-second: 200

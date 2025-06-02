@@ -26,10 +26,16 @@ fwrite(final_anno,file=paste0('../temp/',sample_name,'_anno.tsv'),sep='\t',col.n
 
 } else{
 #change MSI NA's to MSS (on the basis that MSS unless otherwise proven high)
-anno$msi[is.na(anno$msi)] <- "MSS"
+#anno$msi[is.na(anno$msi)] <- "MSS"
+##double checking the NA conversion doesn't impact clonality too much
 
 anno$cancer2 <- paste0(anno$cancer,'_',anno$msi)
+
 final_anno <- data.frame(cell_name=anno$cell_name,type=ifelse(anno$cancer =="Normal",yes=anno$cancer,no=anno$cancer2))
+
+#filter NA's here (see above comment)
+final_anno <- filter(final_anno, type != "Cancer_NA")
+
 fwrite(final_anno,file=paste0('../temp/',sample_name,'_anno.tsv'),sep='\t',col.names=FALSE)
 }
 
