@@ -1,5 +1,5 @@
 # Intratumoral heterogeneity in microsatellite instability status at single cell resolution
-## Article DOI: Under review
+## Article DOI: Submitted to *Cancer Research*
 
 ### Information about the author(s) of this code:
 Name(s): Harrison Anthony 
