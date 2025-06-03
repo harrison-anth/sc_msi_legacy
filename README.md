@@ -29,9 +29,6 @@ slurm_executor_profile -- contains settings for using the SLURM executor plugin 
 
 slurm_profile -- contains the settings used specifically for the University of Galway HPC
 
-### images
-Contains preliminary plots for all the samples prior to integration 
-
 ### manifests
 This directory contains all the manifest files used to run the Snakemake pipeline.
 
